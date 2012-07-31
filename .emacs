@@ -13,7 +13,7 @@
 ;(menu-bar-mode nil)
 (tool-bar-mode -1)
 (scroll-bar-mode -1)
-(global-linum-mode)
+;; (global-linum-mode)
 (set-fringe-mode 0)
 
 ;; Font & Colors
