@@ -33,7 +33,7 @@
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
 
 
-------------------------------------------------------------------------------
+;;------------------------------------------------------------------------------
 ;; Ido
 (setq ido-enable-flex-matching t)
 (setq ido-everywhere t)
@@ -63,7 +63,7 @@
 
 ;;------------------------------------------------------------------------------
 ;; Lisp, Slime, Paredit
-(setq inferior-lisp-program "/usr/local/bin/clisp")
+(setq inferior-lisp-program "/usr/local/bin/ccl64")
 (require 'slime-autoloads)
 (slime-setup '(slime-repl))
 (add-hook 'lisp-mode-hook (lambda () (slime-mode t)))
