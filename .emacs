@@ -12,11 +12,11 @@
 
 ;;------------------------------------------------------------------------------
 ;; GUI Cleanup
-;(menu-bar-mode nil)  ; not necessary on osx
+;; (menu-bar-mode nil)  ; not necessary on osx
 (tool-bar-mode -1)
 (scroll-bar-mode -1)
 ;; (global-linum-mode)
-(set-fringe-mode 0)
+;; (set-fringe-mode 0)
 
 
 ;;------------------------------------------------------------------------------
@@ -72,5 +72,3 @@
 (add-hook 'emacs-lisp-mode-hook (lambda () (paredit-mode +1)))
 (add-hook 'lisp-mode-hook (lambda () (paredit-mode +1)))
 (add-hook 'lisp-interaction-mode-hook (lambda () (paredit-mode +1)))
-
-
