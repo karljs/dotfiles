@@ -1,10 +1,10 @@
-"         _                    
-"  __   _(_)_ __ ___  _ __ ___ 
+"         _
+"  __   _(_)_ __ ___  _ __ ___
 "  \ \ / / | '_ ` _ \| '__/ __|
-"   \ V /| | | | | | | | | (__ 
+"   \ V /| | | | | | | | | (__
 "  (_)_/ |_|_| |_| |_|_|  \___|
 
-
+" If you read this, switch to Emacs
 
 " Vundle stuff first
 set nocompatible
@@ -48,5 +48,3 @@ if has("gui_running")
     set guioptions-=r
     set guioptions-=L
 endif
-
-

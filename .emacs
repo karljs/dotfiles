@@ -17,7 +17,7 @@
 (scroll-bar-mode -1)
 ;; (global-linum-mode)
 ;; (set-fringe-mode 0)
-
+(load "/Users/karl/.emacs.d/site-lisp/smooth-scroll.el")
 
 ;;------------------------------------------------------------------------------
 ;; Font & Colors
@@ -25,12 +25,19 @@
 (require 'color-theme-solarized)
 (color-theme-initialize)
 (color-theme-solarized-light)
-(set-default-font "-*-inconsolata-*-*-*-*-16-*-*-*-*-*-*-*")
+(set-default-font "-*-inconsolata-*-*-*-*-14-*-*-*-*-*-*-*")
 
 ;;------------------------------------------------------------------------------
 ;; Good behavior
 (setq make-backup-files nil)
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
+(setq ns-pop-up-frames nil)
+
+
+;;------------------------------------------------------------------------------
+;; General & Keybindings
+(server-start)
+(global-set-key (kbd "C-x a r") 'align-regexp)
 
 
 ;;------------------------------------------------------------------------------
@@ -54,7 +61,6 @@
 (global-set-key (kbd "C-x C-;") 'comment-or-uncomment-region-or-line)
 
 
-
 ;;------------------------------------------------------------------------------
 ;; Haskell
 (load "/Users/karl/.emacs.d/site-lisp/haskell-mode/haskell-site-file.el")
@@ -72,3 +78,14 @@
 (add-hook 'emacs-lisp-mode-hook (lambda () (paredit-mode +1)))
 (add-hook 'lisp-mode-hook (lambda () (paredit-mode +1)))
 (add-hook 'lisp-interaction-mode-hook (lambda () (paredit-mode +1)))
+
+
+;;------------------------------------------------------------------------------
+;; ML
+(load "/Users/karl/.emacs.d/site-lisp/ocaml-mode/ocaml.emacs")
+
+
+;;------------------------------------------------------------------------------
+;; Coq
+(setq auto-mode-alist (cons '("\.v$" . coq-mode) auto-mode-alist))
+(autoload 'coq-mode "coq" "Major mode for editing Coq vernacular." t)
