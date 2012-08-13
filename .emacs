@@ -32,6 +32,7 @@
 (setq make-backup-files nil)
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
 (setq ns-pop-up-frames nil)
+(global-auto-revert-mode 1)
 
 
 ;;------------------------------------------------------------------------------
@@ -59,6 +60,10 @@
     (comment-or-uncomment-region beg end)))
 
 (global-set-key (kbd "C-x C-;") 'comment-or-uncomment-region-or-line)
+
+;;------------------------------------------------------------------------------
+;; Magit
+(require 'magit)
 
 
 ;;------------------------------------------------------------------------------
