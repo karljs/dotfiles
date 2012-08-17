@@ -3,9 +3,14 @@
 "  \ \ / / | '_ ` _ \| '__/ __|
 "   \ V /| | | | | | | | | (__ 
 "  (_)_/ |_|_| |_| |_|_|  \___|
+" 
+
+
+call pathogen#infect()
+
+filetype plugin indent on
 
 set nocompatible
-filetype plugin indent on
 set ttyfast
 set autoread
 set nowrap
@@ -42,3 +47,4 @@ if has("gui_running")
 endif
 
 
+                             
