@@ -22,7 +22,7 @@
 
 ;;------------------------------------------------------------------------------
 ;; Font & Colors
-(add-to-list 'custom-theme-load-path "~/.emacs.d/site-lisp/solarized")
+(add-to-list 'custom-theme-load-path "~/.emacs.d/site-lisp/emacs-color-theme-solarized")
 (load-theme 'solarized-light t)
 ;(require 'color-theme)
 ;(require 'color-theme-solarized)
