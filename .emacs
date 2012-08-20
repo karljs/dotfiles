@@ -5,40 +5,55 @@
 
 
 ;;------------------------------------------------------------------------------
-;; Load libraries
+;; Load things
 (let ((default-directory "~/.emacs.d/site-lisp/"))
   (normal-top-level-add-to-load-path '("."))
   (normal-top-level-add-subdirs-to-load-path))
+
+(setenv "PATH" (concat (getenv "PATH") ":/usr/local/bin"))
+(setq exec-path (append exec-path '("/usr/local/bin")))
 
 ;;------------------------------------------------------------------------------
 ;; GUI Cleanup
 ;; (menu-bar-mode nil)  ; not necessary on osx
 (tool-bar-mode -1)
 (scroll-bar-mode -1)
-;; (global-linum-mode)
-;; (set-fringe-mode 0)
-(load "/Users/karl/.emacs.d/site-lisp/smooth-scroll.el")
+(column-number-mode 1)
 
 ;;------------------------------------------------------------------------------
 ;; Font & Colors
-(require 'color-theme)
-(require 'color-theme-solarized)
-(color-theme-initialize)
-; (color-theme-solarized-light)
-(set-default-font "-*-inconsolata-*-*-*-*-14-*-*-*-*-*-*-*")
+(add-to-list 'custom-theme-load-path "~/.emacs.d/site-lisp/solarized")
+(load-theme 'solarized-light t)
+;(require 'color-theme)
+;(require 'color-theme-solarized)
+;(color-theme-initialize)
+;(color-theme-solarized-light)
+(set-default-font "-*-ubuntu mono-*-*-*-*-16-*-*-*-*-*-*-*")
 
 ;;------------------------------------------------------------------------------
 ;; Good behavior
+(setq-default indent-tabs-mode nil)
 (setq make-backup-files nil)
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
 (setq ns-pop-up-frames nil)
 (global-auto-revert-mode 1)
+(setq-default fill-column 80)
 
 
 ;;------------------------------------------------------------------------------
 ;; General & Keybindings
 (server-start)
 (global-set-key (kbd "C-x a r") 'align-regexp)
+
+
+;;------------------------------------------------------------------------------
+;; Spelling
+(setq-default ispell-program-name "aspell")
+
+
+;;------------------------------------------------------------------------------
+;; LaTeX
+;(add-hook 'LaTeX-mode-hook 'turn-on-flyspell)
 
 
 ;;------------------------------------------------------------------------------
@@ -61,6 +76,7 @@
 
 (global-set-key (kbd "C-x C-;") 'comment-or-uncomment-region-or-line)
 
+
 ;;------------------------------------------------------------------------------
 ;; Magit
 (require 'magit)
@@ -68,13 +84,13 @@
 
 ;;------------------------------------------------------------------------------
 ;; Haskell
-(load "/Users/karl/.emacs.d/site-lisp/haskell-mode/haskell-site-file.el")
+;(load "/Users/karl/.emacs.d/site-lisp/haskell-mode/haskell-site-file.el")
 (add-hook 'haskell-mode-hook 'turn-on-haskell-indent)
 
 
 ;;------------------------------------------------------------------------------
 ;; Lisp, Slime, Paredit
-(setq inferior-lisp-program "/usr/local/bin/ccl64")
+(setq inferior-lisp-program "/usr/local/bin/sbcl")
 (require 'slime-autoloads)
 (slime-setup '(slime-repl))
 (add-hook 'lisp-mode-hook (lambda () (slime-mode t)))
@@ -87,10 +103,4 @@
 
 ;;------------------------------------------------------------------------------
 ;; ML
-(load "/Users/karl/.emacs.d/site-lisp/ocaml-mode/ocaml.emacs")
-
-
-;;------------------------------------------------------------------------------
-;; Coq
-(setq auto-mode-alist (cons '("\.v$" . coq-mode) auto-mode-alist))
-(autoload 'coq-mode "coq" "Major mode for editing Coq vernacular." t)
+; (load "/Users/karl/.emacs.d/site-lisp/ocaml-mode/ocaml.emacs")
