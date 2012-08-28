@@ -32,6 +32,10 @@
 
 ;;------------------------------------------------------------------------------
 ;; Good behavior
+(setq mac-option-modifier 'none)
+(setq mac-command-modifier 'meta)
+;(setq osx-key-mode 0)
+;(setq mac-option-key-is-meta t)
 (setq-default indent-tabs-mode nil)
 (setq make-backup-files nil)
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
@@ -63,6 +67,17 @@
 (ido-mode 1)
 
 
+;;--------------------------------------------------------------------------------
+;; Multi Term
+(require 'multi-term)
+(setq multi-term-program "/bin/bash")
+(defun add-mode-line-dirtrack ()
+  (add-to-list 'mode-line-buffer-identification
+               '(:propertize (" " default-directory " ") face dired-directory)))
+(add-hook 'term-mode-hook 'add-mode-line-dirtrack)
+
+
+
 ;;------------------------------------------------------------------------------
 ;; Comments
 (defun comment-or-uncomment-region-or-line ()
@@ -84,7 +99,7 @@
 
 ;;------------------------------------------------------------------------------
 ;; Haskell
-;(load "/Users/karl/.emacs.d/site-lisp/haskell-mode/haskell-site-file.el")
+(load "/Users/karl/.emacs.d/site-lisp/haskell-mode/haskell-site-file.el")
 (add-hook 'haskell-mode-hook 'turn-on-haskell-indent)
 
 
