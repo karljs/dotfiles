@@ -19,6 +19,8 @@
 (tool-bar-mode -1)
 (scroll-bar-mode -1)
 (column-number-mode 1)
+(setq inhibit-startup-message t)
+(setq inhibit-startup-echo-area-message t)
 
 ;;------------------------------------------------------------------------------
 ;; Font & Colors
@@ -56,6 +58,12 @@
 
 
 ;;------------------------------------------------------------------------------
+;; Org
+(define-key global-map "\C-ca" 'org-agenda)
+(setq org-agenda-files (list "~/notes/dsvl/dsvl.org"
+                             "~/notes/awareness/awareness.org"))
+
+;;------------------------------------------------------------------------------
 ;; LaTeX
 ;(add-hook 'LaTeX-mode-hook 'turn-on-flyspell)
 
@@ -65,6 +73,7 @@
 (setq ido-enable-flex-matching t)
 (setq ido-everywhere t)
 (ido-mode 1)
+(setq ido-create-new-buffer 'always)
 
 
 ;;--------------------------------------------------------------------------------
@@ -75,6 +84,7 @@
   (add-to-list 'mode-line-buffer-identification
                '(:propertize (" " default-directory " ") face dired-directory)))
 (add-hook 'term-mode-hook 'add-mode-line-dirtrack)
+(global-set-key (kbd "C-x t") 'multi-term)
 
 
 
