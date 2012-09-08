@@ -60,8 +60,8 @@
 ;;------------------------------------------------------------------------------
 ;; Org
 (define-key global-map "\C-ca" 'org-agenda)
-(setq org-agenda-files (list "~/notes/dsvl/dsvl.org"
-                             "~/notes/awareness/awareness.org"))
+;; (setq org-agenda-files (list "~/notes/dsvl/dsvl.org"
+                             ;;"~/notes/awareness/awareness.org"))
 
 ;;------------------------------------------------------------------------------
 ;; LaTeX
@@ -109,7 +109,7 @@
 
 ;;------------------------------------------------------------------------------
 ;; Haskell
-(load "/Users/karl/.emacs.d/site-lisp/haskell-mode/haskell-site-file.el")
+(load "~/.emacs.d/site-lisp/haskell-mode/haskell-site-file.el")
 (add-hook 'haskell-mode-hook 'turn-on-haskell-indent)
 
 
@@ -128,4 +128,14 @@
 
 ;;------------------------------------------------------------------------------
 ;; ML
-; (load "/Users/karl/.emacs.d/site-lisp/ocaml-mode/ocaml.emacs")
+; (load "/Users/karl/.emacs.d/site-lisp/ocaml-mode/
+
+
+;;------------------------------------------------------------------------------
+;; AceJump
+(autoload
+  'ace-jump-mode
+  "ace-jump-mode"
+  "Emacs quick move minor mode"
+  t)
+(define-key global-map (kbd "C-c SPC") 'ace-jump-mode)
