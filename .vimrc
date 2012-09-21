@@ -37,7 +37,7 @@ set smartcase
 
 set mouse=a
 
-" set t_Co=256
+set t_Co=256
 set background=light
 colorscheme solarized
 syntax enable
