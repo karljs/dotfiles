@@ -21,17 +21,21 @@ set showcmd
 set autoindent
 set number
 set autochdir
-set wildmenu
 set showtabline=2
 set softtabstop=4
 set shiftwidth=4
 set expandtab
+
+set wildmenu
+" set wildmode=list:longest,full
 
 let NERD_haskell_alt_style=1
 let NERD_c_alt_style=1
 
 set incsearch
 set smartcase
+
+set mouse=a
 
 " set t_Co=256
 set background=light
@@ -40,11 +44,9 @@ syntax enable
 
 if has("gui_running")
     " set noanti gfn=Terminus_\(TTF\):h18
-    set gfn=Inconsolata:h18
+    set gfn=Anonymous_Pro:h16
     set guioptions-=T
     set guioptions-=r
     set guioptions-=L
 endif
 
-
-                             
