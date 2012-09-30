@@ -39,7 +39,7 @@ set mouse=a
 
 set t_Co=256
 set background=light
-colorscheme solarized
+colorscheme Tomorrow-Night
 syntax enable
 
 if has("gui_running")

@@ -25,7 +25,9 @@
 ;;------------------------------------------------------------------------------
 ;; Font & Colors
 (add-to-list 'custom-theme-load-path "~/.emacs.d/site-lisp/emacs-color-theme-solarized")
-(load-theme 'solarized-light t)
+(add-to-list 'custom-theme-load-path "~/.emacs.d/site-lisp/tomorrow-theme")
+;(load-theme 'solarized-light t)
+(load-theme 'tomorrow-night t)
 ;(require 'color-theme)
 ;(require 'color-theme-solarized)
 ;(color-theme-initialize)
@@ -51,6 +53,10 @@
 (server-start)
 (global-set-key (kbd "C-x a r") 'align-regexp)
 
+;;------------------------------------------------------------------------------
+;; Evil
+(require 'evil)
+(evil-mode 1)
 
 ;;------------------------------------------------------------------------------
 ;; Spelling
@@ -106,6 +112,11 @@
 ;; Magit
 (require 'magit)
 
+
+;;------------------------------------------------------------------------------
+;; C/C++
+(add-hook 'c-mode-common-hook 'google-set-c-style)
+;(add-hook 'c-mode-common-hook 'google-make-newline-indent)
 
 ;;------------------------------------------------------------------------------
 ;; Haskell
