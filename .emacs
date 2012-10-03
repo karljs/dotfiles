@@ -46,7 +46,7 @@
 (setq ns-pop-up-frames nil)
 (global-auto-revert-mode 1)
 (setq-default fill-column 80)
-
+(setq vc-suppress-confirm t)
 
 ;;------------------------------------------------------------------------------
 ;; General & Keybindings
@@ -55,13 +55,13 @@
 
 ;;------------------------------------------------------------------------------
 ;; Evil
-(require 'evil)
-(evil-mode 1)
+;(require 'evil)
+;(evil-mode 1)
+;(setq evil-want-C-u-scroll t)
 
 ;;------------------------------------------------------------------------------
 ;; Spelling
 (setq-default ispell-program-name "aspell")
-
 
 ;;------------------------------------------------------------------------------
 ;; Org
@@ -121,7 +121,7 @@
 ;;------------------------------------------------------------------------------
 ;; Haskell
 (load "~/.emacs.d/site-lisp/haskell-mode/haskell-site-file.el")
-(add-hook 'haskell-mode-hook 'turn-on-haskell-indent)
+(add-hook 'haskell-mode-hook 'turn-on-haskell-indentation)
 
 
 ;;------------------------------------------------------------------------------
@@ -149,4 +149,3 @@
   "ace-jump-mode"
   "Emacs quick move minor mode"
   t)
-(define-key global-map (kbd "C-c SPC") 'ace-jump-mode)
