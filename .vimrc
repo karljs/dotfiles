@@ -32,9 +32,10 @@ set autoindent
 set number
 " set autochdir
 " set showtabline=2
-set softtabstop=4
-set shiftwidth=4
+set softtabstop=2
+set shiftwidth=2
 set expandtab
+set hidden
 
 set wildmenu
 " set wildmode=list:longest,full
