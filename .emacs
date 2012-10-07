@@ -6,12 +6,42 @@
 
 ;;------------------------------------------------------------------------------
 ;; Load things
-(let ((default-directory "~/.emacs.d/site-lisp/"))
-  (normal-top-level-add-to-load-path '("."))
-  (normal-top-level-add-subdirs-to-load-path))
 
+(package-initialize)
+
+(add-to-list 'package-archives
+             '("marmalade" . "http://marmalade-repo.org/packages/") t)
+
+;;------------------------------------------------------------------------------
+;; Install packages as necessary. Thanks to the Prelude project for inspiration
+(require 'cl)
+
+(defvar karl-packages
+  '(auctex clojure-mode haskell-mode magit multi-term nrepl paredit solarized-theme)
+  "Packages to install at launch, when necessary.")
+
+(defun karl-packages-installed-p ()
+  (loop for p in karl-packages
+        when (not (package-installed-p p)) do (return nil)
+        finally (return t)))
+
+(defun karl-install-packages ()
+  (unless (karl-packages-installed-p)
+    (message "%s" "Refreshing package database...")
+    (package-refresh-contents)
+    (message "%s" " done.")
+    (dolist (p karl-packages)
+      (unless (package-installed-p p)
+	(package-install p)))))
+
+(karl-install-packages)
+
+
+;;------------------------------------------------------------------------------
+;; Path stuff
 (setenv "PATH" (concat (getenv "PATH") ":/usr/local/bin"))
 (setq exec-path (append exec-path '("/usr/local/bin")))
+(setq exec-path (append exec-path '("/opt/local/bin")))
 
 ;;------------------------------------------------------------------------------
 ;; GUI Cleanup
@@ -24,40 +54,30 @@
 
 ;;------------------------------------------------------------------------------
 ;; Font & Colors
-(add-to-list 'custom-theme-load-path "~/.emacs.d/site-lisp/emacs-color-theme-solarized")
-(add-to-list 'custom-theme-load-path "~/.emacs.d/site-lisp/tomorrow-theme")
-;(load-theme 'solarized-light t)
-(load-theme 'tomorrow-night t)
-;(require 'color-theme)
-;(require 'color-theme-solarized)
-;(color-theme-initialize)
-;(color-theme-solarized-light)
-(set-default-font "-*-ubuntu mono-*-*-*-*-16-*-*-*-*-*-*-*")
+(load-theme 'solarized-light t)
+;(load-theme 'tomorrow-night t)
+(set-default-font "-*-inconsolata-*-*-*-*-16-*-*-*-*-*-*-*")
 
 ;;------------------------------------------------------------------------------
 ;; Good behavior
 (setq mac-option-modifier 'none)
 (setq mac-command-modifier 'meta)
-;(setq osx-key-mode 0)
-;(setq mac-option-key-is-meta t)
 (setq-default indent-tabs-mode nil)
 (setq make-backup-files nil)
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
 (setq ns-pop-up-frames nil)
 (global-auto-revert-mode 1)
 (setq-default fill-column 80)
-(setq vc-suppress-confirm t)
+(setq vc-follow-symlinks t)
 
 ;;------------------------------------------------------------------------------
 ;; General & Keybindings
-(server-start)
 (global-set-key (kbd "C-x a r") 'align-regexp)
 
-;;------------------------------------------------------------------------------
-;; Evil
-;(require 'evil)
-;(evil-mode 1)
-;(setq evil-want-C-u-scroll t)
+;;______________________________________________________________________________
+;; LaTeX
+(setq latex-run-command "/usr/texbin/pdflatex")
+;(add-hook 'LaTeX-mode-hook 'turn-on-flyspell)
 
 ;;------------------------------------------------------------------------------
 ;; Spelling
@@ -70,11 +90,6 @@
                              ;;"~/notes/awareness/awareness.org"))
 
 ;;------------------------------------------------------------------------------
-;; LaTeX
-;(add-hook 'LaTeX-mode-hook 'turn-on-flyspell)
-
-
-;;------------------------------------------------------------------------------
 ;; Ido
 (setq ido-enable-flex-matching t)
 (setq ido-everywhere t)
@@ -84,15 +99,8 @@
 
 ;;--------------------------------------------------------------------------------
 ;; Multi Term
-(require 'multi-term)
 (setq multi-term-program "/bin/bash")
-(defun add-mode-line-dirtrack ()
-  (add-to-list 'mode-line-buffer-identification
-               '(:propertize (" " default-directory " ") face dired-directory)))
-(add-hook 'term-mode-hook 'add-mode-line-dirtrack)
 (global-set-key (kbd "C-x t") 'multi-term)
-
-
 
 ;;------------------------------------------------------------------------------
 ;; Comments
@@ -107,45 +115,36 @@
 
 (global-set-key (kbd "C-x C-;") 'comment-or-uncomment-region-or-line)
 
-
-;;------------------------------------------------------------------------------
-;; Magit
-(require 'magit)
-
-
 ;;------------------------------------------------------------------------------
 ;; C/C++
-(add-hook 'c-mode-common-hook 'google-set-c-style)
+;(add-hook 'c-mode-common-hook 'google-set-c-style)
 ;(add-hook 'c-mode-common-hook 'google-make-newline-indent)
 
 ;;------------------------------------------------------------------------------
 ;; Haskell
-(load "~/.emacs.d/site-lisp/haskell-mode/haskell-site-file.el")
 (add-hook 'haskell-mode-hook 'turn-on-haskell-indentation)
-
 
 ;;------------------------------------------------------------------------------
 ;; Lisp, Slime, Paredit
-(setq inferior-lisp-program "/usr/local/bin/sbcl")
-(require 'slime-autoloads)
-(slime-setup '(slime-repl))
-(add-hook 'lisp-mode-hook (lambda () (slime-mode t)))
-(autoload 'paredit-mode "paredit"
-  "Minor mode for pseudo-structurally editing Lisp code." t)
-(add-hook 'emacs-lisp-mode-hook (lambda () (paredit-mode +1)))
-(add-hook 'lisp-mode-hook (lambda () (paredit-mode +1)))
-(add-hook 'lisp-interaction-mode-hook (lambda () (paredit-mode +1)))
-
-
-;;------------------------------------------------------------------------------
-;; ML
-; (load "/Users/karl/.emacs.d/site-lisp/ocaml-mode/
-
+;(setq inferior-lisp-program "/usr/local/bin/sbcl")
+;(require 'slime-autoloads)
+;(slime-setup '(slime-repl))
+;(add-hook 'lisp-mode-hook (lambda () (slime-mode t)))
+;(autoload 'paredit-mode "paredit"
+  ;"Minor mode for pseudo-structurally editing Lisp code." t)
+;(add-hook 'emacs-lisp-mode-hook (lambda () (paredit-mode +1)))
+;(add-hook 'lisp-mode-hook (lambda () (paredit-mode +1)))
+;(add-hook 'lisp-interaction-mode-hook (lambda () (paredit-mode +1)))
 
 ;;------------------------------------------------------------------------------
 ;; AceJump
-(autoload
-  'ace-jump-mode
-  "ace-jump-mode"
-  "Emacs quick move minor mode"
-  t)
+;(autoload
+  ;'ace-jump-mode
+  ;"ace-jump-mode"
+  ;"Emacs quick move minor mode"
+  ;t)
+
+;;------------------------------------------------------------------------------
+;; Clojure
+(add-hook 'clojure-mode-hook (lambda () (paredit-mode +1)))
+(setq nrepl-popup-stacktraces nil)
