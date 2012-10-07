@@ -17,7 +17,7 @@
 (require 'cl)
 
 (defvar karl-packages
-  '(auctex clojure-mode haskell-mode magit multi-term nrepl paredit solarized-theme)
+  '(auctex clojure-mode color-theme-solarized haskell-mode magit multi-term nrepl paredit)
   "Packages to install at launch, when necessary.")
 
 (defun karl-packages-installed-p ()
