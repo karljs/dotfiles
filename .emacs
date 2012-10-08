@@ -3,21 +3,20 @@
 ;;  |  __/ | | | | | (_| | (__\__ \
 ;; (_)___|_| |_| |_|\__,_|\___|___/
 
-
 ;;------------------------------------------------------------------------------
-;; Load things
-
+;; Load and setup
 (package-initialize)
 
 (add-to-list 'package-archives
              '("marmalade" . "http://marmalade-repo.org/packages/") t)
 
 ;;------------------------------------------------------------------------------
-;; Install packages as necessary. Thanks to the Prelude project for inspiration
+;; Install packages as necessary. Credit to the Prelude project
 (require 'cl)
 
 (defvar karl-packages
-  '(auctex clojure-mode color-theme-solarized haskell-mode magit multi-term nrepl paredit)
+  '(ace-jump-mode auctex clojure-mode color-theme-solarized
+                  haskell-mode magit multi-term nrepl paredit)
   "Packages to install at launch, when necessary.")
 
 (defun karl-packages-installed-p ()
@@ -36,10 +35,9 @@
 
 (karl-install-packages)
 
-
 ;;------------------------------------------------------------------------------
 ;; Path stuff
-(setenv "PATH" (concat (getenv "PATH") ":/usr/local/bin"))
+;(setenv "PATH" (concat (getenv "PATH") ":/usr/local/bin" ":/opt/local/bin"))
 (setq exec-path (append exec-path '("/usr/local/bin")))
 (setq exec-path (append exec-path '("/opt/local/bin")))
 
@@ -50,13 +48,14 @@
 (scroll-bar-mode -1)
 (column-number-mode 1)
 (setq inhibit-startup-message t)
-(setq inhibit-startup-echo-area-message t)
+(setq inhibit-startup-echo-area-message "karl")
 
 ;;------------------------------------------------------------------------------
 ;; Font & Colors
+(setq solarized-italic nil)
+(setq-default solarized-italic nil)
 (load-theme 'solarized-light t)
-;(load-theme 'tomorrow-night t)
-(set-default-font "-*-inconsolata-*-*-*-*-16-*-*-*-*-*-*-*")
+(set-face-attribute 'default nil :font "Source Code Pro-14")
 
 ;;------------------------------------------------------------------------------
 ;; Good behavior
@@ -70,9 +69,14 @@
 (setq-default fill-column 80)
 (setq vc-follow-symlinks t)
 
+
 ;;------------------------------------------------------------------------------
 ;; General & Keybindings
 (global-set-key (kbd "C-x a r") 'align-regexp)
+
+;;------------------------------------------------------------------------------
+;; Ace jump mode
+(define-key global-map (kbd "C-c SPC") 'ace-jump-mode)
 
 ;;______________________________________________________________________________
 ;; LaTeX
@@ -95,7 +99,6 @@
 (setq ido-everywhere t)
 (ido-mode 1)
 (setq ido-create-new-buffer 'always)
-
 
 ;;--------------------------------------------------------------------------------
 ;; Multi Term
@@ -131,20 +134,14 @@
 ;(slime-setup '(slime-repl))
 ;(add-hook 'lisp-mode-hook (lambda () (slime-mode t)))
 ;(autoload 'paredit-mode "paredit"
-  ;"Minor mode for pseudo-structurally editing Lisp code." t)
-;(add-hook 'emacs-lisp-mode-hook (lambda () (paredit-mode +1)))
-;(add-hook 'lisp-mode-hook (lambda () (paredit-mode +1)))
-;(add-hook 'lisp-interaction-mode-hook (lambda () (paredit-mode +1)))
-
-;;------------------------------------------------------------------------------
-;; AceJump
-;(autoload
-  ;'ace-jump-mode
-  ;"ace-jump-mode"
-  ;"Emacs quick move minor mode"
-  ;t)
+;  "Minor mode for pseudo-structurally editing Lisp code." t)
+(add-hook 'emacs-lisp-mode-hook (lambda () (paredit-mode +1)))
+(add-hook 'lisp-mode-hook (lambda () (paredit-mode +1)))
+(add-hook 'lisp-interaction-mode-hook (lambda () (paredit-mode +1)))
 
 ;;------------------------------------------------------------------------------
 ;; Clojure
 (add-hook 'clojure-mode-hook (lambda () (paredit-mode +1)))
 (setq nrepl-popup-stacktraces nil)
+
+(message "%s" "You shouldn't have come back, Karl")
