@@ -14,8 +14,8 @@ call pathogen#runtime_append_all_bundles()
 
 let g:vimclojure#HighlightBUiltins = 1
 let g:vimclojure#ParenRainbow = 1
-let vimclojure#NailgunClient = "/Users/karl/bin/ng"
-let vimclojure#WantNailgun = 1
+" let vimclojure#NailgunClient = "/Users/karl/bin/ng"
+" let vimclojure#WantNailgun = 1
 
 filetype plugin indent on
 syntax on
