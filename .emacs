@@ -7,17 +7,25 @@
 ;; Load and setup
 (package-initialize)
 
+;; (add-to-list 'package-archives
+;;              '("marmalade" . "http://marmalade-repo.org/packages/") t)
+
 (add-to-list 'package-archives
-             '("marmalade" . "http://marmalade-repo.org/packages/") t)
+	     '("melpa" . "http://melpa.milkbox.net/packages/") t)
 
 ;;------------------------------------------------------------------------------
 ;; Install packages as necessary. Credit to the Prelude project
 (require 'cl)
 
-(defvar karl-packages
-  '(ace-jump-mode auctex clojure-mode color-theme-solarized
-                  haskell-mode magit multi-term nrepl paredit)
+(defvar karl-packages '(ace-jump-mode auctex birds-of-paradise-plus-theme
+                                      clojure-mode clojurescript-mode evil
+				      google-c-style goto-chg haskell-mode
+				      ir-black-theme magit markdown-mode
+				      multi-term nrepl solarized-theme
+				      zenburn-theme)
   "Packages to install at launch, when necessary.")
+
+;; removed: paredit, slime
 
 (defun karl-packages-installed-p ()
   (loop for p in karl-packages
@@ -53,9 +61,10 @@
 ;;------------------------------------------------------------------------------
 ;; Font & Colors
 (setq solarized-italic nil)
-(setq-default solarized-italic nil)
+(setq solarized-broken-srgb t)
+;; (setq-default solarized-italic nil)
 (load-theme 'solarized-light t)
-(set-face-attribute 'default nil :font "Source Code Pro-14")
+(set-face-attribute 'default nil :font "Consolas-14")
 
 ;;------------------------------------------------------------------------------
 ;; Good behavior
@@ -80,7 +89,8 @@
 
 ;;______________________________________________________________________________
 ;; LaTeX
-(setq latex-run-command "/usr/texbin/pdflatex")
+; (setq latex-run-command "/usr/texbin/pdflatex")
+(setq TeX-PDF-mode t)
 ;(add-hook 'LaTeX-mode-hook 'turn-on-flyspell)
 
 ;;------------------------------------------------------------------------------
@@ -135,13 +145,26 @@
 ;(add-hook 'lisp-mode-hook (lambda () (slime-mode t)))
 ;(autoload 'paredit-mode "paredit"
 ;  "Minor mode for pseudo-structurally editing Lisp code." t)
-(add-hook 'emacs-lisp-mode-hook (lambda () (paredit-mode +1)))
-(add-hook 'lisp-mode-hook (lambda () (paredit-mode +1)))
-(add-hook 'lisp-interaction-mode-hook (lambda () (paredit-mode +1)))
+; (add-hook 'emacs-lisp-mode-hook (lambda () (paredit-mode +1)))
+; (add-hook 'lisp-mode-hook (lambda () (paredit-mode +1)))
+; (add-hook 'lisp-interaction-mode-hook (lambda () (paredit-mode +1)))
 
 ;;------------------------------------------------------------------------------
 ;; Clojure
-(add-hook 'clojure-mode-hook (lambda () (paredit-mode +1)))
+; (add-hook 'clojure-mode-hook (lambda () (paredit-mode +1)))
 (setq nrepl-popup-stacktraces nil)
+
+;;------------------------------------------------------------------------------
+;; Evil
+(require 'evil)
+(evil-mode 1)
+;; (define-key evil-ex-map "e " 'ido-find-file)
+;; (define-key evil-ex-map "w " 'ido-write-file)
+;; (define-key evil-ex-map "b " 'ido-switch-buffer)
+
+;;------------------------------------------------------------------------------
+;; Speedbar
+(global-set-key "\M-`" 'next-multiframe-window)
+
 
 (message "%s" "You shouldn't have come back, Karl")

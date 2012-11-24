@@ -15,15 +15,22 @@ Bundle 'gmarik/vundle'
 
 " github
 Bundle 'altercation/vim-colors-solarized'
+Bundle 'bitc/lushtags'
+Bundle 'jpo/vim-railscasts-theme'
 Bundle 'kien/ctrlp.vim'
-Bundle 'scrooloose/nerdcommenter'
-Bundle 'tpope/vim-surround'
-Bundle 'tpope/vim-fugitive'
+Bundle 'majutsushi/tagbar'
+" Bundle 'scrooloose/nerdcommenter'
+" Bundle 'tpope/vim-surround'
+" Bundle 'tpope/vim-fugitive'
 
 " vim-scripts
 Bundle 'Align'
+Bundle 'darktango.vim'
 Bundle 'desert.vim'
+Bundle 'inkpot'
 Bundle 'jellybeans.vim'
+Bundle 'peaksea'
+Bundle 'tComment'
 Bundle 'Wombat'
 Bundle 'Zenburn'
 
@@ -33,13 +40,15 @@ Bundle 'Zenburn'
 filetype plugin indent on
 set ttyfast
 
+set shortmess+=I
+syntax on
 set nowrap
 set ls=2
 set backspace=indent,eol,start
 set nostartofline
 set showcmd
 set autoindent
-"set number
+set number
 set softtabstop=2
 set shiftwidth=2
 set expandtab
@@ -47,25 +56,27 @@ set hidden
 
 set wildmenu
 set wildmode=list:longest,full
-
-" These are in the nerdcommenter documentation, but don't work
-let NERD_haskell_alt_style=1
-let NERD_c_alt_style=1
-let g:NERDCustomDelimiters = { 'haskell': { 'leftAlt': '{-', 'rightAlt': '-}', 'left': '-- ', 'right': '' } }
+set wildignore+=*/tmp/*,*.so,*.swp,*.zip,*/Library/*,*/.ghc/*,*/.macports/*,*/.cabal/*,*/Music/*
 
 set incsearch
 set smartcase
 set mouse=a
 
-set background=dark
+
+nmap <c-s> :TagbarToggle<CR>
+
+let g:solarized_italic=0
+let g:solarized_bold=0
+colorscheme darktango
 
 if has("gui_running")
-  colorscheme wombat
-  set gfn=Source\ Code\ Pro\ 10
+  set gfn=Source\ Code\ Pro:h14
   set guioptions-=T
   set guioptions-=r
   set guioptions-=L
 else
   set t_Co=256
-  colorscheme solarized
 endif
+
+
+
