@@ -18,11 +18,14 @@
 (require 'cl)
 
 (defvar karl-packages '(ace-jump-mode auctex birds-of-paradise-plus-theme
-                                      clojure-mode clojurescript-mode evil
-				      google-c-style goto-chg haskell-mode
-				      ir-black-theme magit markdown-mode
-				      multi-term nrepl solarized-theme
-				      zenburn-theme)
+                                      clojure-mode clojurescript-mode
+                                      color-theme-sanityinc-solarized
+                                      color-theme-sanityinc-tomorrow
+                                      cyberpunk-theme evil google-c-style
+                                      goto-chg haskell-mode inkpot-theme
+                                      ir-black-theme magit markdown-mode
+                                      multi-term nrepl ucs-utils unicode-fonts
+                                      zenburn-theme)
   "Packages to install at launch, when necessary.")
 
 ;; removed: paredit, slime
@@ -45,9 +48,10 @@
 
 ;;------------------------------------------------------------------------------
 ;; Path stuff
-;(setenv "PATH" (concat (getenv "PATH") ":/usr/local/bin" ":/opt/local/bin"))
 (setq exec-path (append exec-path '("/usr/local/bin")))
 (setq exec-path (append exec-path '("/opt/local/bin")))
+(setq exec-path (append exec-path '("/Users/karl/Library/Haskell/bin/")))
+(setenv "PATH" (concat (getenv "PATH") ":/Users/karl/Library/Haskell/bin"))
 
 ;;------------------------------------------------------------------------------
 ;; GUI Cleanup
@@ -60,11 +64,12 @@
 
 ;;------------------------------------------------------------------------------
 ;; Font & Colors
-(setq solarized-italic nil)
-(setq solarized-broken-srgb t)
-;; (setq-default solarized-italic nil)
-(load-theme 'solarized-light t)
-(set-face-attribute 'default nil :font "Consolas-14")
+;(setq solarized-italic nil)
+;(set-face-italic-p 'italic nil)
+;(setq solarized-broken-srgb t)
+(load-theme 'sanityinc-solarized-light t)
+(set-face-attribute 'default nil :font "Source Code Pro-14")
+
 
 ;;------------------------------------------------------------------------------
 ;; Good behavior
@@ -78,7 +83,6 @@
 (setq-default fill-column 80)
 (setq vc-follow-symlinks t)
 
-
 ;;------------------------------------------------------------------------------
 ;; General & Keybindings
 (global-set-key (kbd "C-x a r") 'align-regexp)
@@ -87,9 +91,8 @@
 ;; Ace jump mode
 (define-key global-map (kbd "C-c SPC") 'ace-jump-mode)
 
-;;______________________________________________________________________________
+;;------------------------------------------------------------------------------
 ;; LaTeX
-; (setq latex-run-command "/usr/texbin/pdflatex")
 (setq TeX-PDF-mode t)
 ;(add-hook 'LaTeX-mode-hook 'turn-on-flyspell)
 
@@ -100,8 +103,6 @@
 ;;------------------------------------------------------------------------------
 ;; Org
 (define-key global-map "\C-ca" 'org-agenda)
-;; (setq org-agenda-files (list "~/notes/dsvl/dsvl.org"
-                             ;;"~/notes/awareness/awareness.org"))
 
 ;;------------------------------------------------------------------------------
 ;; Ido
@@ -138,6 +139,14 @@
 (add-hook 'haskell-mode-hook 'turn-on-haskell-indentation)
 
 ;;------------------------------------------------------------------------------
+;; Agda
+; (require 'ucs-utils)
+(require 'unicode-fonts)
+(unicode-fonts-setup)
+(load-file (let ((coding-system-for-read 'utf-8))
+             (shell-command-to-string "agda-mode locate")))
+
+;;------------------------------------------------------------------------------
 ;; Lisp, Slime, Paredit
 ;(setq inferior-lisp-program "/usr/local/bin/sbcl")
 ;(require 'slime-autoloads)
@@ -157,7 +166,7 @@
 ;;------------------------------------------------------------------------------
 ;; Evil
 (require 'evil)
-(evil-mode 1)
+;; (evil-mode 1)
 ;; (define-key evil-ex-map "e " 'ido-find-file)
 ;; (define-key evil-ex-map "w " 'ido-write-file)
 ;; (define-key evil-ex-map "b " 'ido-switch-buffer)

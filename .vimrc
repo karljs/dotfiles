@@ -67,7 +67,8 @@ nmap <c-s> :TagbarToggle<CR>
 
 let g:solarized_italic=0
 let g:solarized_bold=0
-colorscheme darktango
+set background=light
+colorscheme solarized
 
 if has("gui_running")
   set gfn=Source\ Code\ Pro:h14
