@@ -82,10 +82,13 @@
 (global-auto-revert-mode 1)
 (setq-default fill-column 80)
 (setq vc-follow-symlinks t)
+; (setq visible-bell t)
+(setq ring-bell-function (lambda () (message "*beep*")))
 
 ;;------------------------------------------------------------------------------
 ;; General & Keybindings
 (global-set-key (kbd "C-x a r") 'align-regexp)
+(global-set-key (kbd "C-h C-f") 'find-tag)
 
 ;;------------------------------------------------------------------------------
 ;; Ace jump mode
@@ -131,8 +134,11 @@
 
 ;;------------------------------------------------------------------------------
 ;; C/C++
-;(add-hook 'c-mode-common-hook 'google-set-c-style)
-;(add-hook 'c-mode-common-hook 'google-make-newline-indent)
+(require 'google-c-style)
+(add-hook 'c-mode-common-hook 'google-set-c-style)
+(add-hook 'c-mode-common-hook 'google-make-newline-indent)
+(add-hook 'c-mode-common-hook
+          (lambda () (define-key c-mode-base-map (kbd "C-c C-l") 'compile)))
 
 ;;------------------------------------------------------------------------------
 ;; Haskell
@@ -141,10 +147,12 @@
 ;;------------------------------------------------------------------------------
 ;; Agda
 ; (require 'ucs-utils)
-(require 'unicode-fonts)
-(unicode-fonts-setup)
 (load-file (let ((coding-system-for-read 'utf-8))
              (shell-command-to-string "agda-mode locate")))
+(add-hook 'agda2-mode-hook
+          '(lambda ()
+             (require 'unicode-fonts)
+             (unicode-fonts-setup)))
 
 ;;------------------------------------------------------------------------------
 ;; Lisp, Slime, Paredit
@@ -173,7 +181,8 @@
 
 ;;------------------------------------------------------------------------------
 ;; Speedbar
-(global-set-key "\M-`" 'next-multiframe-window)
+(require 'sr-speedbar)
+(global-set-key (kbd "M-s M-s") 'sr-speedbar-toggle)
 
 
 (message "%s" "You shouldn't have come back, Karl")
