@@ -16,6 +16,7 @@ Bundle 'gmarik/vundle'
 " github
 Bundle 'altercation/vim-colors-solarized'
 Bundle 'bitc/lushtags'
+Bundle 'jasonkuhrt/Tomorrow-Theme'
 Bundle 'jpo/vim-railscasts-theme'
 Bundle 'kien/ctrlp.vim'
 Bundle 'majutsushi/tagbar'
@@ -53,6 +54,7 @@ set softtabstop=2
 set shiftwidth=2
 set expandtab
 set hidden
+set autochdir
 
 set wildmenu
 set wildmode=list:longest,full
@@ -62,12 +64,16 @@ set incsearch
 set smartcase
 set mouse=a
 
-
+" Tagbar binding
 nmap <c-s> :TagbarToggle<CR>
+
+
+" Ctrl-P binding
+nnoremap <leader>p :CtrlP ~<CR>
 
 let g:solarized_italic=0
 let g:solarized_bold=0
-set background=light
+set background=dark
 colorscheme solarized
 
 if has("gui_running")

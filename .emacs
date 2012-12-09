@@ -67,7 +67,7 @@
 ;(setq solarized-italic nil)
 ;(set-face-italic-p 'italic nil)
 ;(setq solarized-broken-srgb t)
-(load-theme 'sanityinc-solarized-light t)
+(load-theme 'sanityinc-solarized-dark t)
 (set-face-attribute 'default nil :font "Source Code Pro-14")
 
 
@@ -84,6 +84,7 @@
 (setq vc-follow-symlinks t)
 ; (setq visible-bell t)
 (setq ring-bell-function (lambda () (message "*beep*")))
+(setq-default truncate-lines t)
 
 ;;------------------------------------------------------------------------------
 ;; General & Keybindings
@@ -173,10 +174,10 @@
 
 ;;------------------------------------------------------------------------------
 ;; Evil
-(require 'evil)
+;; (require 'evil)
 ;; (evil-mode 1)
 ;; (define-key evil-ex-map "e " 'ido-find-file)
-;; (define-key evil-ex-map "w " 'ido-write-file)
+;; ;; (define-key evil-ex-map "w " 'ido-write-file)
 ;; (define-key evil-ex-map "b " 'ido-switch-buffer)
 
 ;;------------------------------------------------------------------------------
