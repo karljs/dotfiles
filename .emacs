@@ -24,8 +24,8 @@
                                       cyberpunk-theme evil google-c-style
                                       goto-chg haskell-mode inkpot-theme
                                       ir-black-theme magit markdown-mode
-                                      multi-term nrepl ucs-utils unicode-fonts
-                                      zenburn-theme)
+                                      multi-term nrepl paredit twilight-theme
+                                      ucs-utils unicode-fonts zenburn-theme)
   "Packages to install at launch, when necessary.")
 
 ;; removed: paredit, slime
@@ -61,14 +61,27 @@
 (column-number-mode 1)
 (setq inhibit-startup-message t)
 (setq inhibit-startup-echo-area-message "karl")
+(transient-mark-mode 1)
 
 ;;------------------------------------------------------------------------------
 ;; Font & Colors
 ;(setq solarized-italic nil)
 ;(set-face-italic-p 'italic nil)
 ;(setq solarized-broken-srgb t)
-(load-theme 'sanityinc-solarized-dark t)
-(set-face-attribute 'default nil :font "Source Code Pro-14")
+(load-theme 'twilight t)
+; (set-face-attribute 'default nil :font "Source Code Pro-14")
+
+;; Thanks to the Emacs Starter Kit for the following bit
+;; Make the font larger on my external monitor
+(defun fontify-frame (frame)
+  (interactive)
+  (if window-system
+      (progn
+        (if (> (x-display-pixel-width) 2000)
+            (set-frame-parameter frame 'font "Source Code Pro-17")
+          (set-frame-parameter frame 'font "Source Code Pro-14")))))
+(fontify-frame nil)
+(push 'fontify-frame after-make-frame-functions)
 
 
 ;;------------------------------------------------------------------------------
@@ -85,6 +98,7 @@
 ; (setq visible-bell t)
 (setq ring-bell-function (lambda () (message "*beep*")))
 (setq-default truncate-lines t)
+(setq dired-use-ls-dired nil)
 
 ;;------------------------------------------------------------------------------
 ;; General & Keybindings
