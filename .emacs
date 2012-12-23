@@ -55,7 +55,7 @@
 
 ;;------------------------------------------------------------------------------
 ;; GUI Cleanup
-;; (menu-bar-mode nil)  ; not necessary on osx
+(menu-bar-mode -1)
 (tool-bar-mode -1)
 (scroll-bar-mode -1)
 (column-number-mode 1)
@@ -65,11 +65,11 @@
 
 ;;------------------------------------------------------------------------------
 ;; Font & Colors
-;(setq solarized-italic nil)
-;(set-face-italic-p 'italic nil)
-;(setq solarized-broken-srgb t)
-(load-theme 'twilight t)
-; (set-face-attribute 'default nil :font "Source Code Pro-14")
+(setq solarized-broken-srgb t)
+(setq solarized-italic nil)
+(setq solarized-bold nil)
+(load-theme 'solarized-light t)
+(set-face-attribute 'default nil :font "Consolas-14")
 
 ;; Thanks to the Emacs Starter Kit for the following bit
 ;; Make the font larger on my external monitor
@@ -78,8 +78,8 @@
   (if window-system
       (progn
         (if (> (x-display-pixel-width) 2000)
-            (set-frame-parameter frame 'font "Source Code Pro-17")
-          (set-frame-parameter frame 'font "Source Code Pro-14")))))
+            (set-frame-parameter frame 'font "Consolas-17")
+          (set-frame-parameter frame 'font "Consolas-14")))))
 (fontify-frame nil)
 (push 'fontify-frame after-make-frame-functions)
 
@@ -188,16 +188,16 @@
 
 ;;------------------------------------------------------------------------------
 ;; Evil
-;; (require 'evil)
-;; (evil-mode 1)
-;; (define-key evil-ex-map "e " 'ido-find-file)
-;; ;; (define-key evil-ex-map "w " 'ido-write-file)
-;; (define-key evil-ex-map "b " 'ido-switch-buffer)
+; (require 'evil)
+; (evil-mode 1)
+; (define-key evil-ex-map "e " 'ido-find-file)
+;; (define-key evil-ex-map "w " 'ido-write-file)
+; (define-key evil-ex-map "b " 'ido-switch-buffer)
 
 ;;------------------------------------------------------------------------------
 ;; Speedbar
 (require 'sr-speedbar)
 (global-set-key (kbd "M-s M-s") 'sr-speedbar-toggle)
 
-
+;;------------------------------------------------------------------------------
 (message "%s" "You shouldn't have come back, Karl")
