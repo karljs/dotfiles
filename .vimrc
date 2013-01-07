@@ -20,7 +20,6 @@ Bundle 'jasonkuhrt/Tomorrow-Theme'
 Bundle 'jpo/vim-railscasts-theme'
 Bundle 'kien/ctrlp.vim'
 Bundle 'majutsushi/tagbar'
-" Bundle 'scrooloose/nerdcommenter'
 " Bundle 'tpope/vim-surround'
 " Bundle 'tpope/vim-fugitive'
 
@@ -54,7 +53,7 @@ set softtabstop=2
 set shiftwidth=2
 set expandtab
 set hidden
-set autochdir
+" set autochdir
 
 set wildmenu
 set wildmode=list:longest,full
@@ -67,16 +66,14 @@ set mouse=a
 " Tagbar binding
 nmap <c-s> :TagbarToggle<CR>
 
-
 " Ctrl-P binding
 nnoremap <leader>p :CtrlP ~<CR>
 
-let g:solarized_italic=0
-let g:solarized_bold=0
-set background=dark
-colorscheme solarized
-
 if has("gui_running")
+  let g:solarized_italic=0
+  let g:solarized_bold=0
+  set background=light
+  colorscheme solarized
   set gfn=Source\ Code\ Pro:h14
   set guioptions-=T
   set guioptions-=r
