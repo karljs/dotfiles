@@ -69,7 +69,7 @@
 (setq solarized-italic nil)
 (setq solarized-bold nil)
 (load-theme 'solarized-light t)
-(set-face-attribute 'default nil :font "Consolas-14")
+; (set-face-attribute 'default nil :font "Consolas-15")
 
 ;; Thanks to the Emacs Starter Kit for the following bit
 ;; Make the font larger on my external monitor
@@ -79,7 +79,7 @@
       (progn
         (if (> (x-display-pixel-width) 2000)
             (set-frame-parameter frame 'font "Consolas-17")
-          (set-frame-parameter frame 'font "Consolas-14")))))
+          (set-frame-parameter frame 'font "Consolas-15")))))
 (fontify-frame nil)
 (push 'fontify-frame after-make-frame-functions)
 
@@ -159,6 +159,17 @@
 ;; Haskell
 (add-hook 'haskell-mode-hook 'turn-on-haskell-indentation)
 
+(defun civil-tags ()
+  "Generate TAGS file specifically for CIViL."
+  (interactive)
+  (shell-command "cd ~/workspace/civil/src && echo \":etags\" | ghci -v0 Graphics/Civil.hs"))
+
+(add-hook 'haskell-mode-hook
+          '(lambda ()
+             (add-hook 'before-save-hook
+                       (lambda ()
+                         (civil-tags)))))
+
 ;;------------------------------------------------------------------------------
 ;; Agda
 ; (require 'ucs-utils)
@@ -191,13 +202,14 @@
 ; (require 'evil)
 ; (evil-mode 1)
 ; (define-key evil-ex-map "e " 'ido-find-file)
-;; (define-key evil-ex-map "w " 'ido-write-file)
+; ;; (define-key evil-ex-map "w " 'ido-write-file)
 ; (define-key evil-ex-map "b " 'ido-switch-buffer)
 
 ;;------------------------------------------------------------------------------
 ;; Speedbar
 (require 'sr-speedbar)
 (global-set-key (kbd "M-s M-s") 'sr-speedbar-toggle)
+(speedbar-add-supported-extension ".hs")
 
 ;;------------------------------------------------------------------------------
 (message "%s" "You shouldn't have come back, Karl")
