@@ -3,8 +3,9 @@
 ;;  |  __/ | | | | | (_| | (__\__ \
 ;; (_)___|_| |_| |_|\__,_|\___|___/
 
+
 ;;------------------------------------------------------------------------------
-;; Load and setup
+;; Package manager load and setup
 (package-initialize)
 
 ;; (add-to-list 'package-archives
@@ -14,10 +15,10 @@
 	     '("melpa" . "http://melpa.milkbox.net/packages/") t)
 
 ;;------------------------------------------------------------------------------
-;; Install packages as necessary. Credit to the Prelude project
+;; Install packages as necessary on startup. Credit to the Prelude project.
 (require 'cl)
 
-(defvar karl-packages '(ace-jump-mode auctex birds-of-paradise-plus-theme
+(defvar my-packages '(ace-jump-mode auctex birds-of-paradise-plus-theme
                                       clojure-mode clojurescript-mode
                                       color-theme-sanityinc-solarized
                                       color-theme-sanityinc-tomorrow
@@ -28,33 +29,31 @@
                                       ucs-utils unicode-fonts zenburn-theme)
   "Packages to install at launch, when necessary.")
 
-;; removed: paredit, slime
-
-(defun karl-packages-installed-p ()
-  (loop for p in karl-packages
+(defun my-packages-installed-p ()
+  (loop for p in my-packages
         when (not (package-installed-p p)) do (return nil)
         finally (return t)))
 
-(defun karl-install-packages ()
-  (unless (karl-packages-installed-p)
+(defun my-install-packages ()
+  (unless (my-packages-installed-p)
     (message "%s" "Refreshing package database...")
     (package-refresh-contents)
     (message "%s" " done.")
-    (dolist (p karl-packages)
+    (dolist (p my-packages)
       (unless (package-installed-p p)
 	(package-install p)))))
 
-(karl-install-packages)
+(my-install-packages)
 
 ;;------------------------------------------------------------------------------
-;; Path stuff
+;; Path stuff.  Machine specific.
 (setq exec-path (append exec-path '("/usr/local/bin")))
 (setq exec-path (append exec-path '("/opt/local/bin")))
 (setq exec-path (append exec-path '("/Users/karl/Library/Haskell/bin/")))
 (setenv "PATH" (concat (getenv "PATH") ":/Users/karl/Library/Haskell/bin"))
 
 ;;------------------------------------------------------------------------------
-;; GUI Cleanup
+;; GUI Settings
 ; (menu-bar-mode -1)
 (tool-bar-mode -1)
 (scroll-bar-mode -1)
@@ -65,14 +64,14 @@
 
 ;;------------------------------------------------------------------------------
 ;; Font & Colors
-(setq solarized-broken-srgb t)
-(setq solarized-italic nil)
-(setq solarized-bold nil)
-(load-theme 'solarized-light t)
+;; (setq solarized-broken-srgb t)
+;; (setq solarized-italic nil)
+;; (setq solarized-bold nil)
+(load-theme 'zenburn t)
 ; (set-face-attribute 'default nil :font "Consolas-15")
 
 ;; Thanks to the Emacs Starter Kit for the following bit
-;; Make the font larger on my external monitor
+;; Make the font larger on external monitor than on laptop.
 (defun fontify-frame (frame)
   (interactive)
   (if window-system
@@ -103,7 +102,11 @@
 ;;------------------------------------------------------------------------------
 ;; General & Keybindings
 (global-set-key (kbd "C-x a r") 'align-regexp)
-(global-set-key (kbd "C-h C-f") 'find-tag)
+; (global-set-key (kbd "C-h C-f") 'find-tag)
+(global-set-key [M-left] 'windmove-left)
+(global-set-key [M-right] 'windmove-right)
+(global-set-key [M-up] 'windmove-up)
+(global-set-key [M-down] 'windmove-down)
 
 ;;------------------------------------------------------------------------------
 ;; Ace jump mode
@@ -159,16 +162,16 @@
 ;; Haskell
 (add-hook 'haskell-mode-hook 'turn-on-haskell-indentation)
 
-(defun civil-tags ()
-  "Generate TAGS file specifically for CIViL."
-  (interactive)
-  (shell-command "cd ~/workspace/civil/src && echo \":etags\" | ghci -v0 Graphics/Civil.hs"))
+;; (defun civil-tags ()
+;;   "Generate TAGS file specifically for CIViL."
+;;   (interactive)
+;;   (shell-command "cd ~/workspace/civil/src && echo \":etags\" | ghci -v0 Graphics/Civil.hs"))
 
-(add-hook 'haskell-mode-hook
-          '(lambda ()
-             (add-hook 'before-save-hook
-                       (lambda ()
-                         (civil-tags)))))
+;; (add-hook 'haskell-mode-hook
+;;           '(lambda ()
+;;              (add-hook 'before-save-hook
+;;                        (lambda ()
+;;                          (civil-tags)))))
 
 ;;------------------------------------------------------------------------------
 ;; Agda
@@ -214,6 +217,10 @@
 ;;------------------------------------------------------------------------------
 ;; GDB
 (setq gdb-many-windows t)
+
+;;------------------------------------------------------------------------------
+;; Magit
+(global-set-key (kbd "C-x g") 'magit-status)
 
 ;;------------------------------------------------------------------------------
 (message "%s" "You shouldn't have come back, Karl")
