@@ -55,7 +55,7 @@
 
 ;;------------------------------------------------------------------------------
 ;; GUI Cleanup
-(menu-bar-mode -1)
+; (menu-bar-mode -1)
 (tool-bar-mode -1)
 (scroll-bar-mode -1)
 (column-number-mode 1)
@@ -210,6 +210,10 @@
 (require 'sr-speedbar)
 (global-set-key (kbd "M-s M-s") 'sr-speedbar-toggle)
 (speedbar-add-supported-extension ".hs")
+
+;;------------------------------------------------------------------------------
+;; GDB
+(setq gdb-many-windows t)
 
 ;;------------------------------------------------------------------------------
 (message "%s" "You shouldn't have come back, Karl")
