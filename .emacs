@@ -8,8 +8,8 @@
 ;; Package manager load and setup
 (package-initialize)
 
-;; (add-to-list 'package-archives
-;;              '("marmalade" . "http://marmalade-repo.org/packages/") t)
+(add-to-list 'package-archives
+             '("marmalade" . "http://marmalade-repo.org/packages/") t)
 
 (add-to-list 'package-archives
 	     '("melpa" . "http://melpa.milkbox.net/packages/") t)
@@ -19,14 +19,14 @@
 (require 'cl)
 
 (defvar my-packages '(ace-jump-mode auctex birds-of-paradise-plus-theme
-                                      clojure-mode clojurescript-mode
-                                      color-theme-sanityinc-solarized
-                                      color-theme-sanityinc-tomorrow
-                                      cyberpunk-theme evil google-c-style
-                                      goto-chg haskell-mode inkpot-theme
-                                      ir-black-theme magit markdown-mode
-                                      multi-term nrepl paredit twilight-theme
-                                      ucs-utils unicode-fonts zenburn-theme)
+                                    clojure-mode clojurescript-mode
+                                    color-theme-sanityinc-solarized
+                                    color-theme-sanityinc-tomorrow
+                                    cyberpunk-theme evil google-c-style goto-chg
+                                    haskell-mode inkpot-theme ir-black-theme
+                                    jabber magit markdown-mode multi-term nrepl
+                                    paredit twilight-theme ucs-utils
+                                    unicode-fonts zenburn-theme)
   "Packages to install at launch, when necessary.")
 
 (defun my-packages-installed-p ()
@@ -47,9 +47,9 @@
 
 ;;------------------------------------------------------------------------------
 ;; Path stuff.  Machine specific.
-(setq exec-path (append exec-path '("/usr/local/bin")))
-(setq exec-path (append exec-path '("/opt/local/bin")))
-(setq exec-path (append exec-path '("/Users/karl/Library/Haskell/bin/")))
+;(setq exec-path (append exec-path '("/usr/local/bin")))
+;(setq exec-path (append exec-path '("/opt/local/bin")))
+;(setq exec-path (append exec-path '("/Users/karl/Library/Haskell/bin/")))
 (setenv "PATH" (concat (getenv "PATH") ":/Users/karl/Library/Haskell/bin"))
 
 ;;------------------------------------------------------------------------------
@@ -221,6 +221,13 @@
 ;;------------------------------------------------------------------------------
 ;; Magit
 (global-set-key (kbd "C-x g") 'magit-status)
+
+;;------------------------------------------------------------------------------
+;; Jabber
+(setq jabber-account-list
+      '(("karl.smeltzer@gmail.com"
+         (:network-server . "talk.google.com")
+         (:connection-type . ssl))))
 
 ;;------------------------------------------------------------------------------
 (message "%s" "You shouldn't have come back, Karl")
