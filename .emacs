@@ -58,10 +58,9 @@
 
 ;;------------------------------------------------------------------------------
 ;; Path stuff.  Machine specific.
-;(setq exec-path (append exec-path '("/usr/local/bin")))
-;(setq exec-path (append exec-path '("/opt/local/bin")))
-;(setq exec-path (append exec-path '("/Users/karl/Library/Haskell/bin/")))
-(setenv "PATH" (concat (getenv "PATH") ":/Users/karl/Library/Haskell/bin"))
+(when (eq system-type 'darwin)
+  (setenv "PATH" (concat "/Users/karl/.cabal/bin:" (getenv "PATH")))
+  (push "/Users/karl/.cabal/bin" exec-path))
 
 ;;------------------------------------------------------------------------------
 ;; GUI Settings
@@ -76,8 +75,8 @@
 
 ;;------------------------------------------------------------------------------
 ;; Font & Colors
+(set-face-italic-p 'italic nil)
 (load-theme 'solarized-light t)
-; (set-face-attribute 'default nil :font "Consolas-15")
 
 ;; Thanks to the Emacs Starter Kit for the following bit
 ;; Make the font larger on external monitor because I have old man eyes.
@@ -149,11 +148,6 @@
 (ido-mode 1)
 (setq ido-create-new-buffer 'always)
 
-;;--------------------------------------------------------------------------------
-;; Multi Term
-; (setq multi-term-program "/bin/bash")
-; (global-set-key (kbd "C-x t") 'multi-term)
-
 ;;------------------------------------------------------------------------------
 ;; Commenting
 (defun comment-or-uncomment-region-or-line ()
@@ -217,7 +211,7 @@
 ; (add-hook 'lisp-interaction-mode-hook (lambda () (paredit-mode +1)))
 
 ;;------------------------------------------------------------------------------
-;; Clojure
+;; Clojure/nREPL
 (setq nrepl-popup-stacktraces nil)
 
 ;;------------------------------------------------------------------------------
