@@ -86,9 +86,11 @@
   (if window-system
       (progn
         (if (> (x-display-pixel-width) 2000)
-            (set-frame-parameter frame 'font "Consolas-17")
-          (set-frame-parameter frame 'font "Consolas-15")))))
-(fontify-frame nil)
+            (set-frame-parameter frame 'font "Source Code Pro-17")
+          (set-frame-parameter frame 'font "Source Code Pro-15")))))
+(if (eq system-type 'darwin)
+    (fontify-frame nil)
+  (set-face-attribute 'default nil :font "Source Code Pro-11"))
 (push 'fontify-frame after-make-frame-functions)
 
 
