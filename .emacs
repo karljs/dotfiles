@@ -19,7 +19,9 @@
                       buffer-move
                       clojure-mode
                       clojurescript-mode
+                      color-theme-solarized
                       evil
+                      fastnav
                       google-c-style
                       goto-chg
                       haskell-mode
@@ -31,7 +33,6 @@
                       nrepl
                       paredit
                       rainbow-delimiters
-                      solarized-theme
                       sr-speedbar
                       ucs-utils
                       unicode-fonts
@@ -75,18 +76,18 @@
 
 ;;------------------------------------------------------------------------------
 ;; Font & Colors
-(set-face-italic-p 'italic nil)
+(setq solarized-italic nil)
+(setq solarized-broken-srgb t)
 (load-theme 'solarized-light t)
 
-;; Thanks to the Emacs Starter Kit for the following bit
-;; Make the font larger on external monitor because I have old man eyes.
+;; Set the font depending on OS and pixel density
 (defun fontify-frame (frame)
   (interactive)
   (if window-system
       (progn
         (if (> (x-display-pixel-width) 2000)
-            (set-frame-parameter frame 'font "Source Code Pro-17")
-          (set-frame-parameter frame 'font "Source Code Pro-15")))))
+            (set-frame-parameter frame 'font "Source Code Pro-15")
+          (set-frame-parameter frame 'font "Source Code Pro-14")))))
 (if (eq system-type 'darwin)
     (fontify-frame nil)
   (set-face-attribute 'default nil :font "Source Code Pro-11"))
@@ -256,6 +257,12 @@
       '(("karl.smeltzer@gmail.com"
          (:network-server . "talk.google.com")
          (:connection-type . ssl))))
+
+;;------------------------------------------------------------------------------
+;; FastNav
+(global-set-key "\M-z" 'fastnav-zap-up-to-char-forward)
+(global-set-key "\M-Z" 'fastnav-zap-up-to-char-backward)
+
 
 ;;------------------------------------------------------------------------------
 (message "%s" "You shouldn't have come back, Karl")
