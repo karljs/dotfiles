@@ -251,6 +251,10 @@
 (global-set-key (kbd "C-x g") 'magit-status)
 
 ;;------------------------------------------------------------------------------
+;; Markdown
+(add-to-list 'auto-mode-alist '("\\.md\\'" . gfm-mode))
+
+;;------------------------------------------------------------------------------
 ;; Jabber
 (setq jabber-alert-presence-hooks nil)
 (setq jabber-account-list
