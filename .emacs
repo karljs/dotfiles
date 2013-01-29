@@ -90,7 +90,7 @@
           (set-frame-parameter frame 'font "Source Code Pro-14")))))
 (if (eq system-type 'darwin)
     (fontify-frame nil)
-  (set-face-attribute 'default nil :font "Source Code Pro-11"))
+  (set-face-attribute 'default nil :font "Source Code Pro-12"))
 (push 'fontify-frame after-make-frame-functions)
 
 
