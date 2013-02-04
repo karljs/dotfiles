@@ -60,8 +60,11 @@
 ;;------------------------------------------------------------------------------
 ;; Path stuff.  Machine specific.
 (when (eq system-type 'darwin)
-  (setenv "PATH" (concat "/Users/karl/.cabal/bin:" (getenv "PATH")))
-  (push "/Users/karl/.cabal/bin" exec-path))
+  (setenv "PATH" (concat "/Users/karl/.cabal/bin:"
+                         "/Users/karl/bin:"
+                         (getenv "PATH")))
+  (push "/Users/karl/.cabal/bin" exec-path)
+  (push "/Users/karl/bin" exec-path))
 
 ;;------------------------------------------------------------------------------
 ;; GUI Settings
@@ -231,12 +234,11 @@
 
 ;;------------------------------------------------------------------------------
 ;; Evil
-; (require 'evil)
-; (evil-mode 1)
-; (define-key evil-ex-map "e " 'ido-find-file)
-; ;; (define-key evil-ex-map "w " 'ido-write-file)
-; (define-key evil-ex-map "b " 'ido-switch-buffer)
-
+;; (evil-mode 1)
+;; (define-key evil-ex-map "e " 'ido-find-file)
+;; (define-key evil-ex-map "w " 'ido-write-file)
+;; (define-key evil-ex-map "b " 'ido-switch-buffer)
+ 
 ;;------------------------------------------------------------------------------
 ;; Speedbar
 (require 'sr-speedbar)
@@ -250,6 +252,10 @@
 ;;------------------------------------------------------------------------------
 ;; Magit
 (global-set-key (kbd "C-x g") 'magit-status)
+
+;;------------------------------------------------------------------------------
+;; Markdown
+(add-to-list 'auto-mode-alist '("\\.md\\'" . gfm-mode))
 
 ;;------------------------------------------------------------------------------
 ;; Jabber

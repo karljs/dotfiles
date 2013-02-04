@@ -69,11 +69,12 @@ nmap <c-s> :TagbarToggle<CR>
 " Ctrl-P binding
 nnoremap <leader>p :CtrlP ~<CR>
 
+let g:solarized_italic=0
+let g:solarized_bold=0
+set background=light
+colorscheme solarized
+
 if has("gui_running")
-  let g:solarized_italic=0
-  let g:solarized_bold=0
-  set background=light
-  colorscheme solarized
   set gfn=Source\ Code\ Pro:h14
   set guioptions-=T
   set guioptions-=r
