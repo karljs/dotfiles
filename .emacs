@@ -81,7 +81,7 @@
 ;; Font & Colors
 (setq solarized-italic nil)
 (setq solarized-broken-srgb t)
-(load-theme 'solarized-dark t)
+(load-theme 'solarized-light t)
 
 ;; Set the font depending on OS and pixel density
 (defun fontify-frame (frame)
@@ -238,7 +238,7 @@
 ;; (define-key evil-ex-map "e " 'ido-find-file)
 ;; (define-key evil-ex-map "w " 'ido-write-file)
 ;; (define-key evil-ex-map "b " 'ido-switch-buffer)
- 
+
 ;;------------------------------------------------------------------------------
 ;; Speedbar
 (require 'sr-speedbar)
