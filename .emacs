@@ -91,7 +91,7 @@
           (set-frame-parameter frame 'font "Source Code Pro-14")))))
 (if (eq system-type 'darwin)
     (fontify-frame nil)
-  (set-face-attribute 'default nil :font "Source Code Pro-12"))
+  (set-face-attribute 'default nil :font "Inconsolata-13"))
 (push 'fontify-frame after-make-frame-functions)
 
 
@@ -107,7 +107,7 @@
 (setq-default fill-column 80)
 (setq vc-follow-symlinks t)
 (setq ring-bell-function (lambda () (message "*beep*")))  ; stop beeping
-(setq-default truncate-lines t)
+;(setq-default truncate-lines t)
 (setq dired-use-ls-dired nil)
 
 ;;------------------------------------------------------------------------------
@@ -176,6 +176,7 @@
 ;;------------------------------------------------------------------------------
 ;; Haskell
 (add-hook 'haskell-mode-hook 'turn-on-haskell-indent)
+(setq haskell-program-name "ghci")
 
 ;; The following needs to be done without the hardcoded path.
 
