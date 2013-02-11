@@ -21,6 +21,8 @@
                       clojurescript-mode
                       color-theme-solarized
                       evil
+                      evil-paredit
+                      exec-path-from-shell
                       fastnav
                       google-c-style
                       goto-chg
@@ -60,11 +62,7 @@
 ;;------------------------------------------------------------------------------
 ;; Path stuff.  Machine specific.
 (when (eq system-type 'darwin)
-  (setenv "PATH" (concat "/Users/karl/.cabal/bin:"
-                         "/Users/karl/bin:"
-                         (getenv "PATH")))
-  (push "/Users/karl/.cabal/bin" exec-path)
-  (push "/Users/karl/bin" exec-path))
+  (exec-path-from-shell-initialize))
 
 ;;------------------------------------------------------------------------------
 ;; GUI Settings
@@ -81,7 +79,7 @@
 ;; Font & Colors
 (setq solarized-italic nil)
 (setq solarized-broken-srgb t)
-(load-theme 'solarized-light t)
+(load-theme 'solarized-dark t)
 
 ;; Set the font depending on OS and pixel density
 (defun fontify-frame (frame)
@@ -195,8 +193,8 @@
 ;;------------------------------------------------------------------------------
 ;; Agda
 ; (require 'ucs-utils)
-(load-file (let ((coding-system-for-read 'utf-8))
-             (shell-command-to-string "agda-mode locate")))
+;; (load-file (let ((coding-system-for-read 'utf-8))
+;;              (shell-command-to-string "agda-mode locate")))
 (add-hook 'agda2-mode-hook
           '(lambda ()
              (require 'unicode-fonts)
@@ -233,11 +231,12 @@
 
 ;;------------------------------------------------------------------------------
 ;; Evil
+;; (setq evil-want-C-u-scroll t)
 ;; (evil-mode 1)
 ;; (define-key evil-ex-map "e " 'ido-find-file)
 ;; (define-key evil-ex-map "w " 'ido-write-file)
 ;; (define-key evil-ex-map "b " 'ido-switch-buffer)
- 
+
 ;;------------------------------------------------------------------------------
 ;; Speedbar
 (require 'sr-speedbar)
