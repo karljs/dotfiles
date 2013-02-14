@@ -202,18 +202,6 @@
              (unicode-fonts-setup)))
 
 ;;------------------------------------------------------------------------------
-;; Lisp, Slime, Paredit
-;(setq inferior-lisp-program "/usr/local/bin/sbcl")
-;(require 'slime-autoloads)
-;(slime-setup '(slime-repl))
-;(add-hook 'lisp-mode-hook (lambda () (slime-mode t)))
-;(autoload 'paredit-mode "paredit"
-;  "Minor mode for pseudo-structurally editing Lisp code." t)
-; (add-hook 'emacs-lisp-mode-hook (lambda () (paredit-mode +1)))
-; (add-hook 'lisp-mode-hook (lambda () (paredit-mode +1)))
-; (add-hook 'lisp-interaction-mode-hook (lambda () (paredit-mode +1)))
-
-;;------------------------------------------------------------------------------
 ;; Clojure/nREPL
 (setq nrepl-popup-stacktraces nil)
 
@@ -237,6 +225,15 @@
 ;; (define-key evil-ex-map "e " 'ido-find-file)
 ;; (define-key evil-ex-map "w " 'ido-write-file)
 ;; (define-key evil-ex-map "b " 'ido-switch-buffer)
+
+;; (require 'evil-paredit)
+;; (add-hook 'clojure-mode-hook 'evil-paredit-mode)
+;; (add-hook 'clojurescript-mode-hook 'evil-paredit-mode)
+;; (add-hook 'nrepl-interaction-mode 'evil-paredit-mode)
+;; (add-hook 'nrepl-connected-hook 'evil-paredit-mode)
+;; (add-hook 'emacs-lisp-mode-hook 'evil-paredit-mode)
+;; (add-hook 'lisp-mode-hook 'evil-paredit-mode)
+
 
 ;;------------------------------------------------------------------------------
 ;; Speedbar
