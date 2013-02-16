@@ -111,13 +111,19 @@
 (setq dired-use-ls-dired nil)
 
 ;;------------------------------------------------------------------------------
-;; General keybindings
+;; Global keybindings
 (global-set-key (kbd "C-x t") 'eshell)
 (global-set-key (kbd "C-x a r") 'align-regexp)
 (global-set-key [M-left] 'windmove-left)
 (global-set-key [M-right] 'windmove-right)
 (global-set-key [M-up] 'windmove-up)
 (global-set-key [M-down] 'windmove-down)
+
+;; <3 Unix
+(global-set-key (kbd "C-?" 'help-command))
+(global-set-key (kbd "M-?" 'mark-paragraph))
+(global-set-key (kbd "C-h" 'delete-backwards-char))
+(global-set-key (kbd "M-h" 'backward-kill-word))
 
 ;;------------------------------------------------------------------------------
 ;; buffer-move
@@ -220,11 +226,11 @@
 
 ;;------------------------------------------------------------------------------
 ;; Evil
-;; (setq evil-want-C-u-scroll t)
-;; (evil-mode 1)
-;; (define-key evil-ex-map "e " 'ido-find-file)
-;; (define-key evil-ex-map "w " 'ido-write-file)
-;; (define-key evil-ex-map "b " 'ido-switch-buffer)
+(setq evil-want-C-u-scroll t)
+(evil-mode 1)
+(define-key evil-ex-map "e " 'ido-find-file)
+(define-key evil-ex-map "w " 'ido-write-file)
+(define-key evil-ex-map "b " 'ido-switch-buffer)
 
 ;; (require 'evil-paredit)
 ;; (add-hook 'clojure-mode-hook 'evil-paredit-mode)
