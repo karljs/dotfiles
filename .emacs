@@ -120,10 +120,10 @@
 (global-set-key [M-down] 'windmove-down)
 
 ;; <3 Unix
-(global-set-key (kbd "C-?" 'help-command))
-(global-set-key (kbd "M-?" 'mark-paragraph))
-(global-set-key (kbd "C-h" 'delete-backwards-char))
-(global-set-key (kbd "M-h" 'backward-kill-word))
+(global-set-key (kbd "C-?") 'help-command)
+(global-set-key (kbd "M-?") 'mark-paragraph)
+(global-set-key (kbd "C-h") 'delete-backwards-char)
+(global-set-key (kbd "M-h") 'backward-kill-word)
 
 ;;------------------------------------------------------------------------------
 ;; buffer-move
@@ -226,11 +226,11 @@
 
 ;;------------------------------------------------------------------------------
 ;; Evil
-(setq evil-want-C-u-scroll t)
-(evil-mode 1)
-(define-key evil-ex-map "e " 'ido-find-file)
-(define-key evil-ex-map "w " 'ido-write-file)
-(define-key evil-ex-map "b " 'ido-switch-buffer)
+;; (setq evil-want-C-u-scroll t)
+;; (evil-mode 1)
+;; (define-key evil-ex-map "e " 'ido-find-file)
+;; (define-key evil-ex-map "w " 'ido-write-file)
+;; (define-key evil-ex-map "b " 'ido-switch-buffer)
 
 ;; (require 'evil-paredit)
 ;; (add-hook 'clojure-mode-hook 'evil-paredit-mode)
@@ -272,6 +272,11 @@
 (global-set-key "\M-z" 'fastnav-zap-up-to-char-forward)
 (global-set-key "\M-Z" 'fastnav-zap-up-to-char-backward)
 
+;;------------------------------------------------------------------------------
+;; Change Inner
+(require 'change-inner)
+(global-set-key (kbd "M-i") 'change-inner)
+(global-set-key (kbd "M-o") 'change-outer)
 
 ;;------------------------------------------------------------------------------
 (message "%s" "You shouldn't have come back, Karl")
