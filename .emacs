@@ -184,19 +184,6 @@
 (add-hook 'haskell-mode-hook 'turn-on-haskell-indent)
 (setq haskell-program-name "ghci")
 
-;; The following needs to be done without the hardcoded path.
-
-;; (defun civil-tags ()
-;;   "Generate TAGS file specifically for CIViL."
-;;   (interactive)
-;;   (shell-command "cd ~/workspace/civil/src && echo \":etags\" | ghci -v0 Graphics/Civil.hs"))
-
-;; (add-hook 'haskell-mode-hook
-;;           '(lambda ()
-;;              (add-hook 'before-save-hook
-;;                        (lambda ()
-;;                          (civil-tags)))))
-
 ;;------------------------------------------------------------------------------
 ;; Agda
 ; (require 'ucs-utils)
@@ -210,6 +197,12 @@
 ;;------------------------------------------------------------------------------
 ;; Clojure/nREPL
 (setq nrepl-popup-stacktraces nil)
+
+(fset 'refresh
+   [?\( ?r ?e ?f ?r ?e ?s ?h return])
+(add-hook 'nrepl-mode-hook
+          (lambda () (local-set-key (kbd "C-c r") 'refresh)))
+
 
 ;;------------------------------------------------------------------------------
 ;; Paredit
