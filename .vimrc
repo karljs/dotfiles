@@ -87,14 +87,15 @@ nmap <c-s> :TagbarToggle<CR>
 
 "-------------------------------------------------------------------------------
 " Ctrl-P
-nnoremap <leader>p :CtrlP ~<CR>
+nmap <leader>p :CtrlP ~<CR>
+nmap <leader>b :CtrlPBuffer<CR>
 
 "-------------------------------------------------------------------------------
 " Colors
 syntax on
 let g:solarized_italic=0
 let g:solarized_bold=0
-set background=light
+set background=dark
 colorscheme solarized
 
 "-------------------------------------------------------------------------------
