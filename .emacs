@@ -79,7 +79,7 @@
 ;; Font & Colors
 (setq solarized-italic nil)
 (setq solarized-broken-srgb t)
-(load-theme 'solarized-dark t)
+(load-theme 'solarized-light t)
 
 ;; Set the font depending on OS and pixel density
 (defun fontify-frame (frame)
@@ -198,10 +198,15 @@
 ;; Clojure/nREPL
 (setq nrepl-popup-stacktraces nil)
 
-(fset 'refresh
-   [?\( ?r ?e ?f ?r ?e ?s ?h return])
+(defun nrepl-refresh ()
+  (interactive)
+  (set-buffer "*nrepl*")
+  (goto-char (point-max))
+  (insert "(clojure.tools.namespace.repl/refresh)")
+  (nrepl-return))
+
 (add-hook 'nrepl-mode-hook
-          (lambda () (local-set-key (kbd "C-c r") 'refresh)))
+          (lambda () (local-set-key (kbd "C-c r") 'nrepl-refresh)))
 
 
 ;;------------------------------------------------------------------------------
