@@ -122,7 +122,7 @@
 ;; <3 Unix
 (global-set-key (kbd "C-?") 'help-command)
 (global-set-key (kbd "M-?") 'mark-paragraph)
-(global-set-key (kbd "C-h") 'delete-backwards-char)
+(global-set-key (kbd "C-h") 'delete-backward-char)
 (global-set-key (kbd "M-h") 'backward-kill-word)
 
 ;;------------------------------------------------------------------------------
@@ -182,7 +182,7 @@
 ;;------------------------------------------------------------------------------
 ;; Haskell
 (add-hook 'haskell-mode-hook 'turn-on-haskell-indent)
-(setq haskell-program-name "ghci")
+(setq haskell-program-name "ghci -fno-ghci-sandbox")
 
 ;;------------------------------------------------------------------------------
 ;; Agda
