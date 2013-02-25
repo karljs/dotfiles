@@ -78,7 +78,7 @@
 ;;------------------------------------------------------------------------------
 ;; Font & Colors
 (setq solarized-italic nil)
-(setq solarized-broken-srgb t)
+(setq solarized-broken-srgb nil)
 (load-theme 'solarized-light t)
 
 ;; Set the font depending on OS and pixel density
@@ -213,7 +213,6 @@
 ;; Paredit
 (add-hook 'clojure-mode-hook 'paredit-mode)
 (add-hook 'clojurescript-mode-hook 'paredit-mode)
-(add-hook 'nrepl-interaction-mode 'paredit-mode)
 (add-hook 'nrepl-connected-hook 'paredit-mode)
 (add-hook 'emacs-lisp-mode-hook 'paredit-mode)
 (add-hook 'lisp-mode-hook 'paredit-mode)
