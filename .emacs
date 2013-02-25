@@ -213,7 +213,7 @@
 ;; Paredit
 (add-hook 'clojure-mode-hook 'paredit-mode)
 (add-hook 'clojurescript-mode-hook 'paredit-mode)
-(add-hook 'nrepl-connected-hook 'paredit-mode)
+(add-hook 'nrepl-mode-hook 'paredit-mode)
 (add-hook 'emacs-lisp-mode-hook 'paredit-mode)
 (add-hook 'lisp-mode-hook 'paredit-mode)
 
