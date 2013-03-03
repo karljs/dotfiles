@@ -78,7 +78,8 @@ set smartcase
 " Wildmenu and Ctrl-P
 set wildmenu
 set wildmode=list:longest,full
-set wildignore+=.*,*/tmp/*,*.so,*.swp,*.zip,*/Library/*,*/Music/*
+set wildignore+=.*,*.so,*.swp,*.zip
+set wildignore+=*/tmp/*,*/Library/*,*/Music/*,*/src/*
 
 
 "-------------------------------------------------------------------------------
@@ -95,7 +96,7 @@ nmap <leader>b :CtrlPBuffer<CR>
 syntax on
 let g:solarized_italic=0
 let g:solarized_bold=0
-set background=dark
+set background=light
 colorscheme solarized
 
 "-------------------------------------------------------------------------------
@@ -117,7 +118,7 @@ au Bufenter *.hs compiler ghc
 
 "-------------------------------------------------------------------------------
 " Refresh all buffers from disk.  This is useful when using version control.
-fun! PullAndRefresh()
+fun! Refresh()
   set noconfirm
   bufdo e!
   set confirm
