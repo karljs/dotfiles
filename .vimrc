@@ -22,7 +22,7 @@ Bundle 'guns/vim-clojure-static'
 Bundle 'jasonkuhrt/Tomorrow-Theme'
 Bundle 'kien/ctrlp.vim'
 Bundle 'kien/rainbow_parentheses.vim'
-Bundle 'laurilehmijoki/haskellmode-vim.git'
+" Bundle 'laurilehmijoki/haskellmode-vim.git'
 Bundle 'majutsushi/tagbar'
 Bundle 'tpope/vim-classpath'
 Bundle 'tpope/vim-foreplay'
@@ -79,7 +79,7 @@ set smartcase
 set wildmenu
 set wildmode=list:longest,full
 set wildignore+=.*,*.so,*.swp,*.zip
-set wildignore+=*/tmp/*,*/Library/*,*/Music/*,*/src/*
+set wildignore+=*/tmp/*,*/Library/*,*/Music/*,~/src/*
 
 
 "-------------------------------------------------------------------------------
@@ -112,9 +112,9 @@ endif
 
 "-------------------------------------------------------------------------------
 " Haskell
-let g:haddock_browser = "open"
-let g:haddock_browser_callformat = "%s %s"
-au Bufenter *.hs compiler ghc
+" let g:haddock_browser = "open"
+" let g:haddock_browser_callformat = "%s %s"
+" au Bufenter *.hs compiler ghc
 
 "-------------------------------------------------------------------------------
 " Refresh all buffers from disk.  This is useful when using version control.
