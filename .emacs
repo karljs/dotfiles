@@ -24,6 +24,7 @@
                       evil-paredit
                       exec-path-from-shell
                       fastnav
+                      geiser
                       google-c-style
                       goto-chg
                       haskell-mode
@@ -34,6 +35,7 @@
                       multi-term
                       nrepl
                       paredit
+                      quack
                       rainbow-delimiters
                       sr-speedbar
                       ucs-utils
@@ -74,11 +76,12 @@
 (setq inhibit-startup-message t)
 (setq inhibit-startup-echo-area-message "karl")
 (transient-mark-mode 1)
+(global-linum-mode t)
 
 ;;------------------------------------------------------------------------------
 ;; Font & Colors
 (setq solarized-italic nil)
-(setq solarized-broken-srgb nil)
+; (setq solarized-broken-srgb t)
 (load-theme 'solarized-light t)
 
 ;; Set the font depending on OS and pixel density
@@ -88,7 +91,7 @@
       (progn
         (if (> (x-display-pixel-width) 2000)
             (set-frame-parameter frame 'font "Source Code Pro-15")
-          (set-frame-parameter frame 'font "Source Code Pro-14")))))
+          (set-frame-parameter frame 'font "Source Code Pro-15")))))
 (if (eq system-type 'darwin)
     (fontify-frame nil)
   (set-face-attribute 'default nil :font "Inconsolata-13"))
@@ -186,7 +189,7 @@
 
 ;;------------------------------------------------------------------------------
 ;; Agda
-; (require 'ucs-utils)
+;; (require 'ucs-utils)
 ;; (load-file (let ((coding-system-for-read 'utf-8))
 ;;              (shell-command-to-string "agda-mode locate")))
 (add-hook 'agda2-mode-hook
