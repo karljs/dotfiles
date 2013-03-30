@@ -19,7 +19,6 @@
                       buffer-move
                       clojure-mode
                       clojurescript-mode
-                      color-theme-solarized
                       evil
                       evil-paredit
                       exec-path-from-shell
@@ -35,8 +34,8 @@
                       multi-term
                       nrepl
                       paredit
-                      quack
                       rainbow-delimiters
+                      solarized-theme
                       sr-speedbar
                       ucs-utils
                       unicode-fonts
@@ -76,13 +75,12 @@
 (setq inhibit-startup-message t)
 (setq inhibit-startup-echo-area-message "karl")
 (transient-mark-mode 1)
-(global-linum-mode t)
+;(global-linum-mode t)
 
 ;;------------------------------------------------------------------------------
 ;; Font & Colors
-(setq solarized-italic nil)
-; (setq solarized-broken-srgb t)
-(load-theme 'solarized-light t)
+; (setq color-theme-sanityinc-solarized-rgb-is-srgb t)
+(load-theme 'sanityinc-tomorrow-day t)
 
 ;; Set the font depending on OS and pixel density
 (defun fontify-frame (frame)
@@ -219,6 +217,8 @@
 (add-hook 'nrepl-mode-hook 'paredit-mode)
 (add-hook 'emacs-lisp-mode-hook 'paredit-mode)
 (add-hook 'lisp-mode-hook 'paredit-mode)
+(add-hook 'scheme-mode-hook 'paredit-mode)
+(add-hook 'geiser-repl-mode-hook 'paredit-mode)
 
 ;;------------------------------------------------------------------------------
 ;; Rainbows!
@@ -277,6 +277,38 @@
 (require 'change-inner)
 (global-set-key (kbd "M-i") 'change-inner)
 (global-set-key (kbd "M-o") 'change-outer)
+
+;;------------------------------------------------------------------------------
+;; Scheme/Racket
+
+;;------------------------------------------------------------------------------
+;; Misc things that should probably be in a different file
+(defun smart-open-line ()
+  (interactive)
+  (move-end-of-line nil)
+  (newline-and-indent))
+
+(global-set-key [(shift return)] 'smart-open-line)
+
+(defun reload-dot-emacs ()
+  (interactive)
+  (load-file "~/.emacs")
+  (message "Reloaded .emacs file..."))
+
+(global-set-key (kbd "C-x C-r") 'reload-dot-emacs)
+
+(defun open-with ()
+  (interactive)
+  (when buffer-file-name
+    (shell-command (concat
+                    (if (eq system-type 'darwin)
+                        "open"
+                      (read-shell-command "Open current file with: "))
+                    " "
+                    buffer-file-name))))
+
+(global-set-key (kbd "C-c o") 'open-with)
+
 
 ;;------------------------------------------------------------------------------
 (message "%s" "You shouldn't have come back, Karl")
