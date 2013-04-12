@@ -20,7 +20,6 @@
                       clojure-mode
                       clojurescript-mode
                       evil
-                      evil-paredit
                       exec-path-from-shell
                       fastnav
                       geiser
@@ -80,7 +79,7 @@
 ;;------------------------------------------------------------------------------
 ;; Font & Colors
 ; (setq color-theme-sanityinc-solarized-rgb-is-srgb t)
-(load-theme 'sanityinc-tomorrow-day t)
+(load-theme 'zenburn t)
 
 ;; Set the font depending on OS and pixel density
 (defun fontify-frame (frame)
@@ -156,6 +155,7 @@
 (setq ido-everywhere t)
 (ido-mode 1)
 (setq ido-create-new-buffer 'always)
+(setq ido-default-buffer-method 'selected-window)
 
 ;;------------------------------------------------------------------------------
 ;; Commenting
@@ -174,11 +174,11 @@
 
 ;;------------------------------------------------------------------------------
 ;; C/C++
-(require 'google-c-style)
-(add-hook 'c-mode-common-hook 'google-set-c-style)
-(add-hook 'c-mode-common-hook 'google-make-newline-indent)
-(add-hook 'c-mode-common-hook
-          (lambda () (define-key c-mode-base-map (kbd "C-c C-l") 'compile)))
+(defun my-c-mode-hook ()
+  (setq c-basic-offset 4
+        c-indent-level 4
+        c-default-style "BSD"))
+(add-hook 'c-mode-common-hook 'my-c-mode-hook)
 
 ;;------------------------------------------------------------------------------
 ;; Haskell
@@ -226,11 +226,14 @@
 
 ;;------------------------------------------------------------------------------
 ;; Evil
-;; (setq evil-want-C-u-scroll t)
-;; (evil-mode 1)
-;; (define-key evil-ex-map "e " 'ido-find-file)
-;; (define-key evil-ex-map "w " 'ido-write-file)
-;; (define-key evil-ex-map "b " 'ido-switch-buffer)
+(setq evil-want-C-u-scroll t)
+(setq evil-shift-width 4)
+
+(evil-mode 1)
+(define-key evil-ex-map "e " 'ido-find-file)
+(define-key evil-ex-map "w " 'ido-write-file)
+(define-key evil-ex-map "b " 'ido-switch-buffer)
+
 
 ;; (require 'evil-paredit)
 ;; (add-hook 'clojure-mode-hook 'evil-paredit-mode)
