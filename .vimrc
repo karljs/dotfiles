@@ -18,14 +18,8 @@ Bundle 'gmarik/vundle'
 " github
 Bundle 'altercation/vim-colors-solarized'
 Bundle 'bitc/lushtags'
-Bundle 'guns/vim-clojure-static'
-Bundle 'jasonkuhrt/Tomorrow-Theme'
 Bundle 'kien/ctrlp.vim'
 Bundle 'kien/rainbow_parentheses.vim'
-" Bundle 'laurilehmijoki/haskellmode-vim.git'
-Bundle 'majutsushi/tagbar'
-Bundle 'tpope/vim-classpath'
-Bundle 'tpope/vim-foreplay'
 Bundle 'tpope/vim-markdown'
 " Bundle 'tpope/vim-surround'
 " Bundle 'tpope/vim-fugitive'
@@ -35,6 +29,7 @@ Bundle 'Align'
 Bundle 'darktango.vim'
 Bundle 'inkpot'
 Bundle 'tComment'
+Bundle 'twilight'
 Bundle 'Wombat'
 Bundle 'Zenburn'
 
@@ -46,28 +41,34 @@ filetype plugin indent on
 "-------------------------------------------------------------------------------
 " Simple tweaks
 set ttyfast
-" set nocompatible   " vundle requires this above
 set shortmess+=I
 
 "-------------------------------------------------------------------------------
 " Tabs & Indent
 set expandtab
-set softtabstop=2
-set shiftwidth=2
+set softtabstop=4
+set shiftwidth=4
 set autoindent
 
 "-------------------------------------------------------------------------------
 " Programming tool
 set nowrap
-set ls=2
 set backspace=indent,eol,start
 set nostartofline
-set showcmd
-set number
 set hidden
 set autochdir
-set colorcolumn=80
 set mouse=a
+set autoread
+
+"-------------------------------------------------------------------------------
+" Aesthetics
+set number
+set laststatus=2
+set ruler
+set showcmd
+set showmatch
+set colorcolumn=80
+
 
 "-------------------------------------------------------------------------------
 " Searching
@@ -79,8 +80,8 @@ set smartcase
 set wildmenu
 set wildmode=list:longest,full
 set wildignore+=.*,*.so,*.swp,*.zip
-set wildignore+=*/tmp/*,*/Library/*,*/Music/*,~/src/*
-
+set wildignore+=*/tmp/*,*/Library/*,*/Music/*,*/Pictures/*,/Users/karl/src/*,
+              \*/Documents/*,*/Downloads/*
 
 "-------------------------------------------------------------------------------
 " Tagbar 
@@ -94,15 +95,15 @@ nmap <leader>b :CtrlPBuffer<CR>
 "-------------------------------------------------------------------------------
 " Colors
 syntax on
-let g:solarized_italic=0
-let g:solarized_bold=0
-set background=light
-colorscheme solarized
+" let g:solarized_italic=0
+" let g:solarized_bold=0
+" set background=light
+colorscheme twilight
 
 "-------------------------------------------------------------------------------
 " GUI/Terminal specific tweaks
 if has("gui_running")
-  set gfn=Source\ Code\ Pro:h14
+  set gfn=Source\ Code\ Pro:h15
   set guioptions-=T
   set guioptions-=r
   set guioptions-=L
@@ -111,16 +112,8 @@ else
 endif
 
 "-------------------------------------------------------------------------------
-" Haskell
-" let g:haddock_browser = "open"
-" let g:haddock_browser_callformat = "%s %s"
-" au Bufenter *.hs compiler ghc
-
-"-------------------------------------------------------------------------------
-" Refresh all buffers from disk.  This is useful when using version control.
-fun! Refresh()
-  set noconfirm
-  bufdo e!
-  set confirm
-endfun
-
+" Keybindings
+nnoremap <silent> [b :bprevious<CR>
+nnoremap <silent> ]b :bnext<CR>
+nnoremap <silent> [a :previous<CR>
+nnoremap <silent> ]a :next<CR>
