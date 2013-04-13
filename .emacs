@@ -75,6 +75,7 @@
 (setq inhibit-startup-echo-area-message "karl")
 (transient-mark-mode 1)
 ;(global-linum-mode t)
+(column-marker-1 80)
 
 ;;------------------------------------------------------------------------------
 ;; Font & Colors
