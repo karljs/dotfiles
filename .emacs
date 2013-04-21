@@ -38,6 +38,7 @@
                       sr-speedbar
                       ucs-utils
                       unicode-fonts
+                      yasnippet
                       zenburn-theme)
   "Packages to install at launch, when necessary.")
 
@@ -80,7 +81,7 @@
 ;;------------------------------------------------------------------------------
 ;; Font & Colors
 ; (setq color-theme-sanityinc-solarized-rgb-is-srgb t)
-(load-theme 'zenburn t)
+(load-theme 'sanityinc-solarized-light t)
 
 ;; Set the font depending on OS and pixel density
 (defun fontify-frame (frame)
@@ -140,7 +141,19 @@
 ;;------------------------------------------------------------------------------
 ;; LaTeX
 (setq TeX-PDF-mode t)
-;(add-hook 'LaTeX-mode-hook 'turn-on-flyspell)
+(add-hook 'LaTeX-mode-hook 'LaTeX-math-mode)
+(setq font-latex-fontify-script nil)
+(setq font-latex-fontify-sectioning 'color)
+
+(setq TeX-view-program-selection
+      '((output-pdf "PDF Viewer")
+        (output-dvi "DVI Viewer")
+        (output-html "HTML Viewer")))
+(when (eq system-type 'darwin)
+  (setq TeX-view-program-list
+        '(("PDF Viewer" "open %o")
+          ("DVI Viewer" "open %o")
+          ("HTML Viewer" "open %o"))))
 
 ;;------------------------------------------------------------------------------
 ;; Spelling
@@ -227,13 +240,22 @@
 
 ;;------------------------------------------------------------------------------
 ;; Evil
-(setq evil-want-C-u-scroll t)
-(setq evil-shift-width 4)
+;; (setq evil-want-C-u-scroll t)
+;; (setq evil-shift-width 4)
+;; (setq-default evil-auto-indent nil)
 
-(evil-mode 1)
-(define-key evil-ex-map "e " 'ido-find-file)
-(define-key evil-ex-map "w " 'ido-write-file)
-(define-key evil-ex-map "b " 'ido-switch-buffer)
+; (evil-mode 1)
+;; (define-key evil-ex-map "e " 'ido-find-file)
+;; (define-key evil-ex-map "w " 'ido-write-file)
+;; (define-key evil-ex-map "b " 'ido-switch-buffer)
+
+;; (define-key evil-normal-state-map [escape] 'keyboard-quit)
+;; (define-key evil-visual-state-map [escape] 'keyboard-quit)
+;; (define-key minibuffer-local-map [escape] 'minibuffer-keyboard-quit)
+;; (define-key minibuffer-local-ns-map [escape] 'minibuffer-keyboard-quit)
+;; (define-key minibuffer-local-completion-map [escape] 'minibuffer-keyboard-quit)
+;; (define-key minibuffer-local-must-match-map [escape] 'minibuffer-keyboard-quit)
+;; (define-key minibuffer-local-isearch-map [escape] 'minibuffer-keyboard-quit)
 
 
 ;; (require 'evil-paredit)
@@ -283,7 +305,11 @@
 (global-set-key (kbd "M-o") 'change-outer)
 
 ;;------------------------------------------------------------------------------
-;; Scheme/Racket
+;; Yasnippet
+(setq yas-verbosity 0)
+(yas-global-mode 1)
+(setq yas-snippet-dirs
+      '("~/.emacs.d/snippets"))
 
 ;;------------------------------------------------------------------------------
 ;; Misc things that should probably be in a different file
