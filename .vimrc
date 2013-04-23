@@ -22,7 +22,7 @@ Bundle 'kien/ctrlp.vim'
 Bundle 'kien/rainbow_parentheses.vim'
 Bundle 'tpope/vim-markdown'
 " Bundle 'tpope/vim-surround'
-" Bundle 'tpope/vim-fugitive'
+Bundle 'tpope/vim-fugitive'
 
 " vim-scripts
 Bundle 'Align'
@@ -67,7 +67,7 @@ set laststatus=2
 set ruler
 set showcmd
 set showmatch
-set colorcolumn=80
+" set colorcolumn=80
 
 
 "-------------------------------------------------------------------------------
@@ -95,10 +95,10 @@ nmap <leader>b :CtrlPBuffer<CR>
 "-------------------------------------------------------------------------------
 " Colors
 syntax on
-" let g:solarized_italic=0
-" let g:solarized_bold=0
-" set background=light
-colorscheme twilight
+let g:solarized_italic=0
+let g:solarized_bold=0
+set background=light
+colorscheme solarized
 
 "-------------------------------------------------------------------------------
 " GUI/Terminal specific tweaks
@@ -117,3 +117,5 @@ nnoremap <silent> [b :bprevious<CR>
 nnoremap <silent> ]b :bnext<CR>
 nnoremap <silent> [a :previous<CR>
 nnoremap <silent> ]a :next<CR>
+
+nmap <leader>v :setlocal paste! paste?<cr>
