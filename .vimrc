@@ -17,12 +17,12 @@ Bundle 'gmarik/vundle'
 
 " github
 Bundle 'altercation/vim-colors-solarized'
-Bundle 'bitc/lushtags'
 Bundle 'kien/ctrlp.vim'
 Bundle 'kien/rainbow_parentheses.vim'
 Bundle 'tpope/vim-markdown'
 " Bundle 'tpope/vim-surround'
 Bundle 'tpope/vim-fugitive'
+" Bundle 'xolox/vim-easytags'
 
 " vim-scripts
 Bundle 'Align'
@@ -42,6 +42,7 @@ filetype plugin indent on
 " Simple tweaks
 set ttyfast
 set shortmess+=I
+set noesckeys
 
 "-------------------------------------------------------------------------------
 " Tabs & Indent
@@ -80,8 +81,7 @@ set smartcase
 set wildmenu
 set wildmode=list:longest,full
 set wildignore+=.*,*.so,*.swp,*.zip
-set wildignore+=*/tmp/*,*/Library/*,*/Music/*,*/Pictures/*,/Users/karl/src/*,
-              \*/Documents/*,*/Downloads/*
+set wildignore+=*/tmp/*,*/Library/*,*/Music/*,*/Pictures/*,/Users/karl/src/*,*/Downloads/*
 
 "-------------------------------------------------------------------------------
 " Tagbar 
@@ -91,6 +91,19 @@ nmap <c-s> :TagbarToggle<CR>
 " Ctrl-P
 nmap <leader>p :CtrlP ~<CR>
 nmap <leader>b :CtrlPBuffer<CR>
+let g:ctrlp_user_command = ['.git/', 'git --git-dir=%s/.git ls-files -oc --exclude-standard']
+
+"-------------------------------------------------------------------------------
+" EasyTags
+let g:easytags_languages = {
+\   'haskell': {
+\       'cmd': '~/.cabal/bin/lushtags',
+\       'args': [],
+\       'fileoutput_opt': '-f',
+\       'stdout_opt': '-f-',
+\       'recurse_flag': '-R'
+\   }
+\}
 
 "-------------------------------------------------------------------------------
 " Colors
