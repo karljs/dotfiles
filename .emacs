@@ -114,7 +114,7 @@
 
 ;;------------------------------------------------------------------------------
 ;; Global keybindings
-(global-set-key (kbd "C-x t") 'eshell)
+;;(global-set-key (kbd "C-x t") 'eshell)
 (global-set-key (kbd "C-x a r") 'align-regexp)
 (global-set-key [M-left] 'windmove-left)
 (global-set-key [M-right] 'windmove-right)
@@ -196,7 +196,8 @@
 
 ;;------------------------------------------------------------------------------
 ;; Haskell
-(add-hook 'haskell-mode-hook 'turn-on-haskell-indent)
+(custom-set-variables
+ '(haskell-mode-hook '(turn-on-haskell-indentation)))
 (setq haskell-program-name "ghci -fno-ghci-sandbox")
 
 ;;------------------------------------------------------------------------------
@@ -226,13 +227,13 @@
 
 ;;------------------------------------------------------------------------------
 ;; Paredit
-(add-hook 'clojure-mode-hook 'paredit-mode)
-(add-hook 'clojurescript-mode-hook 'paredit-mode)
-(add-hook 'nrepl-mode-hook 'paredit-mode)
-(add-hook 'emacs-lisp-mode-hook 'paredit-mode)
-(add-hook 'lisp-mode-hook 'paredit-mode)
-(add-hook 'scheme-mode-hook 'paredit-mode)
-(add-hook 'geiser-repl-mode-hook 'paredit-mode)
+;; (add-hook 'clojure-mode-hook 'paredit-mode)
+;; (add-hook 'clojurescript-mode-hook 'paredit-mode)
+;; (add-hook 'nrepl-mode-hook 'paredit-mode)
+;; (add-hook 'emacs-lisp-mode-hook 'paredit-mode)
+;; (add-hook 'lisp-mode-hook 'paredit-mode)
+;; (add-hook 'scheme-mode-hook 'paredit-mode)
+;; (add-hook 'geiser-repl-mode-hook 'paredit-mode)
 
 ;;------------------------------------------------------------------------------
 ;; Rainbows!
@@ -244,7 +245,7 @@
 ;; (setq evil-shift-width 4)
 ;; (setq-default evil-auto-indent nil)
 
-; (evil-mode 1)
+;; (evil-mode 1)
 ;; (define-key evil-ex-map "e " 'ido-find-file)
 ;; (define-key evil-ex-map "w " 'ido-write-file)
 ;; (define-key evil-ex-map "b " 'ido-switch-buffer)
@@ -256,7 +257,6 @@
 ;; (define-key minibuffer-local-completion-map [escape] 'minibuffer-keyboard-quit)
 ;; (define-key minibuffer-local-must-match-map [escape] 'minibuffer-keyboard-quit)
 ;; (define-key minibuffer-local-isearch-map [escape] 'minibuffer-keyboard-quit)
-
 
 ;; (require 'evil-paredit)
 ;; (add-hook 'clojure-mode-hook 'evil-paredit-mode)
@@ -338,6 +338,27 @@
                     buffer-file-name))))
 
 (global-set-key (kbd "C-c o") 'open-with)
+
+(defun htags (dir)
+  "Create Haskell tags"
+  (interactive)
+  (shell-command (concat "cd " dir "&& hasktags -e -o ./TAGS ."))
+  (message "Created Haskell tags."))
+
+(defun ctags (dir)
+  "Create ctags"
+  (interactive)
+  (shell-command (concat "cd " dir "&& ctags -e -R ."))
+  (message "Created ctags."))
+
+(defun tags (dir)
+  "Create tags"
+  (interactive (list (read-directory-name "Directory: ")))
+  (if (equal major-mode 'haskell-mode)
+      (htags dir)
+    (ctags dir)))
+
+(global-set-key (kbd "C-x t") 'tags)
 
 
 ;;------------------------------------------------------------------------------
