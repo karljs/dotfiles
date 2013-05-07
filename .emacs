@@ -5,6 +5,10 @@
 
 
 ;;------------------------------------------------------------------------------
+;; Import things
+(require 'cl)
+
+;;------------------------------------------------------------------------------
 ;; Package manager load and setup
 (package-initialize)
 (add-to-list 'package-archives
@@ -41,8 +45,6 @@
                       yasnippet
                       zenburn-theme)
   "Packages to install at launch, when necessary.")
-
-(require 'cl)
 
 (defun my-packages-installed-p ()
   (loop for p in my-packages
@@ -111,6 +113,8 @@
 (setq ring-bell-function (lambda () (message "*beep*")))  ; stop beeping
 ;(setq-default truncate-lines t)
 (setq dired-use-ls-dired nil)
+(setq compilation-scroll-output 1)
+(setq compilation-window-height 10)
 
 ;;------------------------------------------------------------------------------
 ;; Global keybindings
@@ -174,7 +178,8 @@
 ;;------------------------------------------------------------------------------
 ;; Commenting
 (defun comment-or-uncomment-region-or-line ()
-  "Comments or uncomments the region or the current line if there's no active region."
+  "Comments or uncomments the region or the current line if
+   there's no active region."
   (interactive)
   (let (beg end)
     (if (region-active-p)
@@ -191,8 +196,32 @@
 (defun my-c-mode-hook ()
   (setq c-basic-offset 4
         c-indent-level 4
-        c-default-style "BSD"))
+        c-default-style "BSD")
+  (local-set-key (kbd "C-c C-l") 'my-compile-func)
+  (local-set-key (kbd "C-c C-k") 'my-compile-clean-func))
 (add-hook 'c-mode-common-hook 'my-c-mode-hook)
+
+
+(defun* get-closest-pathname (&optional (file "Makefile"))
+  "Walks up from current directory until it finds a makefile."
+  (let ((root (expand-file-name "/")))
+    (expand-file-name file
+                      (loop
+                       for d = default-directory then (expand-file-name ".." d)
+                       if (file-exists-p (expand-file-name file d))
+                       return d
+                       if (equal d root)
+                       return nil))))
+
+(defun my-compile-func ()
+  (interactive)
+  (compile (format "make -C %s" (file-name-directory (get-closest-pathname)))))
+
+(defun my-compile-clean-func ()
+  (interactive)
+  (compile (format "make -C %s clean"
+                   (file-name-directory (get-closest-pathname)))))
+
 
 ;;------------------------------------------------------------------------------
 ;; Haskell
@@ -227,13 +256,13 @@
 
 ;;------------------------------------------------------------------------------
 ;; Paredit
-;; (add-hook 'clojure-mode-hook 'paredit-mode)
-;; (add-hook 'clojurescript-mode-hook 'paredit-mode)
-;; (add-hook 'nrepl-mode-hook 'paredit-mode)
-;; (add-hook 'emacs-lisp-mode-hook 'paredit-mode)
-;; (add-hook 'lisp-mode-hook 'paredit-mode)
-;; (add-hook 'scheme-mode-hook 'paredit-mode)
-;; (add-hook 'geiser-repl-mode-hook 'paredit-mode)
+(add-hook 'clojure-mode-hook 'paredit-mode)
+(add-hook 'clojurescript-mode-hook 'paredit-mode)
+(add-hook 'nrepl-mode-hook 'paredit-mode)
+(add-hook 'emacs-lisp-mode-hook 'paredit-mode)
+(add-hook 'lisp-mode-hook 'paredit-mode)
+(add-hook 'scheme-mode-hook 'paredit-mode)
+(add-hook 'geiser-repl-mode-hook 'paredit-mode)
 
 ;;------------------------------------------------------------------------------
 ;; Rainbows!
@@ -339,6 +368,9 @@
 
 (global-set-key (kbd "C-c o") 'open-with)
 
+
+;;------------------------------------------------------------------------------
+;; Creating various tags
 (defun htags (dir)
   "Create Haskell tags"
   (interactive)
