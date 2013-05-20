@@ -91,11 +91,11 @@
   (if window-system
       (progn
         (if (> (x-display-pixel-width) 2000)
-            (set-frame-parameter frame 'font "Source Code Pro-15")
-          (set-frame-parameter frame 'font "Source Code Pro-15")))))
+            (set-frame-parameter frame 'font "Anonymous Pro-18")
+          (set-frame-parameter frame 'font "Anonymous Pro-15")))))
 (if (eq system-type 'darwin)
     (fontify-frame nil)
-  (set-face-attribute 'default nil :font "Inconsolata-13"))
+  (set-face-attribute 'default nil :font "Anonymous Pro-13"))
 (push 'fontify-frame after-make-frame-functions)
 
 
@@ -130,6 +130,12 @@
 (global-set-key (kbd "M-?") 'mark-paragraph)
 (global-set-key (kbd "C-h") 'delete-backward-char)
 (global-set-key (kbd "M-h") 'backward-kill-word)
+
+;; Programming specific
+(global-set-key (kbd "M-g n") 'next-error)
+(global-set-key (kbd "M-g p") 'previous-error)
+
+
 
 ;;------------------------------------------------------------------------------
 ;; buffer-move
@@ -197,10 +203,9 @@
   (setq c-basic-offset 4
         c-indent-level 4
         c-default-style "BSD")
-  (local-set-key (kbd "C-c C-l") 'my-compile-func)
+  (local-set-key (kbd "C-c C-c") 'my-compile-func)
   (local-set-key (kbd "C-c C-k") 'my-compile-clean-func))
 (add-hook 'c-mode-common-hook 'my-c-mode-hook)
-
 
 (defun* get-closest-pathname (&optional (file "Makefile"))
   "Walks up from current directory until it finds a makefile."
@@ -252,7 +257,6 @@
 
 (add-hook 'nrepl-mode-hook
           (lambda () (local-set-key (kbd "C-c r") 'nrepl-refresh)))
-
 
 ;;------------------------------------------------------------------------------
 ;; Paredit
