@@ -91,8 +91,8 @@
   (if window-system
       (progn
         (if (> (x-display-pixel-width) 2000)
-            (set-frame-parameter frame 'font "Anonymous Pro-18")
-          (set-frame-parameter frame 'font "Anonymous Pro-15")))))
+            (set-frame-parameter frame 'font "Source Code Pro-16")
+          (set-frame-parameter frame 'font "Source Code Pro-14")))))
 (if (eq system-type 'darwin)
     (fontify-frame nil)
   (set-face-attribute 'default nil :font "Anonymous Pro-13"))
@@ -175,6 +175,7 @@
 
 ;;------------------------------------------------------------------------------
 ;; Ido
+(setq ido-auto-merge-work-directories-length -1)
 (setq ido-enable-flex-matching t)
 (setq ido-everywhere t)
 (ido-mode 1)
