@@ -23,11 +23,9 @@
                       buffer-move
                       clojure-mode
                       clojurescript-mode
-                      evil
                       exec-path-from-shell
                       fastnav
                       geiser
-                      google-c-style
                       goto-chg
                       haskell-mode
                       inkpot-theme
@@ -39,7 +37,6 @@
                       paredit
                       rainbow-delimiters
                       solarized-theme
-                      sr-speedbar
                       ucs-utils
                       unicode-fonts
                       yasnippet
@@ -274,38 +271,10 @@
 (add-hook 'prog-mode-hook 'rainbow-delimiters-mode)
 
 ;;------------------------------------------------------------------------------
-;; Evil
-;; (setq evil-want-C-u-scroll t)
-;; (setq evil-shift-width 4)
-;; (setq-default evil-auto-indent nil)
-
-;; (evil-mode 1)
-;; (define-key evil-ex-map "e " 'ido-find-file)
-;; (define-key evil-ex-map "w " 'ido-write-file)
-;; (define-key evil-ex-map "b " 'ido-switch-buffer)
-
-;; (define-key evil-normal-state-map [escape] 'keyboard-quit)
-;; (define-key evil-visual-state-map [escape] 'keyboard-quit)
-;; (define-key minibuffer-local-map [escape] 'minibuffer-keyboard-quit)
-;; (define-key minibuffer-local-ns-map [escape] 'minibuffer-keyboard-quit)
-;; (define-key minibuffer-local-completion-map [escape] 'minibuffer-keyboard-quit)
-;; (define-key minibuffer-local-must-match-map [escape] 'minibuffer-keyboard-quit)
-;; (define-key minibuffer-local-isearch-map [escape] 'minibuffer-keyboard-quit)
-
-;; (require 'evil-paredit)
-;; (add-hook 'clojure-mode-hook 'evil-paredit-mode)
-;; (add-hook 'clojurescript-mode-hook 'evil-paredit-mode)
-;; (add-hook 'nrepl-interaction-mode 'evil-paredit-mode)
-;; (add-hook 'nrepl-connected-hook 'evil-paredit-mode)
-;; (add-hook 'emacs-lisp-mode-hook 'evil-paredit-mode)
-;; (add-hook 'lisp-mode-hook 'evil-paredit-mode)
-
-
-;;------------------------------------------------------------------------------
 ;; Speedbar
-(require 'sr-speedbar)
-(global-set-key (kbd "M-s M-s") 'sr-speedbar-toggle)
-(speedbar-add-supported-extension ".hs")
+;; (require 'sr-speedbar)
+;; (global-set-key (kbd "M-s M-s") 'sr-speedbar-toggle)
+;; (speedbar-add-supported-extension ".hs")
 
 ;;------------------------------------------------------------------------------
 ;; GDB
