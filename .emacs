@@ -29,7 +29,6 @@
                       goto-chg
                       haskell-mode
                       inkpot-theme
-                      jabber
                       magit
                       markdown-mode
                       multi-term
@@ -237,10 +236,10 @@
 ;; (require 'ucs-utils)
 ;; (load-file (let ((coding-system-for-read 'utf-8))
 ;;              (shell-command-to-string "agda-mode locate")))
-(add-hook 'agda2-mode-hook
-          '(lambda ()
-             (require 'unicode-fonts)
-             (unicode-fonts-setup)))
+;; (add-hook 'agda2-mode-hook
+;;           '(lambda ()
+;;              (require 'unicode-fonts)
+;;              (unicode-fonts-setup)))
 
 ;;------------------------------------------------------------------------------
 ;; Clojure/nREPL
@@ -287,14 +286,6 @@
 ;;------------------------------------------------------------------------------
 ;; Markdown
 (add-to-list 'auto-mode-alist '("\\.md\\'" . gfm-mode))
-
-;;------------------------------------------------------------------------------
-;; Jabber
-(setq jabber-alert-presence-hooks nil)
-(setq jabber-account-list
-      '(("karl.smeltzer@gmail.com"
-         (:network-server . "talk.google.com")
-         (:connection-type . ssl))))
 
 ;;------------------------------------------------------------------------------
 ;; FastNav
