@@ -21,8 +21,10 @@
 (defvar my-packages '(ace-jump-mode
                       auctex
                       buffer-move
+                      change-inner
                       clojure-mode
                       clojurescript-mode
+		      color-theme-sanityinc-solarized
                       exec-path-from-shell
                       fastnav
                       geiser
@@ -35,7 +37,6 @@
                       nrepl
                       paredit
                       rainbow-delimiters
-                      solarized-theme
                       ucs-utils
                       unicode-fonts
                       yasnippet
@@ -73,8 +74,8 @@
 (setq inhibit-startup-message t)
 (setq inhibit-startup-echo-area-message "karl")
 (transient-mark-mode 1)
-;(global-linum-mode t)
-(column-marker-1 80)
+;; (global-linum-mode t)
+;; (column-marker-1 80)
 
 ;;------------------------------------------------------------------------------
 ;; Font & Colors
@@ -87,7 +88,7 @@
   (if window-system
       (progn
         (if (> (x-display-pixel-width) 2000)
-            (set-frame-parameter frame 'font "Source Code Pro-16")
+            (set-frame-parameter frame 'font "Source Code Pro-15")
           (set-frame-parameter frame 'font "Source Code Pro-14")))))
 (if (eq system-type 'darwin)
     (fontify-frame nil)
@@ -232,19 +233,24 @@
  '(haskell-process-args-ghci '("-fno-ghci-sandbox"))
  '(haskell-tags-on-save t))
 
+(setq haskell-program-name "ghci -fno-ghci-sandbox")
+
 (add-hook 'haskell-mode-hook 'haskell-hook)
 
 (defun haskell-hook ()
   (turn-on-haskell-indentation)
-  (define-key haskell-mode-map [?\C-c ?\C-l] 'haskell-process-load-file)
-  (define-key haskell-mode-map [?\C-c ?\C-z] 'haskell-interactive-switch)
-  (define-key haskell-mode-map (kbd "C-c C-c") 'haskell-process-cabal-build)
-  (define-key haskell-mode-map (kbd "C-c c") 'haskell-process-cabal)
-  (define-key haskell-mode-map (kbd "C-c C-t") 'haskell-process-do-type)
-  (define-key haskell-mode-map (kbd "C-c C-i") 'haskell-process-do-info)
-  (define-key haskell-mode-map (kbd "M-.") 'haskell-mode-tag-find))
+  ;; (define-key haskell-mode-map [?\C-c ?\C-l] 'haskell-process-load-file)
+  ;; (define-key haskell-mode-map (kbd "C-c C-c") 'haskell-process-cabal-build)
+  ;; (define-key haskell-mode-map (kbd "C-c c") 'haskell-process-cabal)
+  ;; (define-key haskell-mode-map (kbd "C-c C-t") 'haskell-process-do-type)
+  ;; (define-key haskell-mode-map (kbd "C-c C-i") 'haskell-process-do-info)
+  ;; (define-key haskell-mode-map (kbd "M-.") 'haskell-mode-tag-find)
+  (define-key haskell-mode-map (kbd "C-c C-z")
+    (lambda ()
+      (interactive)
+      (switch-to-buffer-other-window
+       (haskell-session-interactive-buffer (haskell-session))))))
 
-(setq haskell-program-name "ghci -fno-ghci-sandbox")
 
 ;;------------------------------------------------------------------------------
 ;; Agda
@@ -319,6 +325,13 @@
 (yas-global-mode 1)
 (setq yas-snippet-dirs
       '("~/.emacs.d/snippets"))
+
+
+;;------------------------------------------------------------------------------
+;; Whitespace and Long Lines
+(setq whitespace-style '(face lines))
+(setq whitespace-line-column 80)
+(global-whitespace-mode 1)
 
 ;;------------------------------------------------------------------------------
 ;; Misc things that should probably be in a different file
