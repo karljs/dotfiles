@@ -17,11 +17,11 @@ Bundle 'gmarik/vundle'
 
 " github
 Bundle 'altercation/vim-colors-solarized'
-Bundle 'kien/ctrlp.vim'
+" Bundle 'kien/ctrlp.vim'
 Bundle 'kien/rainbow_parentheses.vim'
 Bundle 'tpope/vim-markdown'
 " Bundle 'tpope/vim-surround'
-Bundle 'tpope/vim-fugitive'
+" Bundle 'tpope/vim-fugitive'
 " Bundle 'xolox/vim-easytags'
 
 " vim-scripts
@@ -47,8 +47,8 @@ set noesckeys
 "-------------------------------------------------------------------------------
 " Tabs & Indent
 set expandtab
-set softtabstop=4
-set shiftwidth=4
+set softtabstop=2
+set shiftwidth=2
 set autoindent
 
 "-------------------------------------------------------------------------------
