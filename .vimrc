@@ -33,9 +33,6 @@ Bundle 'twilight'
 Bundle 'Wombat'
 Bundle 'Zenburn'
 
-" other
-" Bundle 'git://git.wincent.com/command-t.git'
-
 filetype plugin indent on
 
 "-------------------------------------------------------------------------------
@@ -78,23 +75,14 @@ set smartcase
 
 "-------------------------------------------------------------------------------
 " Wildmenu and Ctrl-P
-set wildmenu
-set wildmode=list:longest,full
-set wildignore+=.*,*.so,*.swp,*.zip
-set wildignore+=*/tmp/*,*/Library/*,*/Music/*,*/Pictures/*,/Users/karl/src/*,*/Downloads/*
+" set wildmenu
+" set wildmode=list:longest,full
+" set wildignore+=.*,*.so,*.swp,*.zip
+" set wildignore+=*/tmp/*,*/Library/*,*/Music/*,*/Pictures/*,/Users/karl/src/*,*/Downloads/*
 
 "-------------------------------------------------------------------------------
-" Tagbar 
-nmap <c-s> :TagbarToggle<CR>
-
-"-------------------------------------------------------------------------------
-" Ctrl-P
-nmap <leader>p :CtrlP ~<CR>
-nmap <leader>b :CtrlPBuffer<CR>
-let g:ctrlp_user_command = ['.git/', 'git --git-dir=%s/.git ls-files -oc --exclude-standard']
-
-"-------------------------------------------------------------------------------
-" EasyTags
+" Tags
+set tags=./tags;
 let g:easytags_languages = {
 \   'haskell': {
 \       'cmd': '~/.cabal/bin/lushtags',

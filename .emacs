@@ -81,7 +81,7 @@
 ;;------------------------------------------------------------------------------
 ;; Font & Colors
 ; (setq color-theme-sanityinc-solarized-rgb-is-srgb t)
-(load-theme 'monokai t)
+(load-theme 'sanityinc-solarized-light t)
 
 ;; Set the font depending on OS and pixel density
 (defun fontify-frame (frame)
@@ -89,8 +89,8 @@
   (if window-system
       (progn
         (if (> (x-display-pixel-width) 2000)
-            (set-frame-parameter frame 'font "Inconsolata-16")
-          (set-frame-parameter frame 'font "Inconsolata-15")))))
+            (set-frame-parameter frame 'font "Source Code Pro-16")
+          (set-frame-parameter frame 'font "Source Code Pro-14")))))
 (if (eq system-type 'darwin)
     (fontify-frame nil)
   (set-face-attribute 'default nil :font "Inconsolata-13"))
@@ -241,18 +241,19 @@
 
 (defun haskell-hook ()
   (turn-on-haskell-indentation)
-  (define-key haskell-mode-map (kbd "C-c C-l") 'haskell-process-load-file)
-  (define-key haskell-mode-map (kbd "C-c C-r") 'haskell-process-reload-file)
-  (define-key haskell-mode-map (kbd "C-c C-c") 'haskell-process-cabal-build)
-  (define-key haskell-mode-map (kbd "C-c c") 'haskell-process-cabal)
-  (define-key haskell-mode-map (kbd "C-c C-t") 'haskell-process-do-type)
-  (define-key haskell-mode-map (kbd "C-c C-i") 'haskell-process-do-info)
-  (define-key haskell-mode-map (kbd "M-.") 'haskell-mode-tag-find)
-  (define-key haskell-mode-map (kbd "C-c C-z")
-    (lambda ()
-      (interactive)
-      (switch-to-buffer-other-window
-       (haskell-session-interactive-buffer (haskell-session))))))
+  ;; (define-key haskell-mode-map (kbd "C-c C-l") 'haskell-process-load-file)
+  ;; (define-key haskell-mode-map (kbd "C-c C-r") 'haskell-process-reload-file)
+  ;; (define-key haskell-mode-map (kbd "C-c C-c") 'haskell-process-cabal-build)
+  ;; (define-key haskell-mode-map (kbd "C-c c") 'haskell-process-cabal)
+  ;; (define-key haskell-mode-map (kbd "C-c C-t") 'haskell-process-do-type)
+  ;; (define-key haskell-mode-map (kbd "C-c C-i") 'haskell-process-do-info)
+  ;; (define-key haskell-mode-map (kbd "M-.") 'haskell-mode-tag-find)
+  ;; (define-key haskell-mode-map (kbd "C-c C-z")
+  ;;   (lambda ()
+  ;;     (interactive)
+  ;;     (switch-to-buffer-other-window
+  ;;      (haskell-session-interactive-buffer (haskell-session)))))
+  )
 
 
 ;;------------------------------------------------------------------------------
