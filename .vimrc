@@ -17,21 +17,16 @@ Bundle 'gmarik/vundle'
 
 " github
 Bundle 'altercation/vim-colors-solarized'
-" Bundle 'kien/ctrlp.vim'
 Bundle 'kien/rainbow_parentheses.vim'
 Bundle 'tpope/vim-markdown'
-" Bundle 'tpope/vim-surround'
+Bundle 'tpope/vim-surround'
 " Bundle 'tpope/vim-fugitive'
 " Bundle 'xolox/vim-easytags'
 
 " vim-scripts
 Bundle 'Align'
-Bundle 'darktango.vim'
 Bundle 'inkpot'
 Bundle 'tComment'
-Bundle 'twilight'
-Bundle 'Wombat'
-Bundle 'Zenburn'
 
 filetype plugin indent on
 
@@ -44,9 +39,10 @@ set noesckeys
 "-------------------------------------------------------------------------------
 " Tabs & Indent
 set expandtab
-set softtabstop=2
-set shiftwidth=2
+set softtabstop=4
+set shiftwidth=4
 set autoindent
+autocmd FileType haskell setlocal shiftwidth=2 softtabstop=2
 
 "-------------------------------------------------------------------------------
 " Programming tool
@@ -65,13 +61,14 @@ set laststatus=2
 set ruler
 set showcmd
 set showmatch
-" set colorcolumn=80
+set colorcolumn=80
 
 
 "-------------------------------------------------------------------------------
 " Searching
 set incsearch
 set smartcase
+
 
 "-------------------------------------------------------------------------------
 " Wildmenu and Ctrl-P
@@ -104,7 +101,7 @@ colorscheme solarized
 "-------------------------------------------------------------------------------
 " GUI/Terminal specific tweaks
 if has("gui_running")
-  set gfn=Source\ Code\ Pro:h15
+  set gfn=Inconsolata:h14
   set guioptions-=T
   set guioptions-=r
   set guioptions-=L
