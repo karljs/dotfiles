@@ -17,6 +17,8 @@ Bundle 'gmarik/vundle'
 
 " github
 Bundle 'altercation/vim-colors-solarized'
+Bundle 'bling/vim-airline'
+Bundle 'kien/ctrlp.vim'
 Bundle 'kien/rainbow_parentheses.vim'
 Bundle 'tpope/vim-markdown'
 Bundle 'tpope/vim-surround'
@@ -63,19 +65,23 @@ set showcmd
 set showmatch
 set colorcolumn=80
 
+"-------------------------------------------------------------------------------
+" Airline
+let g:airline_theme='solarized'
 
 "-------------------------------------------------------------------------------
 " Searching
 set incsearch
 set smartcase
 
-
 "-------------------------------------------------------------------------------
 " Wildmenu and Ctrl-P
-" set wildmenu
-" set wildmode=list:longest,full
-" set wildignore+=.*,*.so,*.swp,*.zip
-" set wildignore+=*/tmp/*,*/Library/*,*/Music/*,*/Pictures/*,/Users/karl/src/*,*/Downloads/*
+set wildmenu
+set wildmode=list:longest,full
+let g:ctrlp_custom_ignore = {
+    \ 'dir': '\.git$\|\.svn$\|Library\|Music\|Pictures\|Downloads',
+    \ 'file': '\.so$\|\.hi$\|\.o$\|\.swp$\|.zip$'
+\ }
 
 "-------------------------------------------------------------------------------
 " Tags
