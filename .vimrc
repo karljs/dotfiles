@@ -23,7 +23,8 @@ Bundle 'kien/rainbow_parentheses.vim'
 Bundle 'tpope/vim-markdown'
 Bundle 'tpope/vim-surround'
 " Bundle 'tpope/vim-fugitive'
-" Bundle 'xolox/vim-easytags'
+Bundle 'xolox/vim-easytags'
+Bundle 'xolox/vim-misc'
 
 " vim-scripts
 Bundle 'Align'
@@ -43,6 +44,7 @@ set noesckeys
 set expandtab
 set softtabstop=4
 set shiftwidth=4
+set tabstop=4
 set autoindent
 autocmd FileType haskell setlocal shiftwidth=2 softtabstop=2
 
@@ -85,10 +87,11 @@ let g:ctrlp_custom_ignore = {
 
 "-------------------------------------------------------------------------------
 " Tags
-set tags=./tags;
+let g:easytags_autorecurse = 1
+" set tags=./tags;
 let g:easytags_languages = {
 \   'haskell': {
-\       'cmd': '~/.cabal/bin/lushtags',
+\       'cmd': '~/.cabal/bin/hasktags',
 \       'args': [],
 \       'fileoutput_opt': '-f',
 \       'stdout_opt': '-f-',
