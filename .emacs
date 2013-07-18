@@ -38,6 +38,7 @@
                       nrepl
                       paredit
                       rainbow-delimiters
+                      solarized-theme
                       ucs-utils
                       unicode-fonts
                       yasnippet
@@ -81,7 +82,7 @@
 ;;------------------------------------------------------------------------------
 ;; Font & Colors
 ; (setq color-theme-sanityinc-solarized-rgb-is-srgb t)
-(load-theme 'sanityinc-solarized-light t)
+(load-theme 'solarized-light t)
 
 ;; Set the font depending on OS and pixel density
 (defun fontify-frame (frame)
