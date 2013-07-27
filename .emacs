@@ -82,7 +82,7 @@
 ;;------------------------------------------------------------------------------
 ;; Font & Colors
 ; (setq color-theme-sanityinc-solarized-rgb-is-srgb t)
-(load-theme 'solarized-light t)
+(load-theme 'sanityinc-solarized-light t)
 
 ;; Set the font depending on OS and pixel density
 (defun fontify-frame (frame)
@@ -90,8 +90,8 @@
   (if window-system
       (progn
         (if (> (x-display-pixel-width) 2000)
-            (set-frame-parameter frame 'font "Source Code Pro-16")
-          (set-frame-parameter frame 'font "Source Code Pro-14")))))
+            (set-frame-parameter frame 'font "Source Code Pro-15")
+          (set-frame-parameter frame 'font "Source Code Pro-15")))))
 (if (eq system-type 'darwin)
     (fontify-frame nil)
   (set-face-attribute 'default nil :font "Inconsolata-13"))
@@ -114,7 +114,6 @@
 (setq dired-use-ls-dired nil)
 (setq compilation-scroll-output 1)
 (setq compilation-window-height 10)
-(setq transient-mark-mode nil)
 
 ;;------------------------------------------------------------------------------
 ;; Global keybindings
@@ -234,7 +233,8 @@
 (custom-set-variables
  '(haskell-process-type 'ghci)
  '(haskell-process-args-ghci '("-fno-ghci-sandbox"))
- '(haskell-tags-on-save t))
+ ;; '(haskell-tags-on-save t)
+)
 
 (setq haskell-program-name "ghci -fno-ghci-sandbox")
 
@@ -242,19 +242,19 @@
 
 (defun haskell-hook ()
   (turn-on-haskell-indentation)
-  ;; (define-key haskell-mode-map (kbd "C-c C-l") 'haskell-process-load-file)
-  ;; (define-key haskell-mode-map (kbd "C-c C-r") 'haskell-process-reload-file)
-  ;; (define-key haskell-mode-map (kbd "C-c C-c") 'haskell-process-cabal-build)
-  ;; (define-key haskell-mode-map (kbd "C-c c") 'haskell-process-cabal)
-  ;; (define-key haskell-mode-map (kbd "C-c C-t") 'haskell-process-do-type)
-  ;; (define-key haskell-mode-map (kbd "C-c C-i") 'haskell-process-do-info)
+  (setq projectile-tags-command "hasktags -e")
+  (define-key haskell-mode-map (kbd "C-c C-l") 'haskell-process-load-file)
+  (define-key haskell-mode-map (kbd "C-c C-r") 'haskell-process-reload-file)
+  (define-key haskell-mode-map (kbd "C-c C-c") 'haskell-process-cabal-build)
+  (define-key haskell-mode-map (kbd "C-c c") 'haskell-process-cabal)
+  (define-key haskell-mode-map (kbd "C-c C-t") 'haskell-process-do-type)
+  (define-key haskell-mode-map (kbd "C-c C-i") 'haskell-process-do-info)
   ;; (define-key haskell-mode-map (kbd "M-.") 'haskell-mode-tag-find)
-  ;; (define-key haskell-mode-map (kbd "C-c C-z")
-  ;;   (lambda ()
-  ;;     (interactive)
-  ;;     (switch-to-buffer-other-window
-  ;;      (haskell-session-interactive-buffer (haskell-session)))))
-  )
+  (define-key haskell-mode-map (kbd "C-c C-z")
+    (lambda ()
+      (interactive)
+      (switch-to-buffer-other-window
+       (haskell-session-interactive-buffer (haskell-session))))))
 
 
 ;;------------------------------------------------------------------------------
@@ -338,6 +338,7 @@
 (setq whitespace-line-column 80)
 (global-whitespace-mode 1)
 
+
 ;;------------------------------------------------------------------------------
 ;; Misc things that should probably be in a different file
 (defun smart-open-line ()
@@ -368,7 +369,7 @@
 
 
 ;;------------------------------------------------------------------------------
-;; Creating various tags
+;; Creating various tags.
 (defun htags (dir)
   "Create Haskell tags"
   (interactive)
