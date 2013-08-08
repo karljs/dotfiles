@@ -23,8 +23,6 @@ Bundle 'kien/rainbow_parentheses.vim'
 Bundle 'tpope/vim-markdown'
 Bundle 'tpope/vim-surround'
 " Bundle 'tpope/vim-fugitive'
-" Bundle 'xolox/vim-easytags'
-Bundle 'xolox/vim-misc'
 
 " vim-scripts
 Bundle 'Align'
@@ -89,16 +87,16 @@ let g:ctrlp_custom_ignore = {
 " Tags
 " let g:easytags_autorecurse = 1
 " set tags=./tags;
-let g:easytags_languages = {
-\   'haskell': {
-\       'cmd': '~/.cabal/bin/hasktags',
-\       'args': [],
-\       'fileoutput_opt': '-f',
-\       'stdout_opt': '-f-',
-\       'recurse_flag': '-R'
-\   }
-\}
-
+" let g:easytags_languages = {
+" \   'haskell': {
+" \       'cmd': '~/.cabal/bin/hasktags',
+" \       'args': [],
+" \       'fileoutput_opt': '-f',
+" \       'stdout_opt': '-f-',
+" \       'recurse_flag': '-R'
+" \   }
+" \}
+ 
 "-------------------------------------------------------------------------------
 " Colors
 syntax on

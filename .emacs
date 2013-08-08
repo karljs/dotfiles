@@ -26,6 +26,7 @@
                       clojurescript-mode
 		      color-theme-sanityinc-solarized
                       exec-path-from-shell
+                      evil
                       fastnav
                       geiser
                       goto-chg
@@ -41,6 +42,7 @@
                       solarized-theme
                       ucs-utils
                       unicode-fonts
+                      web-mode
                       yasnippet
                       zenburn-theme)
   "Packages to install at launch, when necessary.")
@@ -75,9 +77,7 @@
 (column-number-mode 1)
 (setq inhibit-startup-message t)
 (setq inhibit-startup-echo-area-message "karl")
-(transient-mark-mode 1)
-;; (global-linum-mode t)
-;; (column-marker-1 80)
+(transient-mark-mode -1)
 
 ;;------------------------------------------------------------------------------
 ;; Font & Colors
@@ -117,16 +117,17 @@
 
 ;;------------------------------------------------------------------------------
 ;; Global keybindings
-;;(global-set-key (kbd "C-x t") 'eshell)
+;; (evil-mode 1)
+(global-set-key (kbd "C-x t") 'eshell)
 (global-set-key (kbd "C-x a r") 'align-regexp)
 (global-set-key [M-left] 'windmove-left)
 (global-set-key [M-right] 'windmove-right)
 (global-set-key [M-up] 'windmove-up)
 (global-set-key [M-down] 'windmove-down)
-
-;; <3 Unix
 (global-set-key (kbd "C-?") 'help-command)
 (global-set-key (kbd "M-?") 'mark-paragraph)
+
+;; <3 Unix
 (global-set-key (kbd "C-h") 'delete-backward-char)
 (global-set-key (kbd "M-h") 'backward-kill-word)
 
@@ -326,18 +327,21 @@
 
 ;;------------------------------------------------------------------------------
 ;; Yasnippet
-(setq yas-verbosity 0)
-(yas-global-mode 1)
-(setq yas-snippet-dirs
-      '("~/.emacs.d/snippets"))
-
+;; (setq yas-verbosity 0)
+;; (yas-global-mode 1)
+;; (setq yas-snippet-dirs
+;;       '("~/.emacs.d/snippets"))
 
 ;;------------------------------------------------------------------------------
 ;; Whitespace and Long Lines
 (setq whitespace-style '(face lines))
 (setq whitespace-line-column 80)
-(global-whitespace-mode 1)
+(add-hook 'prog-mode-hook 'whitespace-mode)
 
+;;------------------------------------------------------------------------------
+;; Web mode
+(require 'web-mode)
+(add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
 
 ;;------------------------------------------------------------------------------
 ;; Misc things that should probably be in a different file
@@ -370,6 +374,17 @@
 
 ;;------------------------------------------------------------------------------
 ;; Creating various tags.
+(defun guess-dir ()
+  "Look upward for a .git or .svn directory for a good place to
+   generate tags"
+  (interactive)
+  (labels
+      ((check-dir (cwd))
+       (message "%s " "inner thing"))
+    (let ((files-to-look-for '(".svn" ".git")))
+      (check-dir "blah")
+      (message "my list: %s" files-to-look-for))))
+
 (defun htags (dir)
   "Create Haskell tags"
   (interactive)
@@ -389,7 +404,7 @@
       (htags dir)
     (ctags dir)))
 
-(global-set-key (kbd "C-x t") 'tags)
+(global-set-key (kbd "C-c t") 'tags)
 
 
 ;;------------------------------------------------------------------------------
