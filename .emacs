@@ -114,6 +114,7 @@
 (setq dired-use-ls-dired nil)
 (setq compilation-scroll-output 1)
 (setq compilation-window-height 10)
+(setq confirm-nonexistent-file-or-buffer nil)
 
 ;;------------------------------------------------------------------------------
 ;; Global keybindings
@@ -134,7 +135,6 @@
 ;; Programming specific
 (global-set-key (kbd "M-g n") 'next-error)
 (global-set-key (kbd "M-g p") 'previous-error)
-
 
 
 ;;------------------------------------------------------------------------------
@@ -178,9 +178,9 @@
 (setq ido-auto-merge-work-directories-length -1)
 (setq ido-enable-flex-matching t)
 (setq ido-everywhere t)
-(ido-mode 1)
 (setq ido-create-new-buffer 'always)
 (setq ido-default-buffer-method 'selected-window)
+(ido-mode 1)
 
 ;;------------------------------------------------------------------------------
 ;; Commenting
