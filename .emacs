@@ -82,7 +82,7 @@
 ;;------------------------------------------------------------------------------
 ;; Font & Colors
 ; (setq color-theme-sanityinc-solarized-rgb-is-srgb t)
-(load-theme 'sanityinc-solarized-light t)
+(load-theme 'sanityinc-solarized-dark t)
 
 ;; Set the font depending on OS and pixel density
 (defun fontify-frame (frame)
@@ -119,7 +119,7 @@
 ;;------------------------------------------------------------------------------
 ;; Global keybindings
 ;; (evil-mode 1)
-(global-set-key (kbd "C-x t") 'eshell)
+;; (global-set-key (kbd "C-x t") 'eshell)
 (global-set-key (kbd "C-x a r") 'align-regexp)
 (global-set-key [M-left] 'windmove-left)
 (global-set-key [M-right] 'windmove-right)
@@ -371,6 +371,14 @@
 
 (global-set-key (kbd "C-c o") 'open-with)
 
+
+(defun open-line-above ()
+  (interactive)
+  (beginning-of-line)
+  (newline)
+  (forward-line -1))
+
+(global-set-key (kbd "C-O") 'open-line-above)
 
 ;;------------------------------------------------------------------------------
 ;; Creating various tags.
