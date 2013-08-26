@@ -20,6 +20,7 @@ Bundle 'altercation/vim-colors-solarized'
 Bundle 'bling/vim-airline'
 Bundle 'kien/ctrlp.vim'
 Bundle 'kien/rainbow_parentheses.vim'
+Bundle 'tomasr/molokai'
 Bundle 'tpope/vim-markdown'
 Bundle 'tpope/vim-surround'
 " Bundle 'tpope/vim-fugitive'
@@ -28,6 +29,7 @@ Bundle 'tpope/vim-surround'
 Bundle 'Align'
 Bundle 'inkpot'
 Bundle 'tComment'
+Bundle 'twilight'
 
 filetype plugin indent on
 
@@ -71,8 +73,9 @@ let g:airline_theme='solarized'
 
 "-------------------------------------------------------------------------------
 " Searching
-set incsearch
+set ignorecase
 set smartcase
+set incsearch
 
 "-------------------------------------------------------------------------------
 " Wildmenu and Ctrl-P
