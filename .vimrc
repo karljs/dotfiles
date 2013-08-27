@@ -45,7 +45,7 @@ set expandtab
 set softtabstop=4
 set shiftwidth=4
 set tabstop=4
-set autoindent
+set noautoindent
 autocmd FileType haskell setlocal shiftwidth=2 softtabstop=2
 
 "-------------------------------------------------------------------------------
