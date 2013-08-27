@@ -39,6 +39,7 @@
                       nrepl
                       paredit
                       rainbow-delimiters
+                      scala-mode2
                       solarized-theme
                       ucs-utils
                       unicode-fonts
@@ -81,6 +82,8 @@
 
 ;;------------------------------------------------------------------------------
 ;; Font & Colors
+(setq font-lock-maximum-decoration nil)
+
 ; (setq color-theme-sanityinc-solarized-rgb-is-srgb t)
 (load-theme 'sanityinc-solarized-light t)
 
