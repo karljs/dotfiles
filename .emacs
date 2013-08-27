@@ -82,7 +82,7 @@
 ;;------------------------------------------------------------------------------
 ;; Font & Colors
 ; (setq color-theme-sanityinc-solarized-rgb-is-srgb t)
-(load-theme 'sanityinc-solarized-dark t)
+(load-theme 'sanityinc-solarized-light t)
 
 ;; Set the font depending on OS and pixel density
 (defun fontify-frame (frame)
@@ -90,8 +90,8 @@
   (if window-system
       (progn
         (if (> (x-display-pixel-width) 2000)
-            (set-frame-parameter frame 'font "Source Code Pro-15")
-          (set-frame-parameter frame 'font "Source Code Pro-15")))))
+            (set-frame-parameter frame 'font "Source Code Pro-14")
+          (set-frame-parameter frame 'font "Source Code Pro-14")))))
 (if (eq system-type 'darwin)
     (fontify-frame nil)
   (set-face-attribute 'default nil :font "Inconsolata-13"))
@@ -309,6 +309,8 @@
 ;;------------------------------------------------------------------------------
 ;; Magit
 (global-set-key (kbd "C-x g") 'magit-status)
+(setq magit-emacsclient-executable
+      "/Applications/MacPorts/Emacs.app/Contents/MacOS/bin/emacsclient")
 
 ;;------------------------------------------------------------------------------
 ;; Markdown
@@ -416,4 +418,5 @@
 
 
 ;;------------------------------------------------------------------------------
+(server-start)
 (message "%s" "You shouldn't have come back, Karl")
