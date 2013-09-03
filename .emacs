@@ -15,6 +15,8 @@
              '("marmalade" . "http://marmalade-repo.org/packages/") t)
 (add-to-list 'package-archives
 	     '("melpa" . "http://melpa.milkbox.net/packages/") t)
+(add-to-list 'package-archives
+             '("sunrise" . "http://joseito.republika.pl/sunrise-commander/") t)
 
 ;;------------------------------------------------------------------------------
 ;; Install packages as necessary on startup. Credit to the Prelude project.
@@ -41,6 +43,7 @@
                       rainbow-delimiters
                       scala-mode2
                       solarized-theme
+                      sunrise
                       ucs-utils
                       unicode-fonts
                       web-mode
@@ -129,6 +132,10 @@
 (global-set-key [M-down] 'windmove-down)
 (global-set-key (kbd "C-?") 'help-command)
 (global-set-key (kbd "M-?") 'mark-paragraph)
+(global-set-key (kbd "C-c x") 'sunrise)
+(global-set-key (kbd "C-c X") 'sunrise-cd)
+;; (global-set-key (kbd "C-c h") 'helm-mini)
+
 
 ;; <3 Unix
 (global-set-key (kbd "C-h") 'delete-backward-char)
@@ -356,16 +363,18 @@
 ;;------------------------------------------------------------------------------
 ;; Scala stuff
 ;; (add-to-list 'load-path "/Users/karl/.emacs.d/ensime_2.10.0-0.9.8.9/elisp/")
-
 ;; (require 'ensime)
 ;; (add-hook 'scala-mode-hook 'ensime-scala-mode-hook)
-
 
 ;;------------------------------------------------------------------------------
 ;; MultiTerm
 ;; (setq term-default-fg-color (face-foreground 'default))
 ;; (setq term-default-bg-color (face-background 'default))
 (setq multi-term-program "/opt/local/bin/bash")
+
+;;------------------------------------------------------------------------------
+;; Helm
+;; (helm-mode 1)
 
 ;;------------------------------------------------------------------------------
 ;; Misc things that should probably be in a different file
