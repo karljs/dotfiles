@@ -82,10 +82,9 @@
 
 ;;------------------------------------------------------------------------------
 ;; Font & Colors
-(setq font-lock-maximum-decoration nil)
-
+;; (setq font-lock-maximum-decoration nil)
 ; (setq color-theme-sanityinc-solarized-rgb-is-srgb t)
-(load-theme 'sanityinc-solarized-light t)
+(load-theme 'monokai t)
 
 ;; Set the font depending on OS and pixel density
 (defun fontify-frame (frame)
@@ -122,7 +121,7 @@
 ;;------------------------------------------------------------------------------
 ;; Global keybindings
 ;; (evil-mode 1)
-;; (global-set-key (kbd "C-x t") 'eshell)
+(global-set-key (kbd "C-x t") 'multi-term)
 (global-set-key (kbd "C-x a r") 'align-regexp)
 (global-set-key [M-left] 'windmove-left)
 (global-set-key [M-right] 'windmove-right)
@@ -157,6 +156,12 @@
 (add-hook 'LaTeX-mode-hook 'LaTeX-math-mode)
 (setq font-latex-fontify-script nil)
 (setq font-latex-fontify-sectioning 'color)
+
+(add-hook 'LaTeX-mode-hook (lambda ()
+  (push
+   '("Latexmk" "latexmk -pdf %s" TeX-run-TeX nil t
+     :help "Run Latexmk on file")
+   TeX-command-list)))
 
 (setq TeX-view-program-selection
       '((output-pdf "PDF Viewer")
@@ -349,6 +354,20 @@
 (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
 
 ;;------------------------------------------------------------------------------
+;; Scala stuff
+;; (add-to-list 'load-path "/Users/karl/.emacs.d/ensime_2.10.0-0.9.8.9/elisp/")
+
+;; (require 'ensime)
+;; (add-hook 'scala-mode-hook 'ensime-scala-mode-hook)
+
+
+;;------------------------------------------------------------------------------
+;; MultiTerm
+;; (setq term-default-fg-color (face-foreground 'default))
+;; (setq term-default-bg-color (face-background 'default))
+(setq multi-term-program "/opt/local/bin/bash")
+
+;;------------------------------------------------------------------------------
 ;; Misc things that should probably be in a different file
 (defun smart-open-line ()
   (interactive)
@@ -417,7 +436,7 @@
       (htags dir)
     (ctags dir)))
 
-(global-set-key (kbd "C-c t") 'tags)
+;; (global-set-key (kbd "C-c t") 'tags)
 
 
 ;;------------------------------------------------------------------------------
