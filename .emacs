@@ -12,11 +12,9 @@
 ;; Package manager load and setup
 (package-initialize)
 (add-to-list 'package-archives
-             '("marmalade" . "http://marmalade-repo.org/packages/") t)
-(add-to-list 'package-archives
 	     '("melpa" . "http://melpa.milkbox.net/packages/") t)
 (add-to-list 'package-archives
-             '("sunrise" . "http://joseito.republika.pl/sunrise-commander/") t)
+             '("marmalade" . "http://marmalade-repo.org/packages/") t)
 
 ;;------------------------------------------------------------------------------
 ;; Install packages as necessary on startup. Credit to the Prelude project.
@@ -40,10 +38,10 @@
                       multi-term
                       nrepl
                       paredit
+		      purple-haze-theme
                       rainbow-delimiters
                       scala-mode2
                       solarized-theme
-                      sunrise
                       ucs-utils
                       unicode-fonts
                       web-mode
@@ -87,7 +85,8 @@
 ;; Font & Colors
 ;; (setq font-lock-maximum-decoration nil)
 ; (setq color-theme-sanityinc-solarized-rgb-is-srgb t)
-(load-theme 'monokai t)
+(load-theme 'solarized-light t)
+
 
 ;; Set the font depending on OS and pixel density
 (defun fontify-frame (frame)
@@ -95,8 +94,8 @@
   (if window-system
       (progn
         (if (> (x-display-pixel-width) 2000)
-            (set-frame-parameter frame 'font "Source Code Pro-14")
-          (set-frame-parameter frame 'font "Source Code Pro-14")))))
+            (set-frame-parameter frame 'font "Source Code Pro-12")
+          (set-frame-parameter frame 'font "Source Code Pro-12")))))
 (if (eq system-type 'darwin)
     (fontify-frame nil)
   (set-face-attribute 'default nil :font "Inconsolata-13"))
@@ -120,11 +119,11 @@
 (setq compilation-scroll-output 1)
 (setq compilation-window-height 10)
 (setq confirm-nonexistent-file-or-buffer nil)
+(electric-indent-mode +1)  ; do I really want this?
 
 ;;------------------------------------------------------------------------------
 ;; Global keybindings
 ;; (evil-mode 1)
-(global-set-key (kbd "C-x t") 'multi-term)
 (global-set-key (kbd "C-x a r") 'align-regexp)
 (global-set-key [M-left] 'windmove-left)
 (global-set-key [M-right] 'windmove-right)
@@ -155,7 +154,7 @@
 
 ;;------------------------------------------------------------------------------
 ;; Ace jump mode
-(define-key global-map (kbd "C-c SPC") 'ace-jump-mode)
+(define-key global-map (kbd "C-c C-SPC") 'ace-jump-mode)
 
 ;;------------------------------------------------------------------------------
 ;; LaTeX
@@ -324,8 +323,9 @@
 ;;------------------------------------------------------------------------------
 ;; Magit
 (global-set-key (kbd "C-x g") 'magit-status)
-(setq magit-emacsclient-executable
-      "/Applications/MacPorts/Emacs.app/Contents/MacOS/bin/emacsclient")
+(when (eq system-type 'darwin)
+  (setq magit-emacsclient-executable
+        "/Applications/MacPorts/Emacs.app/Contents/MacOS/bin/emacsclient"))
 
 ;;------------------------------------------------------------------------------
 ;; Markdown
@@ -350,7 +350,7 @@
 ;;       '("~/.emacs.d/snippets"))
 
 ;;------------------------------------------------------------------------------
-;; Whitespace and Long Lines
+;; Whitespace and long lines
 (setq whitespace-style '(face lines))
 (setq whitespace-line-column 80)
 (add-hook 'prog-mode-hook 'whitespace-mode)
@@ -367,10 +367,24 @@
 ;; (add-hook 'scala-mode-hook 'ensime-scala-mode-hook)
 
 ;;------------------------------------------------------------------------------
-;; MultiTerm
+;; MultiTerm + AnsiTerm
 ;; (setq term-default-fg-color (face-foreground 'default))
 ;; (setq term-default-bg-color (face-background 'default))
-(setq multi-term-program "/opt/local/bin/bash")
+(when (eq system-type 'darwin)
+  (setq multi-term-program "/opt/local/bin/bash"))
+
+(defun visit-term-buffer ()
+  "Create or visit a terminal buffer."
+  (interactive)
+  (if (not (get-buffer "*ansi-term*"))
+      (progn
+        (split-window-sensibly (selected-window))
+        (other-window 1)
+        (ansi-term "/opt/local/bin/bash"))
+    (switch-to-buffer-other-window "*ansi-term*")))
+
+(global-set-key (kbd "C-c t") 'visit-term-buffer)
+
 
 ;;------------------------------------------------------------------------------
 ;; Helm
@@ -379,11 +393,13 @@
 ;;------------------------------------------------------------------------------
 ;; Misc things that should probably be in a different file
 (defun smart-open-line ()
+  "Insert a line below regardless of point position.  Like Vim's 'o' command."
   (interactive)
   (move-end-of-line nil)
   (newline-and-indent))
 
 (global-set-key [(shift return)] 'smart-open-line)
+
 
 (defun reload-dot-emacs ()
   (interactive)
@@ -391,6 +407,7 @@
   (message "Reloaded .emacs file..."))
 
 (global-set-key (kbd "C-x C-r") 'reload-dot-emacs)
+
 
 (defun open-with ()
   (interactive)
@@ -415,16 +432,17 @@
 
 ;;------------------------------------------------------------------------------
 ;; Creating various tags.
-(defun guess-dir ()
-  "Look upward for a .git or .svn directory for a good place to
-   generate tags"
-  (interactive)
-  (labels
-      ((check-dir (cwd))
-       (message "%s " "inner thing"))
-    (let ((files-to-look-for '(".svn" ".git")))
-      (check-dir "blah")
-      (message "my list: %s" files-to-look-for))))
+
+;; (defun guess-dir ()
+;;   "Look upward for a .git or .svn directory for a good place to
+;;    generate tags"
+;;   (interactive)
+;;   (labels
+;;       ((check-dir (cwd))
+;;        (message "%s " "inner thing"))
+;;     (let ((files-to-look-for '(".svn" ".git")))
+;;       (check-dir "blah")
+;;       (message "my list: %s" files-to-look-for))))
 
 (defun htags (dir)
   "Create Haskell tags"
