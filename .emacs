@@ -134,6 +134,7 @@
 (global-set-key (kbd "C-c x") 'sunrise)
 (global-set-key (kbd "C-c X") 'sunrise-cd)
 ;; (global-set-key (kbd "C-c h") 'helm-mini)
+(global-set-key (kbd "C-c %") 'replace-regexp)
 
 
 ;; <3 Unix
@@ -389,6 +390,13 @@
 ;;------------------------------------------------------------------------------
 ;; Helm
 ;; (helm-mode 1)
+
+;;------------------------------------------------------------------------------
+;; Tramp
+(setq tramp-shell-prompt-pattern
+      "^[^]#$%>\n]*[]#$%>]$? *\\(\\[[0-9;]*[a-zA-Z] *\\)*")
+(setq ido-enable-tramp-completion t)
+(setq tramp-default-method "ssh")
 
 ;;------------------------------------------------------------------------------
 ;; Misc things that should probably be in a different file
