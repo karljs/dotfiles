@@ -24,28 +24,23 @@
                       change-inner
                       clojure-mode
                       clojurescript-mode
-		      color-theme-sanityinc-solarized
                       exec-path-from-shell
-                      evil
                       fastnav
-                      geiser
-                      goto-chg
+                      glsl-mode
                       haskell-mode
                       inkpot-theme
                       magit
                       markdown-mode
                       monokai-theme
-                      multi-term
+                      ;; multi-web-mode
                       nrepl
                       paredit
-		      purple-haze-theme
                       rainbow-delimiters
                       scala-mode2
                       solarized-theme
                       ucs-utils
                       unicode-fonts
                       web-mode
-                      yasnippet
                       zenburn-theme)
   "Packages to install at launch, when necessary.")
 
@@ -84,9 +79,8 @@
 ;;------------------------------------------------------------------------------
 ;; Font & Colors
 ;; (setq font-lock-maximum-decoration nil)
-; (setq color-theme-sanityinc-solarized-rgb-is-srgb t)
-(load-theme 'solarized-light t)
-
+;; (setq solarized-use-variable-pitch nil)
+(load-theme 'espresso t)
 
 ;; Set the font depending on OS and pixel density
 (defun fontify-frame (frame)
@@ -94,32 +88,31 @@
   (if window-system
       (progn
         (if (> (x-display-pixel-width) 2000)
-            (set-frame-parameter frame 'font "Source Code Pro-12")
-          (set-frame-parameter frame 'font "Source Code Pro-12")))))
+            (set-frame-parameter frame 'font "Source Code Pro-14")
+          (set-frame-parameter frame 'font "Source Code Pro-14")))))
 (if (eq system-type 'darwin)
     (fontify-frame nil)
   (set-face-attribute 'default nil :font "Inconsolata-13"))
 (push 'fontify-frame after-make-frame-functions)
 
-
 ;;------------------------------------------------------------------------------
 ;; Good behavior
-(setq mac-option-modifier 'none)
-(setq mac-command-modifier 'meta)
-(setq-default indent-tabs-mode nil)  ; never use tabs anywhere
-(setq make-backup-files nil)
-(add-hook 'before-save-hook 'delete-trailing-whitespace)
-(setq ns-pop-up-frames nil)
+(setq compilation-scroll-output 1
+      compilation-window-height 10
+      confirm-nonexistent-file-or-buffer nil
+      dired-use-ls-dired nil
+      mac-command-modifier 'meta
+      mac-option-modifier 'none
+      make-backup-files nil
+      ns-pop-up-frames nil
+      ring-bell-function (lambda () (message "*beep*"))
+      vc-follow-symlinks t)
+
+(setq-default fill-column 80
+              indent-tabs-mode nil)
+
 (global-auto-revert-mode 1)
-(setq-default fill-column 80)
-(setq vc-follow-symlinks t)
-(setq ring-bell-function (lambda () (message "*beep*")))  ; stop beeping
-;(setq-default truncate-lines t)
-(setq dired-use-ls-dired nil)
-(setq compilation-scroll-output 1)
-(setq compilation-window-height 10)
-(setq confirm-nonexistent-file-or-buffer nil)
-(electric-indent-mode +1)  ; do I really want this?
+(add-hook 'before-save-hook 'delete-trailing-whitespace)
 
 ;;------------------------------------------------------------------------------
 ;; Global keybindings
@@ -129,17 +122,14 @@
 (global-set-key [M-right] 'windmove-right)
 (global-set-key [M-up] 'windmove-up)
 (global-set-key [M-down] 'windmove-down)
-(global-set-key (kbd "C-?") 'help-command)
-(global-set-key (kbd "M-?") 'mark-paragraph)
-(global-set-key (kbd "C-c x") 'sunrise)
-(global-set-key (kbd "C-c X") 'sunrise-cd)
-;; (global-set-key (kbd "C-c h") 'helm-mini)
 (global-set-key (kbd "C-c %") 'replace-regexp)
 
 
 ;; <3 Unix
-(global-set-key (kbd "C-h") 'delete-backward-char)
-(global-set-key (kbd "M-h") 'backward-kill-word)
+;; (global-set-key (kbd "C-h") 'delete-backward-char)
+;; (global-set-key (kbd "M-h") 'backward-kill-word)
+;; (global-set-key (kbd "C-?") 'help-command)
+;; (global-set-key (kbd "M-?") 'mark-paragraph)
 
 ;; Programming specific
 (global-set-key (kbd "M-g n") 'next-error)
@@ -159,34 +149,48 @@
 
 ;;------------------------------------------------------------------------------
 ;; LaTeX
+(require 'tex-site)
+
 (setq TeX-PDF-mode t)
+(setq TeX-auto-save t)
+(setq TeX-parse-self t)
+(setq-default TeX-master nil)
+;; (setq font-latex-fontify-script nil)
+;; (setq font-latex-fontify-sectioning 'color)
+(add-hook 'LaTeX-mode-hook 'visual-line-mode)
+;; (add-hook 'LaTeX-mode-hook 'flyspell-mode)
 (add-hook 'LaTeX-mode-hook 'LaTeX-math-mode)
-(setq font-latex-fontify-script nil)
-(setq font-latex-fontify-sectioning 'color)
+(add-hook 'LaTeX-mode-hook 'turn-on-reftex)
+(setq reftex-plug-into-AUCTeX t)
 
-(add-hook 'LaTeX-mode-hook (lambda ()
-  (push
-   '("Latexmk" "latexmk -pdf %s" TeX-run-TeX nil t
-     :help "Run Latexmk on file")
-   TeX-command-list)))
+;; (add-hook 'LaTeX-mode-hook (lambda ()
+;;   (push
+;;    '("Latexmk" "latexmk -pdf %s" TeX-run-TeX nil t
+;;      :help "Run Latexmk on file")
+;;    TeX-command-list)))
 
-(setq TeX-view-program-selection
-      '((output-pdf "PDF Viewer")
-        (output-dvi "DVI Viewer")
-        (output-html "HTML Viewer")))
 (when (eq system-type 'darwin)
   (setq TeX-view-program-list
         '(("PDF Viewer" "open %o")
           ("DVI Viewer" "open %o")
           ("HTML Viewer" "open %o"))))
 
+(setq TeX-view-program-selection
+      '((output-pdf "PDF Viewer")
+        (output-dvi "DVI Viewer")
+        (output-html "HTML Viewer")))
+
 ;;------------------------------------------------------------------------------
 ;; Spelling
+;; (setq speck-engine (quote Hunspell))
+;; (setq speck-hunspell-default-dictionary-name "en_US")
 (setq-default ispell-program-name "aspell")
+
 
 ;;------------------------------------------------------------------------------
 ;; Org
-(define-key global-map "\C-ca" 'org-agenda)
+;; (setq org-fontify-emphasized-text nil)
+;; (define-key global-map "\C-ca" 'org-agenda)
 
 ;;------------------------------------------------------------------------------
 ;; Ido
@@ -200,8 +204,8 @@
 ;;------------------------------------------------------------------------------
 ;; Commenting
 (defun comment-or-uncomment-region-or-line ()
-  "Comments or uncomments the region or the current line if
-   there's no active region."
+  "Comments or uncomments the region or the current line if there
+is no active region."
   (interactive)
   (let (beg end)
     (if (region-active-p)
@@ -222,6 +226,10 @@
   (local-set-key (kbd "C-c C-c") 'my-compile-func)
   (local-set-key (kbd "C-c C-k") 'my-compile-clean-func))
 (add-hook 'c-mode-common-hook 'my-c-mode-hook)
+
+(defun my-indent-setup ()
+  (c-set-offset 'arglist-intro '+))
+(add-hook 'c-mode-common-hook 'my-indent-setup)
 
 (defun* get-closest-pathname (&optional (file "Makefile"))
   "Walks up from current directory until it finds a makefile."
@@ -388,6 +396,12 @@
 
 
 ;;------------------------------------------------------------------------------
+;; GLSL
+(autoload 'glsl-mode "glsl-mode" nil t)
+(add-to-list 'auto-mode-alist '("\\.vert\\'" . glsl-mode))
+(add-to-list 'auto-mode-alist '("\\.frag\\'" . glsl-mode))
+
+;;------------------------------------------------------------------------------
 ;; Helm
 ;; (helm-mode 1)
 
@@ -400,6 +414,12 @@
 
 ;;------------------------------------------------------------------------------
 ;; Misc things that should probably be in a different file
+
+(defun comment-paragraph ()
+  (interactive)
+  )
+
+
 (defun smart-open-line ()
   "Insert a line below regardless of point position.  Like Vim's 'o' command."
   (interactive)
