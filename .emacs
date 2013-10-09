@@ -89,7 +89,7 @@
       (progn
         (if (> (x-display-pixel-width) 2000)
             (set-frame-parameter frame 'font "Source Code Pro-14")
-          (set-frame-parameter frame 'font "Source Code Pro-14")))))
+          (set-frame-parameter frame 'font "Source Code Pro-12")))))
 (if (eq system-type 'darwin)
     (fontify-frame nil)
   (set-face-attribute 'default nil :font "Inconsolata-13"))
@@ -219,38 +219,73 @@ is no active region."
 
 ;;------------------------------------------------------------------------------
 ;; C/C++
-(defun my-c-mode-hook ()
-  (setq c-basic-offset 4
-        c-indent-level 4
-        c-default-style "BSD")
-  (local-set-key (kbd "C-c C-c") 'my-compile-func)
-  (local-set-key (kbd "C-c C-k") 'my-compile-clean-func))
-(add-hook 'c-mode-common-hook 'my-c-mode-hook)
+;; (defun my-c-mode-hook ()
+;;   (setq c-basic-offset 4
+;;         c-indent-level 4
+;;         c-default-style "BSD")
+;;   (local-set-key (kbd "C-c C-c") 'my-compile-func)
+;;   (local-set-key (kbd "C-c C-k") 'my-compile-clean-func))
+;; (add-hook 'c-mode-common-hook 'my-c-mode-hook)
 
-(defun my-indent-setup ()
-  (c-set-offset 'arglist-intro '+))
-(add-hook 'c-mode-common-hook 'my-indent-setup)
+;; (defun my-indent-setup ()
+;;   (c-set-offset 'arglist-intro '+))
+;; (add-hook 'c-mode-common-hook 'my-indent-setup)
 
-(defun* get-closest-pathname (&optional (file "Makefile"))
-  "Walks up from current directory until it finds a makefile."
-  (let ((root (expand-file-name "/")))
-    (expand-file-name file
-                      (loop
-                       for d = default-directory then (expand-file-name ".." d)
-                       if (file-exists-p (expand-file-name file d))
-                       return d
-                       if (equal d root)
-                       return nil))))
+;; (defun* get-closest-pathname (&optional (file "Makefile"))
+;;   "Walks up from current directory until it finds a makefile."
+;;   (let ((root (expand-file-name "/")))
+;;     (expand-file-name file
+;;                       (loop
+;;                        for d = default-directory then (expand-file-name ".." d)
+;;                        if (file-exists-p (expand-file-name file d))
+;;                        return d
+;;                        if (equal d root)
+;;                        return nil))))
 
-(defun my-compile-func ()
-  (interactive)
-  (compile (format "make -C %s" (file-name-directory (get-closest-pathname)))))
+;; (defun my-compile-func ()
+;;   (interactive)
+;;   (compile (format "make -C %s" (file-name-directory (get-closest-pathname)))))
 
-(defun my-compile-clean-func ()
-  (interactive)
-  (compile (format "make -C %s clean"
-                   (file-name-directory (get-closest-pathname)))))
+;; (defun my-compile-clean-func ()
+;;   (interactive)
+;;   (compile (format "make -C %s clean"
+;;                    (file-name-directory (get-closest-pathname)))))
 
+
+;; Kill/yanked from Kevin's init file.  Need to read through it, but it seems to
+;; work
+(setq-default tab-width 4) ; or any other preferred value
+(setq cua-auto-tabify-rectangles nil)
+(defadvice align (around smart-tabs activate)
+ (let ((indent-tabs-mode nil)) ad-do-it))
+(defadvice align-regexp (around smart-tabs activate)
+ (let ((indent-tabs-mode nil)) ad-do-it))
+(defadvice indent-relative (around smart-tabs activate)
+ (let ((indent-tabs-mode nil)) ad-do-it))
+(defadvice indent-according-to-mode (around smart-tabs activate)
+ (let ((indent-tabs-mode indent-tabs-mode))
+   (if (memq indent-line-function
+             '(indent-relative
+               indent-relative-maybe))
+       (setq indent-tabs-mode nil))
+   ad-do-it))
+(defmacro smart-tabs-advice (function offset)
+ (defvaralias offset 'tab-width)
+ `(defadvice ,function (around smart-tabs activate)
+    (cond
+     (indent-tabs-mode
+      (save-excursion
+        (beginning-of-line)
+        (while (looking-at "\t*\\( +\\)\t+")
+          (replace-match "" nil nil nil 1)))
+      (setq tab-width tab-width)
+      (let ((tab-width fill-column)
+            (,offset fill-column))
+        ad-do-it))
+     (t
+      ad-do-it))))
+(smart-tabs-advice c-indent-line c-basic-offset)
+(smart-tabs-advice c-indent-region c-basic-offset)
 
 ;;------------------------------------------------------------------------------
 ;; Haskell
