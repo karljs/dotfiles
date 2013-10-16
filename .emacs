@@ -67,7 +67,7 @@
 
 ;;------------------------------------------------------------------------------
 ;; GUI Settings
-(if (not (eq system-type 'darwin))
+(if (or (not (display-graphic-p)) (not (eq system-type 'darwin)))
     (menu-bar-mode -1))
 (tool-bar-mode -1)
 (scroll-bar-mode -1)
@@ -80,20 +80,19 @@
 ;; Font & Colors
 ;; (setq font-lock-maximum-decoration nil)
 ;; (setq solarized-use-variable-pitch nil)
-(load-theme 'espresso t)
+(load-theme 'solarized-light t)
 
 ;; Set the font depending on OS and pixel density
 (defun fontify-frame (frame)
   (interactive)
-  (if window-system
-      (progn
-        (if (> (x-display-pixel-width) 2000)
-            (set-frame-parameter frame 'font "Source Code Pro-14")
-          (set-frame-parameter frame 'font "Source Code Pro-12")))))
+  (when window-system
+    (if (> (x-display-pixel-width) 2000)
+        (set-frame-parameter frame 'font "Source Code Pro-15")
+      (set-frame-parameter frame 'font "Source Code Pro-14"))))
 (if (eq system-type 'darwin)
     (fontify-frame nil)
   (set-face-attribute 'default nil :font "Inconsolata-13"))
-(push 'fontify-frame after-make-frame-functions)
+;; (push 'fontify-frame after-make-frame-functions)
 
 ;;------------------------------------------------------------------------------
 ;; Good behavior
@@ -118,12 +117,11 @@
 ;; Global keybindings
 ;; (evil-mode 1)
 (global-set-key (kbd "C-x a r") 'align-regexp)
+(global-set-key (kbd "C-c %") 'replace-regexp)
 (global-set-key [M-left] 'windmove-left)
 (global-set-key [M-right] 'windmove-right)
 (global-set-key [M-up] 'windmove-up)
 (global-set-key [M-down] 'windmove-down)
-(global-set-key (kbd "C-c %") 'replace-regexp)
-
 
 ;; <3 Unix
 ;; (global-set-key (kbd "C-h") 'delete-backward-char)
@@ -219,73 +217,24 @@ is no active region."
 
 ;;------------------------------------------------------------------------------
 ;; C/C++
-;; (defun my-c-mode-hook ()
-;;   (setq c-basic-offset 4
-;;         c-indent-level 4
-;;         c-default-style "BSD")
-;;   (local-set-key (kbd "C-c C-c") 'my-compile-func)
-;;   (local-set-key (kbd "C-c C-k") 'my-compile-clean-func))
-;; (add-hook 'c-mode-common-hook 'my-c-mode-hook)
-
-;; (defun my-indent-setup ()
-;;   (c-set-offset 'arglist-intro '+))
-;; (add-hook 'c-mode-common-hook 'my-indent-setup)
-
-;; (defun* get-closest-pathname (&optional (file "Makefile"))
-;;   "Walks up from current directory until it finds a makefile."
-;;   (let ((root (expand-file-name "/")))
-;;     (expand-file-name file
-;;                       (loop
-;;                        for d = default-directory then (expand-file-name ".." d)
-;;                        if (file-exists-p (expand-file-name file d))
-;;                        return d
-;;                        if (equal d root)
-;;                        return nil))))
-
-;; (defun my-compile-func ()
-;;   (interactive)
-;;   (compile (format "make -C %s" (file-name-directory (get-closest-pathname)))))
-
-;; (defun my-compile-clean-func ()
-;;   (interactive)
-;;   (compile (format "make -C %s clean"
-;;                    (file-name-directory (get-closest-pathname)))))
+(defun my-c-mode-hook ()
+  (setq c-default-style "k&r"
+        c-basic-offset 4)
+  (local-set-key (kbd "C-c C-c") 'my-compile-func)
+  (local-set-key (kbd "C-c C-k") 'my-compile-clean-func)
+  (local-set-key (kbd "C-c C-r") 'execute-premake-executable))
+(add-hook 'c-mode-common-hook 'my-c-mode-hook)
 
 
-;; Kill/yanked from Kevin's init file.  Need to read through it, but it seems to
-;; work
-(setq-default tab-width 4) ; or any other preferred value
-(setq cua-auto-tabify-rectangles nil)
-(defadvice align (around smart-tabs activate)
- (let ((indent-tabs-mode nil)) ad-do-it))
-(defadvice align-regexp (around smart-tabs activate)
- (let ((indent-tabs-mode nil)) ad-do-it))
-(defadvice indent-relative (around smart-tabs activate)
- (let ((indent-tabs-mode nil)) ad-do-it))
-(defadvice indent-according-to-mode (around smart-tabs activate)
- (let ((indent-tabs-mode indent-tabs-mode))
-   (if (memq indent-line-function
-             '(indent-relative
-               indent-relative-maybe))
-       (setq indent-tabs-mode nil))
-   ad-do-it))
-(defmacro smart-tabs-advice (function offset)
- (defvaralias offset 'tab-width)
- `(defadvice ,function (around smart-tabs activate)
-    (cond
-     (indent-tabs-mode
-      (save-excursion
-        (beginning-of-line)
-        (while (looking-at "\t*\\( +\\)\t+")
-          (replace-match "" nil nil nil 1)))
-      (setq tab-width tab-width)
-      (let ((tab-width fill-column)
-            (,offset fill-column))
-        ad-do-it))
-     (t
-      ad-do-it))))
-(smart-tabs-advice c-indent-line c-basic-offset)
-(smart-tabs-advice c-indent-region c-basic-offset)
+(defun my-compile-func ()
+  (interactive)
+  (compile (format "make -C %s" (file-name-directory (get-closest-pathname)))))
+
+(defun my-compile-clean-func ()
+  (interactive)
+  (compile (format "make -C %s clean"
+                   (file-name-directory (get-closest-pathname)))))
+
 
 ;;------------------------------------------------------------------------------
 ;; Haskell
@@ -296,7 +245,6 @@ is no active region."
 )
 
 (setq haskell-program-name "ghci -fno-ghci-sandbox")
-
 (add-hook 'haskell-mode-hook 'haskell-hook)
 
 (defun haskell-hook ()
@@ -355,12 +303,6 @@ is no active region."
 (add-hook 'prog-mode-hook 'rainbow-delimiters-mode)
 
 ;;------------------------------------------------------------------------------
-;; Speedbar
-;; (require 'sr-speedbar)
-;; (global-set-key (kbd "M-s M-s") 'sr-speedbar-toggle)
-;; (speedbar-add-supported-extension ".hs")
-
-;;------------------------------------------------------------------------------
 ;; GDB
 (setq gdb-many-windows t)
 
@@ -414,8 +356,6 @@ is no active region."
 ;; MultiTerm + AnsiTerm
 ;; (setq term-default-fg-color (face-foreground 'default))
 ;; (setq term-default-bg-color (face-background 'default))
-(when (eq system-type 'darwin)
-  (setq multi-term-program "/opt/local/bin/bash"))
 
 (defun visit-term-buffer ()
   "Create or visit a terminal buffer."
@@ -435,10 +375,9 @@ is no active region."
 (autoload 'glsl-mode "glsl-mode" nil t)
 (add-to-list 'auto-mode-alist '("\\.vert\\'" . glsl-mode))
 (add-to-list 'auto-mode-alist '("\\.frag\\'" . glsl-mode))
+(add-to-list 'auto-mode-alist '("\\.glvs\\'" . glsl-mode))
+(add-to-list 'auto-mode-alist '("\\.glfs\\'" . glsl-mode))
 
-;;------------------------------------------------------------------------------
-;; Helm
-;; (helm-mode 1)
 
 ;;------------------------------------------------------------------------------
 ;; Tramp
@@ -447,20 +386,21 @@ is no active region."
 (setq ido-enable-tramp-completion t)
 (setq tramp-default-method "ssh")
 
+
+;;------------------------------------------------------------------------------
+;; Rebox
+(setq rebox-style-loop '(13))
+(global-set-key (kbd "C-c C-b") 'rebox-cycle)
+
+
 ;;------------------------------------------------------------------------------
 ;; Misc things that should probably be in a different file
-
-(defun comment-paragraph ()
-  (interactive)
-  )
-
 
 (defun smart-open-line ()
   "Insert a line below regardless of point position.  Like Vim's 'o' command."
   (interactive)
   (move-end-of-line nil)
   (newline-and-indent))
-
 (global-set-key [(shift return)] 'smart-open-line)
 
 
@@ -468,7 +408,6 @@ is no active region."
   (interactive)
   (load-file "~/.emacs")
   (message "Reloaded .emacs file..."))
-
 (global-set-key (kbd "C-x C-r") 'reload-dot-emacs)
 
 
@@ -481,7 +420,6 @@ is no active region."
                       (read-shell-command "Open current file with: "))
                     " "
                     buffer-file-name))))
-
 (global-set-key (kbd "C-c o") 'open-with)
 
 
@@ -490,23 +428,11 @@ is no active region."
   (beginning-of-line)
   (newline)
   (forward-line -1))
-
 (global-set-key (kbd "C-O") 'open-line-above)
+
 
 ;;------------------------------------------------------------------------------
 ;; Creating various tags.
-
-;; (defun guess-dir ()
-;;   "Look upward for a .git or .svn directory for a good place to
-;;    generate tags"
-;;   (interactive)
-;;   (labels
-;;       ((check-dir (cwd))
-;;        (message "%s " "inner thing"))
-;;     (let ((files-to-look-for '(".svn" ".git")))
-;;       (check-dir "blah")
-;;       (message "my list: %s" files-to-look-for))))
-
 (defun htags (dir)
   "Create Haskell tags"
   (interactive)
