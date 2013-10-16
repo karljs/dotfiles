@@ -451,8 +451,42 @@ is no active region."
   (if (equal major-mode 'haskell-mode)
       (htags dir)
     (ctags dir)))
-
 ;; (global-set-key (kbd "C-c t") 'tags)
+
+
+;;------------------------------------------------------------------------------
+;; Premake specific stuff for finding a project's executable and running it
+(defun find-premake-executable ()
+  (let ((mf (get-closest-pathname "Makefile")))
+    (with-temp-buffer
+      (progn
+        (insert-file-contents mf)
+        (split-string (buffer-string) "\n" t)
+        (search-forward "PROJECTS := ")
+        (buffer-substring (point) (line-end-position))))))
+
+(defun execute-premake-executable ()
+  (let* ((exe-name (find-premake-executable))
+         (exe (get-closest-pathname exe-name))
+         (path (file-name-directory exe)))
+    (cd path)
+    (shell-command exe)))
+
+
+
+;;------------------------------------------------------------------------------
+;; General utilities
+(defun* get-closest-pathname (&optional (file "Makefile"))
+  "Walks up from current directory until it finds a particular file."
+  (let ((root (expand-file-name "/")))
+    (expand-file-name file
+                      (loop
+                       for d = default-directory then (expand-file-name ".." d)
+                       if (file-exists-p (expand-file-name file d))
+                       return d
+                       if (equal d root)
+                       return nil))))
+
 
 
 ;;------------------------------------------------------------------------------
