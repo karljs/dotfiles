@@ -225,7 +225,6 @@ is no active region."
   (local-set-key (kbd "C-c C-r") 'execute-premake-executable))
 (add-hook 'c-mode-common-hook 'my-c-mode-hook)
 
-
 (defun my-compile-func ()
   (interactive)
   (compile (format "make -C %s" (file-name-directory (get-closest-pathname)))))
@@ -466,12 +465,12 @@ is no active region."
         (buffer-substring (point) (line-end-position))))))
 
 (defun execute-premake-executable ()
+  (interactive)
   (let* ((exe-name (find-premake-executable))
          (exe (get-closest-pathname exe-name))
          (path (file-name-directory exe)))
     (cd path)
     (shell-command exe)))
-
 
 
 ;;------------------------------------------------------------------------------
