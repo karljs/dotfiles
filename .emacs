@@ -35,6 +35,7 @@
                       ;; multi-web-mode
                       nrepl
                       paredit
+                      projectile
                       rainbow-delimiters
                       scala-mode2
                       solarized-theme
@@ -79,7 +80,12 @@
 ;;------------------------------------------------------------------------------
 ;; Font & Colors
 ;; (setq font-lock-maximum-decoration nil)
-;; (setq solarized-use-variable-pitch nil)
+;; (setq solarized-use-variable-pitch nil
+;;       solarized-height-minus-1 1
+;;       solarized-height-plus-1 1
+;;       solarized-height-plus-2 1
+;;       solarized-height-plus-3 1
+;;       solarized-height-plus-4 1)
 (load-theme 'solarized-light t)
 
 ;; Set the font depending on OS and pixel density
@@ -96,9 +102,7 @@
 
 ;;------------------------------------------------------------------------------
 ;; Good behavior
-(setq compilation-scroll-output 1
-      compilation-window-height 10
-      confirm-nonexistent-file-or-buffer nil
+(setq confirm-nonexistent-file-or-buffer nil
       dired-use-ls-dired nil
       mac-command-modifier 'meta
       mac-option-modifier 'none
@@ -389,8 +393,13 @@ is no active region."
 ;;------------------------------------------------------------------------------
 ;; Rebox
 (setq rebox-style-loop '(13))
-(global-set-key (kbd "C-c C-b") 'rebox-cycle)
+(global-set-key (kbd "C-c b") 'rebox-dwim)
 
+
+;;------------------------------------------------------------------------------
+;; Projectile
+(projectile-global-mode)
+(setq projectile-indexing-method 'native)
 
 ;;------------------------------------------------------------------------------
 ;; Misc things that should probably be in a different file
@@ -458,11 +467,10 @@ is no active region."
 (defun find-premake-executable ()
   (let ((mf (get-closest-pathname "Makefile")))
     (with-temp-buffer
-      (progn
-        (insert-file-contents mf)
-        (split-string (buffer-string) "\n" t)
-        (search-forward "PROJECTS := ")
-        (buffer-substring (point) (line-end-position))))))
+      (insert-file-contents mf)
+      (split-string (buffer-string) "\n" t)
+      (search-forward "PROJECTS := ")
+      (buffer-substring (point) (line-end-position)))))
 
 (defun execute-premake-executable ()
   (interactive)
