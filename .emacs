@@ -19,6 +19,7 @@
 ;;------------------------------------------------------------------------------
 ;; Install packages as necessary on startup. Credit to the Prelude project.
 (defvar my-packages '(ace-jump-mode
+                      ag
                       auctex
                       buffer-move
                       change-inner
@@ -28,7 +29,9 @@
                       fastnav
                       glsl-mode
                       haskell-mode
+                      ido-ubiquitous
                       inkpot-theme
+                      lua-mode
                       magit
                       markdown-mode
                       monokai-theme
@@ -38,6 +41,7 @@
                       projectile
                       rainbow-delimiters
                       scala-mode2
+                      smex
                       solarized-theme
                       ucs-utils
                       unicode-fonts
@@ -110,6 +114,9 @@
       ns-pop-up-frames nil
       ring-bell-function (lambda () (message "*beep*"))
       vc-follow-symlinks t)
+
+(when (eq system-type 'darwin)
+  (setq default-directory "/Users/karl"))
 
 (setq-default fill-column 80
               indent-tabs-mode nil)
@@ -196,12 +203,16 @@
 
 ;;------------------------------------------------------------------------------
 ;; Ido
-(setq ido-auto-merge-work-directories-length -1)
-(setq ido-enable-flex-matching t)
-(setq ido-everywhere t)
-(setq ido-create-new-buffer 'always)
-(setq ido-default-buffer-method 'selected-window)
+;; (setq ido-auto-merge-work-directories-length -1)
+;; (setq ido-enable-flex-matching t)
+;; (setq ido-everywhere t)
+;; (setq ido-create-new-buffer 'always)
+;; (setq ido-default-buffer-method 'selected-window)
 (ido-mode 1)
+(ido-ubiquitous-mode 1)
+(global-set-key (kbd "M-x") 'smex)
+(global-set-key (kbd "M-X") 'smex-major-mode-commands)
+(ido-vertical-mode 1)
 
 ;;------------------------------------------------------------------------------
 ;; Commenting
@@ -360,17 +371,17 @@ is no active region."
 ;; (setq term-default-fg-color (face-foreground 'default))
 ;; (setq term-default-bg-color (face-background 'default))
 
-(defun visit-term-buffer ()
-  "Create or visit a terminal buffer."
-  (interactive)
-  (if (not (get-buffer "*ansi-term*"))
-      (progn
-        (split-window-sensibly (selected-window))
-        (other-window 1)
-        (ansi-term "/opt/local/bin/bash"))
-    (switch-to-buffer-other-window "*ansi-term*")))
+;; (defun visit-term-buffer ()
+;;   "Create or visit a terminal buffer."
+;;   (interactive)
+;;   (if (not (get-buffer "*ansi-term*"))
+;;       (progn
+;;         (split-window-sensibly (selected-window))
+;;         (other-window 1)
+;;         (ansi-term "/opt/local/bin/bash"))
+;;     (switch-to-buffer-other-window "*ansi-term*")))
 
-(global-set-key (kbd "C-c t") 'visit-term-buffer)
+(global-set-key (kbd "C-c t") 'eshell)
 
 
 ;;------------------------------------------------------------------------------
