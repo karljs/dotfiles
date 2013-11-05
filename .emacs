@@ -74,12 +74,14 @@
 ;; GUI Settings
 (if (or (not (display-graphic-p)) (not (eq system-type 'darwin)))
     (menu-bar-mode -1))
+(setq inhibit-startup-message t
+      inhibit-startup-echo-area-message "karl"
+      suggest-key-bindings nil)
 (tool-bar-mode -1)
 (scroll-bar-mode -1)
 (column-number-mode 1)
-(setq inhibit-startup-message t)
-(setq inhibit-startup-echo-area-message "karl")
 (transient-mark-mode -1)
+
 
 ;;------------------------------------------------------------------------------
 ;; Font & Colors
@@ -210,6 +212,7 @@
 ;; (setq ido-default-buffer-method 'selected-window)
 (ido-mode 1)
 (ido-ubiquitous-mode 1)
+(setq smex-key-advice-ignore-menu-bar t)
 (global-set-key (kbd "M-x") 'smex)
 (global-set-key (kbd "M-X") 'smex-major-mode-commands)
 (ido-vertical-mode 1)
@@ -371,17 +374,17 @@ is no active region."
 ;; (setq term-default-fg-color (face-foreground 'default))
 ;; (setq term-default-bg-color (face-background 'default))
 
-;; (defun visit-term-buffer ()
-;;   "Create or visit a terminal buffer."
-;;   (interactive)
-;;   (if (not (get-buffer "*ansi-term*"))
-;;       (progn
-;;         (split-window-sensibly (selected-window))
-;;         (other-window 1)
-;;         (ansi-term "/opt/local/bin/bash"))
-;;     (switch-to-buffer-other-window "*ansi-term*")))
+(defun visit-term-buffer ()
+  "Create or visit a terminal buffer."
+  (interactive)
+  (if (not (get-buffer "*ansi-term*"))
+      (progn
+        (split-window-sensibly (selected-window))
+        (other-window 1)
+        (ansi-term "/opt/local/bin/bash"))
+    (switch-to-buffer-other-window "*ansi-term*")))
 
-(global-set-key (kbd "C-c t") 'eshell)
+(global-set-key (kbd "C-c t") 'visit-term-buffer)
 
 
 ;;------------------------------------------------------------------------------
@@ -504,8 +507,6 @@ is no active region."
                        return d
                        if (equal d root)
                        return nil))))
-
-
 
 ;;------------------------------------------------------------------------------
 (server-start)
