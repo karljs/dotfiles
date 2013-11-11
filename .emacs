@@ -41,6 +41,7 @@
                       projectile
                       rainbow-delimiters
                       scala-mode2
+                      smartparens
                       smex
                       solarized-theme
                       ucs-utils
@@ -208,7 +209,7 @@
 ;; (setq ido-auto-merge-work-directories-length -1)
 ;; (setq ido-enable-flex-matching t)
 ;; (setq ido-everywhere t)
-;; (setq ido-create-new-buffer 'always)
+(setq ido-create-new-buffer 'always)
 ;; (setq ido-default-buffer-method 'selected-window)
 (ido-mode 1)
 (ido-ubiquitous-mode 1)
@@ -306,14 +307,17 @@ is no active region."
           (lambda () (local-set-key (kbd "C-c r") 'nrepl-refresh)))
 
 ;;------------------------------------------------------------------------------
-;; Paredit
-(add-hook 'clojure-mode-hook 'paredit-mode)
-(add-hook 'clojurescript-mode-hook 'paredit-mode)
-(add-hook 'nrepl-mode-hook 'paredit-mode)
-(add-hook 'emacs-lisp-mode-hook 'paredit-mode)
-(add-hook 'lisp-mode-hook 'paredit-mode)
-(add-hook 'scheme-mode-hook 'paredit-mode)
-(add-hook 'geiser-repl-mode-hook 'paredit-mode)
+;; Paredit / Smartparens
+(setq smartparens-strict-mode t)
+(smartparens-global-mode)
+
+;; (add-hook 'clojure-mode-hook 'paredit-mode)
+;; (add-hook 'clojurescript-mode-hook 'paredit-mode)
+;; (add-hook 'nrepl-mode-hook 'paredit-mode)
+;; (add-hook 'emacs-lisp-mode-hook 'paredit-mode)
+;; (add-hook 'lisp-mode-hook 'paredit-mode)
+;; (add-hook 'scheme-mode-hook 'paredit-mode)
+;; (add-hook 'geiser-repl-mode-hook 'paredit-mode)
 
 ;;------------------------------------------------------------------------------
 ;; Rainbows!
