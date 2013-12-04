@@ -3,7 +3,6 @@
 ;;  |  __/ | | | | | (_| | (__\__ \
 ;; (_)___|_| |_| |_|\__,_|\___|___/
 
-
 ;;------------------------------------------------------------------------------
 ;; Import things
 (require 'cl)
@@ -11,49 +10,51 @@
 ;;------------------------------------------------------------------------------
 ;; Package manager load and setup
 (package-initialize)
+(setq package-enable-at-startup nil)
+
 (add-to-list 'package-archives
 	     '("melpa" . "http://melpa.milkbox.net/packages/") t)
 (add-to-list 'package-archives
-             '("marmalade" . "http://marmalade-repo.org/packages/") t)
+	     '("marmalade" . "http://marmalade-repo.org/packages/") t)
 
 ;;------------------------------------------------------------------------------
 ;; Install packages as necessary on startup. Credit to the Prelude project.
 (defvar my-packages '(ace-jump-mode
-                      ag
-                      auctex
-                      buffer-move
-                      change-inner
-                      clojure-mode
-                      clojurescript-mode
-                      exec-path-from-shell
-                      fastnav
-                      glsl-mode
-                      haskell-mode
-                      ido-ubiquitous
-                      inkpot-theme
-                      lua-mode
-                      magit
-                      markdown-mode
-                      monokai-theme
-                      ;; multi-web-mode
-                      nrepl
-                      paredit
-                      projectile
-                      rainbow-delimiters
-                      scala-mode2
-                      smartparens
-                      smex
-                      solarized-theme
-                      ucs-utils
-                      unicode-fonts
-                      web-mode
-                      zenburn-theme)
+		      ag
+		      auctex
+		      buffer-move
+		      change-inner
+		      clojure-mode
+		      clojurescript-mode
+		      exec-path-from-shell
+		      fastnav
+		      glsl-mode
+		      haskell-mode
+		      ido-ubiquitous
+		      inkpot-theme
+		      lua-mode
+		      magit
+		      markdown-mode
+		      monokai-theme
+		      ;; multi-web-mode
+		      nrepl
+		      paredit
+		      projectile
+		      rainbow-delimiters
+		      scala-mode2
+		      smartparens
+		      smex
+		      solarized-theme
+		      ucs-utils
+		      unicode-fonts
+		      web-mode
+		      zenburn-theme)
   "Packages to install at launch, when necessary.")
 
 (defun my-packages-installed-p ()
   (loop for p in my-packages
-        when (not (package-installed-p p)) do (return nil)
-        finally (return t)))
+	when (not (package-installed-p p)) do (return nil)
+	finally (return t)))
 
 (defun my-install-packages ()
   (unless (my-packages-installed-p)
@@ -67,7 +68,7 @@
 (my-install-packages)
 
 ;;------------------------------------------------------------------------------
-;; Path stuff.  Machine specific.
+;; Path stuff.	Machine specific.
 (when (eq system-type 'darwin)
   (exec-path-from-shell-initialize))
 
@@ -88,19 +89,22 @@
 ;; Font & Colors
 ;; (setq font-lock-maximum-decoration nil)
 ;; (setq solarized-use-variable-pitch nil
-;;       solarized-height-minus-1 1
-;;       solarized-height-plus-1 1
-;;       solarized-height-plus-2 1
-;;       solarized-height-plus-3 1
-;;       solarized-height-plus-4 1)
+;;	 solarized-height-minus-1 1
+;;	 solarized-height-plus-1 1
+;;	 solarized-height-plus-2 1
+;;	 solarized-height-plus-3 1
+;;	 solarized-height-plus-4 1)
 (load-theme 'solarized-light t)
+
+
+
 
 ;; Set the font depending on OS and pixel density
 (defun fontify-frame (frame)
   (interactive)
   (when window-system
     (if (> (x-display-pixel-width) 2000)
-        (set-frame-parameter frame 'font "Source Code Pro-15")
+	(set-frame-parameter frame 'font "Source Code Pro-15")
       (set-frame-parameter frame 'font "Source Code Pro-14"))))
 (if (eq system-type 'darwin)
     (fontify-frame nil)
@@ -122,7 +126,7 @@
   (setq default-directory "/Users/karl"))
 
 (setq-default fill-column 80
-              indent-tabs-mode nil)
+	      indent-tabs-mode nil)
 
 (global-auto-revert-mode 1)
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
@@ -138,9 +142,9 @@
 (global-set-key [M-down] 'windmove-down)
 
 ;; <3 Unix
-;; (global-set-key (kbd "C-h") 'delete-backward-char)
+(global-set-key (kbd "C-h") 'delete-backward-char)
 ;; (global-set-key (kbd "M-h") 'backward-kill-word)
-;; (global-set-key (kbd "C-?") 'help-command)
+(global-set-key (kbd "C-?") 'help-command)
 ;; (global-set-key (kbd "M-?") 'mark-paragraph)
 
 ;; Programming specific
@@ -178,19 +182,19 @@
 ;; (add-hook 'LaTeX-mode-hook (lambda ()
 ;;   (push
 ;;    '("Latexmk" "latexmk -pdf %s" TeX-run-TeX nil t
-;;      :help "Run Latexmk on file")
+;;	:help "Run Latexmk on file")
 ;;    TeX-command-list)))
 
 (when (eq system-type 'darwin)
   (setq TeX-view-program-list
-        '(("PDF Viewer" "open %o")
-          ("DVI Viewer" "open %o")
-          ("HTML Viewer" "open %o"))))
+	'(("PDF Viewer" "open %o")
+	  ("DVI Viewer" "open %o")
+	  ("HTML Viewer" "open %o"))))
 
 (setq TeX-view-program-selection
       '((output-pdf "PDF Viewer")
-        (output-dvi "DVI Viewer")
-        (output-html "HTML Viewer")))
+	(output-dvi "DVI Viewer")
+	(output-html "HTML Viewer")))
 
 ;;------------------------------------------------------------------------------
 ;; Spelling
@@ -203,6 +207,8 @@
 ;; Org
 ;; (setq org-fontify-emphasized-text nil)
 ;; (define-key global-map "\C-ca" 'org-agenda)
+(setq org-pretty-entities 1)
+
 
 ;;------------------------------------------------------------------------------
 ;; Ido
@@ -227,9 +233,9 @@ is no active region."
   (let (beg end)
     (if (region-active-p)
 	(setq beg (region-beginning)
-              end (region-end))
+	      end (region-end))
       (setq beg (line-beginning-position)
-            end (line-end-position)))
+	    end (line-end-position)))
     (comment-or-uncomment-region beg end)))
 
 (global-set-key (kbd "C-x C-;") 'comment-or-uncomment-region-or-line)
@@ -238,7 +244,7 @@ is no active region."
 ;; C/C++
 (defun my-c-mode-hook ()
   (setq c-default-style "k&r"
-        c-basic-offset 4)
+	c-basic-offset 4)
   (local-set-key (kbd "C-c C-c") 'my-compile-func)
   (local-set-key (kbd "C-c C-k") 'my-compile-clean-func)
   (local-set-key (kbd "C-c C-r") 'execute-premake-executable))
@@ -251,46 +257,41 @@ is no active region."
 (defun my-compile-clean-func ()
   (interactive)
   (compile (format "make -C %s clean"
-                   (file-name-directory (get-closest-pathname)))))
+		   (file-name-directory (get-closest-pathname)))))
 
 
 ;;------------------------------------------------------------------------------
 ;; Haskell
 (custom-set-variables
  '(haskell-process-type 'ghci)
- '(haskell-process-args-ghci '("-fno-ghci-sandbox"))
+ ;; '(haskell-process-args-ghci '("-fno-ghci-sandbox"))
  ;; '(haskell-tags-on-save t)
 )
 
-(setq haskell-program-name "ghci -fno-ghci-sandbox")
 (add-hook 'haskell-mode-hook 'haskell-hook)
-
 (defun haskell-hook ()
-  (turn-on-haskell-indentation)
-  (setq projectile-tags-command "hasktags -e")
+  (turn-on-haskell-indent)
+  ;; (setq projectile-tags-command "hasktags -e")
+  (turn-on-haskell-decl-scan)
   (define-key haskell-mode-map (kbd "C-c C-l") 'haskell-process-load-file)
   (define-key haskell-mode-map (kbd "C-c C-r") 'haskell-process-reload-file)
-  (define-key haskell-mode-map (kbd "C-c C-c") 'haskell-process-cabal-build)
-  (define-key haskell-mode-map (kbd "C-c c") 'haskell-process-cabal)
+  (define-key haskell-mode-map (kbd "C-c C-b") 'haskell-interactive-switch)
+  ;; (define-key haskell-mode-map (kbd "C-c c") 'haskell-process-cabal)
   (define-key haskell-mode-map (kbd "C-c C-t") 'haskell-process-do-type)
   (define-key haskell-mode-map (kbd "C-c C-i") 'haskell-process-do-info)
-  ;; (define-key haskell-mode-map (kbd "M-.") 'haskell-mode-tag-find)
-  (define-key haskell-mode-map (kbd "C-c C-z")
-    (lambda ()
-      (interactive)
-      (switch-to-buffer-other-window
-       (haskell-session-interactive-buffer (haskell-session))))))
+  (define-key haskell-mode-map (kbd "M-.") 'haskell-mode-tag-find)
+  )
 
 
 ;;------------------------------------------------------------------------------
 ;; Agda
 ;; (require 'ucs-utils)
 ;; (load-file (let ((coding-system-for-read 'utf-8))
-;;              (shell-command-to-string "agda-mode locate")))
+;;		(shell-command-to-string "agda-mode locate")))
 ;; (add-hook 'agda2-mode-hook
-;;           '(lambda ()
-;;              (require 'unicode-fonts)
-;;              (unicode-fonts-setup)))
+;;	     '(lambda ()
+;;		(require 'unicode-fonts)
+;;		(unicode-fonts-setup)))
 
 ;;------------------------------------------------------------------------------
 ;; Clojure/nREPL
@@ -304,20 +305,20 @@ is no active region."
   (nrepl-return))
 
 (add-hook 'nrepl-mode-hook
-          (lambda () (local-set-key (kbd "C-c r") 'nrepl-refresh)))
+	  (lambda () (local-set-key (kbd "C-c r") 'nrepl-refresh)))
 
 ;;------------------------------------------------------------------------------
 ;; Paredit / Smartparens
-(setq smartparens-strict-mode t)
-(smartparens-global-mode)
+;; (setq smartparens-strict-mode t)
+;; (smartparens-global-mode)
 
-;; (add-hook 'clojure-mode-hook 'paredit-mode)
-;; (add-hook 'clojurescript-mode-hook 'paredit-mode)
-;; (add-hook 'nrepl-mode-hook 'paredit-mode)
-;; (add-hook 'emacs-lisp-mode-hook 'paredit-mode)
-;; (add-hook 'lisp-mode-hook 'paredit-mode)
-;; (add-hook 'scheme-mode-hook 'paredit-mode)
-;; (add-hook 'geiser-repl-mode-hook 'paredit-mode)
+(add-hook 'clojure-mode-hook 'paredit-mode)
+(add-hook 'clojurescript-mode-hook 'paredit-mode)
+(add-hook 'nrepl-mode-hook 'paredit-mode)
+(add-hook 'emacs-lisp-mode-hook 'paredit-mode)
+(add-hook 'lisp-mode-hook 'paredit-mode)
+(add-hook 'scheme-mode-hook 'paredit-mode)
+(add-hook 'geiser-repl-mode-hook 'paredit-mode)
 
 ;;------------------------------------------------------------------------------
 ;; Rainbows!
@@ -332,7 +333,7 @@ is no active region."
 (global-set-key (kbd "C-x g") 'magit-status)
 (when (eq system-type 'darwin)
   (setq magit-emacsclient-executable
-        "/Applications/MacPorts/Emacs.app/Contents/MacOS/bin/emacsclient"))
+	"/Applications/MacPorts/Emacs.app/Contents/MacOS/bin/emacsclient"))
 
 ;;------------------------------------------------------------------------------
 ;; Markdown
@@ -354,7 +355,7 @@ is no active region."
 ;; (setq yas-verbosity 0)
 ;; (yas-global-mode 1)
 ;; (setq yas-snippet-dirs
-;;       '("~/.emacs.d/snippets"))
+;;	 '("~/.emacs.d/snippets"))
 
 ;;------------------------------------------------------------------------------
 ;; Whitespace and long lines
@@ -383,9 +384,9 @@ is no active region."
   (interactive)
   (if (not (get-buffer "*ansi-term*"))
       (progn
-        (split-window-sensibly (selected-window))
-        (other-window 1)
-        (ansi-term "/opt/local/bin/bash"))
+	(split-window-sensibly (selected-window))
+	(other-window 1)
+	(ansi-term "/opt/local/bin/bash"))
     (switch-to-buffer-other-window "*ansi-term*")))
 
 (global-set-key (kbd "C-c t") 'visit-term-buffer)
@@ -419,6 +420,11 @@ is no active region."
 (projectile-global-mode)
 (setq projectile-indexing-method 'native)
 
+
+;;------------------------------------------------------------------------------
+;; Racket
+;; (require 'quack)
+
 ;;------------------------------------------------------------------------------
 ;; Misc things that should probably be in a different file
 
@@ -441,11 +447,11 @@ is no active region."
   (interactive)
   (when buffer-file-name
     (shell-command (concat
-                    (if (eq system-type 'darwin)
-                        "open"
-                      (read-shell-command "Open current file with: "))
-                    " "
-                    buffer-file-name))))
+		    (if (eq system-type 'darwin)
+			"open"
+		      (read-shell-command "Open current file with: "))
+		    " "
+		    buffer-file-name))))
 (global-set-key (kbd "C-c o") 'open-with)
 
 
@@ -493,8 +499,8 @@ is no active region."
 (defun execute-premake-executable ()
   (interactive)
   (let* ((exe-name (find-premake-executable))
-         (exe (get-closest-pathname exe-name))
-         (path (file-name-directory exe)))
+	 (exe (get-closest-pathname exe-name))
+	 (path (file-name-directory exe)))
     (cd path)
     (shell-command exe)))
 
@@ -505,12 +511,12 @@ is no active region."
   "Walks up from current directory until it finds a particular file."
   (let ((root (expand-file-name "/")))
     (expand-file-name file
-                      (loop
-                       for d = default-directory then (expand-file-name ".." d)
-                       if (file-exists-p (expand-file-name file d))
-                       return d
-                       if (equal d root)
-                       return nil))))
+		      (loop
+		       for d = default-directory then (expand-file-name ".." d)
+		       if (file-exists-p (expand-file-name file d))
+		       return d
+		       if (equal d root)
+		       return nil))))
 
 ;;------------------------------------------------------------------------------
 (server-start)
