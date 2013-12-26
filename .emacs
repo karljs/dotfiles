@@ -94,6 +94,8 @@
 ;;	 solarized-height-plus-2 1
 ;;	 solarized-height-plus-3 1
 ;;	 solarized-height-plus-4 1)
+;; (setq ns-use-srgb-colorspace t)
+(setq color-theme-sanityinc-solarized-rgb-is-srgb nil)
 (load-theme 'solarized-light t)
 
 
@@ -105,7 +107,7 @@
   (when window-system
     (if (> (x-display-pixel-width) 2000)
 	(set-frame-parameter frame 'font "Source Code Pro-15")
-      (set-frame-parameter frame 'font "Source Code Pro-14"))))
+      (set-frame-parameter frame 'font "Inconsolata-15"))))
 (if (eq system-type 'darwin)
     (fontify-frame nil)
   (set-face-attribute 'default nil :font "Inconsolata-13"))
@@ -120,7 +122,8 @@
       make-backup-files nil
       ns-pop-up-frames nil
       ring-bell-function (lambda () (message "*beep*"))
-      vc-follow-symlinks t)
+      vc-follow-symlinks t
+      scroll-conservatively 1)
 
 (when (eq system-type 'darwin)
   (setq default-directory "/Users/karl"))
@@ -140,6 +143,7 @@
 (global-set-key [M-right] 'windmove-right)
 (global-set-key [M-up] 'windmove-up)
 (global-set-key [M-down] 'windmove-down)
+(global-set-key (kbd "C-'") 'imenu)
 
 ;; <3 Unix
 (global-set-key (kbd "C-h") 'delete-backward-char)
@@ -263,23 +267,26 @@ is no active region."
 ;;------------------------------------------------------------------------------
 ;; Haskell
 (custom-set-variables
- '(haskell-process-type 'ghci)
- ;; '(haskell-process-args-ghci '("-fno-ghci-sandbox"))
- ;; '(haskell-tags-on-save t)
-)
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(haskell-interactive-mode-delete-superseded-errors nil)
+ '(haskell-interactive-mode-hide-multi-line-errors nil)
+ '(haskell-process-type (quote ghci))
+ '(haskell-tags-on-save t))
 
 (add-hook 'haskell-mode-hook 'haskell-hook)
 (defun haskell-hook ()
-  (turn-on-haskell-indent)
-  ;; (setq projectile-tags-command "hasktags -e")
+  (turn-on-haskell-indentation)
   (turn-on-haskell-decl-scan)
   (define-key haskell-mode-map (kbd "C-c C-l") 'haskell-process-load-file)
   (define-key haskell-mode-map (kbd "C-c C-r") 'haskell-process-reload-file)
   (define-key haskell-mode-map (kbd "C-c C-b") 'haskell-interactive-switch)
-  ;; (define-key haskell-mode-map (kbd "C-c c") 'haskell-process-cabal)
   (define-key haskell-mode-map (kbd "C-c C-t") 'haskell-process-do-type)
   (define-key haskell-mode-map (kbd "C-c C-i") 'haskell-process-do-info)
   (define-key haskell-mode-map (kbd "M-.") 'haskell-mode-tag-find)
+  (define-key haskell-mode-map (kbd "C-c C-h") 'haskell-check)
   )
 
 
@@ -309,8 +316,50 @@ is no active region."
 
 ;;------------------------------------------------------------------------------
 ;; Paredit / Smartparens
-;; (setq smartparens-strict-mode t)
+
+;; None of this smartparens stuff works, but the potential keybindings are worth
+;; saving.
+
+;; (require 'smartparens-config)
+
+;; (let ((map smartparens-mode-map))
+;;     ;; Movement and navigation
+;;     (define-key map (kbd "C-M-f") #'sp-forward-sexp)
+;;     (define-key map (kbd "C-M-b") #'sp-backward-sexp)
+;;     (define-key map (kbd "C-M-u") #'sp-backward-up-sexp)
+;;     (define-key map (kbd "C-M-d") #'sp-down-sexp)
+;;     (define-key map (kbd "C-M-p") #'sp-backward-down-sexp)
+;;     (define-key map (kbd "C-M-n") #'sp-up-sexp)
+;;     ;; Deleting and killing
+;;     (define-key map (kbd "C-M-k") #'sp-kill-sexp)
+;;     (define-key map (kbd "C-M-w") #'sp-copy-sexp)
+;;     ;; Depth changing
+;;     (define-key map (kbd "M-s") #'sp-splice-sexp)
+;;     (define-key map (kbd "M-<up>") #'sp-splice-sexp-killing-backward)
+;;     (define-key map (kbd "M-<down>") #'sp-splice-sexp-killing-forward)
+;;     (define-key map (kbd "M-r") #'sp-splice-sexp-killing-around)
+;;     (define-key map (kbd "M-?") #'sp-convolute-sexp)
+;;     ;; Barfage & Slurpage
+;;     (define-key map (kbd "C-)") #'sp-forward-slurp-sexp)
+;;     (define-key map (kbd "C-<right>") #'sp-forward-slurp-sexp)
+;;     (define-key map (kbd "C-}") #'sp-forward-barf-sexp)
+;;     (define-key map (kbd "C-<left>") #'sp-forward-barf-sexp)
+;;     (define-key map (kbd "C-(") #'sp-backward-slurp-sexp)
+;;     (define-key map (kbd "C-M-<left>") #'sp-backward-slurp-sexp)
+;;     (define-key map (kbd "C-{") #'sp-backward-barf-sexp)
+;;     (define-key map (kbd "C-M-<right>") #'sp-backward-barf-sexp)
+;;     ;; Miscellaneous commands
+;;     (define-key map (kbd "M-S") #'sp-split-sexp)
+;;     (define-key map (kbd "M-J") #'sp-join-sexp)
+;;     (define-key map (kbd "C-M-t") #'sp-transpose-sexp))
+
+;; ;; Some additional bindings for strict mode
+;; (let ((map smartparens-strict-mode-map))
+;;   (define-key map (kbd "M-q") #'sp-indent-defun)
+;;   (define-key map (kbd "C-j") #'sp-newline))
+
 ;; (smartparens-global-mode)
+;; (show-smartparens-global-mode)
 
 (add-hook 'clojure-mode-hook 'paredit-mode)
 (add-hook 'clojurescript-mode-hook 'paredit-mode)
@@ -521,3 +570,9 @@ is no active region."
 ;;------------------------------------------------------------------------------
 (server-start)
 (message "%s" "You shouldn't have come back, Karl")
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
