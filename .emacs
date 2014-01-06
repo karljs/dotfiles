@@ -31,24 +31,20 @@
 		      glsl-mode
 		      haskell-mode
 		      ido-ubiquitous
-		      inkpot-theme
 		      lua-mode
 		      magit
 		      markdown-mode
 		      monokai-theme
-		      ;; multi-web-mode
 		      nrepl
 		      paredit
 		      projectile
 		      rainbow-delimiters
 		      scala-mode2
-		      smartparens
 		      smex
-		      solarized-theme
+                      solarized-theme
 		      ucs-utils
 		      unicode-fonts
-		      web-mode
-		      zenburn-theme)
+		      web-mode)
   "Packages to install at launch, when necessary.")
 
 (defun my-packages-installed-p ()
@@ -87,18 +83,10 @@
 
 ;;------------------------------------------------------------------------------
 ;; Font & Colors
-;; (setq font-lock-maximum-decoration nil)
-;; (setq solarized-use-variable-pitch nil
-;;	 solarized-height-minus-1 1
-;;	 solarized-height-plus-1 1
-;;	 solarized-height-plus-2 1
-;;	 solarized-height-plus-3 1
-;;	 solarized-height-plus-4 1)
+;; (setq solarized-broken-srgb t)
 ;; (setq ns-use-srgb-colorspace t)
-(setq color-theme-sanityinc-solarized-rgb-is-srgb nil)
+;; (setq solarized-high-contrast-mode-line t)
 (load-theme 'solarized-light t)
-
-
 
 
 ;; Set the font depending on OS and pixel density
@@ -123,7 +111,8 @@
       ns-pop-up-frames nil
       ring-bell-function (lambda () (message "*beep*"))
       vc-follow-symlinks t
-      scroll-conservatively 1)
+      scroll-conservatively 1
+      require-final-newline t)
 
 (when (eq system-type 'darwin)
   (setq default-directory "/Users/karl"))
@@ -136,7 +125,6 @@
 
 ;;------------------------------------------------------------------------------
 ;; Global keybindings
-;; (evil-mode 1)
 (global-set-key (kbd "C-x a r") 'align-regexp)
 (global-set-key (kbd "C-c %") 'replace-regexp)
 (global-set-key [M-left] 'windmove-left)
@@ -215,7 +203,7 @@
 
 
 ;;------------------------------------------------------------------------------
-;; Ido
+;; Ido / smex / vertical
 ;; (setq ido-auto-merge-work-directories-length -1)
 ;; (setq ido-enable-flex-matching t)
 ;; (setq ido-everywhere t)
@@ -317,8 +305,8 @@ is no active region."
 ;;------------------------------------------------------------------------------
 ;; Paredit / Smartparens
 
-;; None of this smartparens stuff works, but the potential keybindings are worth
-;; saving.
+;; None of this smartparens stuff works as is, but the potential keybindings are
+;; worth saving for the future.
 
 ;; (require 'smartparens-config)
 
@@ -424,21 +412,31 @@ is no active region."
 ;; (add-hook 'scala-mode-hook 'ensime-scala-mode-hook)
 
 ;;------------------------------------------------------------------------------
-;; MultiTerm + AnsiTerm
-;; (setq term-default-fg-color (face-foreground 'default))
-;; (setq term-default-bg-color (face-background 'default))
+;; Term / Shell
+;; (when (eq system-type 'darwin)
+;;   (setq multi-term-program "/opt/local/bin/bash"))
 
-(defun visit-term-buffer ()
-  "Create or visit a terminal buffer."
-  (interactive)
-  (if (not (get-buffer "*ansi-term*"))
-      (progn
-	(split-window-sensibly (selected-window))
-	(other-window 1)
-	(ansi-term "/opt/local/bin/bash"))
-    (switch-to-buffer-other-window "*ansi-term*")))
+(add-hook 'term-mode-hook
+          (lambda ()
+            (setq term-buffer-maximum-size 10000)))
 
-(global-set-key (kbd "C-c t") 'visit-term-buffer)
+;; (defun visit-term-buffer ()
+;;   "Create or visit a terminal buffer."
+;;   (interactive)
+;;   (if (not (get-buffer "*ansi-term*"))
+;;       (progn
+;; 	(split-window-sensibly (selected-window))
+;; 	(other-window 1)
+;; 	(ansi-term "/opt/local/bin/bash"))
+;;     (switch-to-buffer-other-window "*ansi-term*")))
+
+(defalias 'flip
+  (lambda ()
+    (cd "/ssh:smeltzek@flip.engr.oregonstate.edu:~/")))
+
+;; (global-set-key (kbd "C-c t") 'visit-term-buffer)
+(global-set-key (kbd "C-c t") 'eshell)
+
 
 
 ;;------------------------------------------------------------------------------
@@ -472,7 +470,7 @@ is no active region."
 
 ;;------------------------------------------------------------------------------
 ;; Racket
-;; (require 'quack)
+(require 'quack)
 
 ;;------------------------------------------------------------------------------
 ;; Misc things that should probably be in a different file
@@ -570,9 +568,3 @@ is no active region."
 ;;------------------------------------------------------------------------------
 (server-start)
 (message "%s" "You shouldn't have come back, Karl")
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )
