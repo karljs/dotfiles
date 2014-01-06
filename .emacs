@@ -13,44 +13,44 @@
 (setq package-enable-at-startup nil)
 
 (add-to-list 'package-archives
-	     '("melpa" . "http://melpa.milkbox.net/packages/") t)
+             '("melpa" . "http://melpa.milkbox.net/packages/") t)
 (add-to-list 'package-archives
-	     '("marmalade" . "http://marmalade-repo.org/packages/") t)
+             '("marmalade" . "http://marmalade-repo.org/packages/") t)
 
 ;;------------------------------------------------------------------------------
 ;; Install packages as necessary on startup. Credit to the Prelude project.
 (defvar my-packages '(ace-jump-mode
-		      ag
-		      auctex
-		      buffer-move
-		      change-inner
-		      clojure-mode
-		      clojurescript-mode
-		      exec-path-from-shell
-		      fastnav
-		      glsl-mode
-		      haskell-mode
-		      ido-ubiquitous
-		      lua-mode
-		      magit
-		      markdown-mode
-		      monokai-theme
-		      nrepl
-		      paredit
-		      projectile
-		      rainbow-delimiters
-		      scala-mode2
-		      smex
+                      ag
+                      auctex
+                      buffer-move
+                      change-inner
+                      clojure-mode
+                      clojurescript-mode
+                      exec-path-from-shell
+                      fastnav
+                      glsl-mode
+                      haskell-mode
+                      ido-ubiquitous
+                      lua-mode
+                      magit
+                      markdown-mode
+                      monokai-theme
+                      nrepl
+                      paredit
+                      projectile
+                      rainbow-delimiters
+                      scala-mode2
+                      smex
                       solarized-theme
-		      ucs-utils
-		      unicode-fonts
-		      web-mode)
+                      ucs-utils
+                      unicode-fonts
+                      web-mode)
   "Packages to install at launch, when necessary.")
 
 (defun my-packages-installed-p ()
   (loop for p in my-packages
-	when (not (package-installed-p p)) do (return nil)
-	finally (return t)))
+        when (not (package-installed-p p)) do (return nil)
+        finally (return t)))
 
 (defun my-install-packages ()
   (unless (my-packages-installed-p)
@@ -59,12 +59,12 @@
     (message "%s" " done.")
     (dolist (p my-packages)
       (unless (package-installed-p p)
-	(package-install p)))))
+        (package-install p)))))
 
 (my-install-packages)
 
 ;;------------------------------------------------------------------------------
-;; Path stuff.	Machine specific.
+;; Path stuff.  Machine specific.
 (when (eq system-type 'darwin)
   (exec-path-from-shell-initialize))
 
@@ -94,7 +94,7 @@
   (interactive)
   (when window-system
     (if (> (x-display-pixel-width) 2000)
-	(set-frame-parameter frame 'font "Source Code Pro-15")
+        (set-frame-parameter frame 'font "Source Code Pro-15")
       (set-frame-parameter frame 'font "Inconsolata-15"))))
 (if (eq system-type 'darwin)
     (fontify-frame nil)
@@ -118,7 +118,7 @@
   (setq default-directory "/Users/karl"))
 
 (setq-default fill-column 80
-	      indent-tabs-mode nil)
+              indent-tabs-mode nil)
 
 (global-auto-revert-mode 1)
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
@@ -174,19 +174,19 @@
 ;; (add-hook 'LaTeX-mode-hook (lambda ()
 ;;   (push
 ;;    '("Latexmk" "latexmk -pdf %s" TeX-run-TeX nil t
-;;	:help "Run Latexmk on file")
+;;      :help "Run Latexmk on file")
 ;;    TeX-command-list)))
 
 (when (eq system-type 'darwin)
   (setq TeX-view-program-list
-	'(("PDF Viewer" "open %o")
-	  ("DVI Viewer" "open %o")
-	  ("HTML Viewer" "open %o"))))
+        '(("PDF Viewer" "open %o")
+          ("DVI Viewer" "open %o")
+          ("HTML Viewer" "open %o"))))
 
 (setq TeX-view-program-selection
       '((output-pdf "PDF Viewer")
-	(output-dvi "DVI Viewer")
-	(output-html "HTML Viewer")))
+        (output-dvi "DVI Viewer")
+        (output-html "HTML Viewer")))
 
 ;;------------------------------------------------------------------------------
 ;; Spelling
@@ -224,10 +224,10 @@ is no active region."
   (interactive)
   (let (beg end)
     (if (region-active-p)
-	(setq beg (region-beginning)
-	      end (region-end))
+        (setq beg (region-beginning)
+              end (region-end))
       (setq beg (line-beginning-position)
-	    end (line-end-position)))
+            end (line-end-position)))
     (comment-or-uncomment-region beg end)))
 
 (global-set-key (kbd "C-x C-;") 'comment-or-uncomment-region-or-line)
@@ -236,7 +236,7 @@ is no active region."
 ;; C/C++
 (defun my-c-mode-hook ()
   (setq c-default-style "k&r"
-	c-basic-offset 4)
+        c-basic-offset 4)
   (local-set-key (kbd "C-c C-c") 'my-compile-func)
   (local-set-key (kbd "C-c C-k") 'my-compile-clean-func)
   (local-set-key (kbd "C-c C-r") 'execute-premake-executable))
@@ -249,7 +249,7 @@ is no active region."
 (defun my-compile-clean-func ()
   (interactive)
   (compile (format "make -C %s clean"
-		   (file-name-directory (get-closest-pathname)))))
+                   (file-name-directory (get-closest-pathname)))))
 
 
 ;;------------------------------------------------------------------------------
@@ -282,11 +282,11 @@ is no active region."
 ;; Agda
 ;; (require 'ucs-utils)
 ;; (load-file (let ((coding-system-for-read 'utf-8))
-;;		(shell-command-to-string "agda-mode locate")))
+;;              (shell-command-to-string "agda-mode locate")))
 ;; (add-hook 'agda2-mode-hook
-;;	     '(lambda ()
-;;		(require 'unicode-fonts)
-;;		(unicode-fonts-setup)))
+;;           '(lambda ()
+;;              (require 'unicode-fonts)
+;;              (unicode-fonts-setup)))
 
 ;;------------------------------------------------------------------------------
 ;; Clojure/nREPL
@@ -300,7 +300,7 @@ is no active region."
   (nrepl-return))
 
 (add-hook 'nrepl-mode-hook
-	  (lambda () (local-set-key (kbd "C-c r") 'nrepl-refresh)))
+          (lambda () (local-set-key (kbd "C-c r") 'nrepl-refresh)))
 
 ;;------------------------------------------------------------------------------
 ;; Paredit / Smartparens
@@ -370,7 +370,7 @@ is no active region."
 (global-set-key (kbd "C-x g") 'magit-status)
 (when (eq system-type 'darwin)
   (setq magit-emacsclient-executable
-	"/Applications/MacPorts/Emacs.app/Contents/MacOS/bin/emacsclient"))
+        "/Applications/MacPorts/Emacs.app/Contents/MacOS/bin/emacsclient"))
 
 ;;------------------------------------------------------------------------------
 ;; Markdown
@@ -392,7 +392,7 @@ is no active region."
 ;; (setq yas-verbosity 0)
 ;; (yas-global-mode 1)
 ;; (setq yas-snippet-dirs
-;;	 '("~/.emacs.d/snippets"))
+;;       '("~/.emacs.d/snippets"))
 
 ;;------------------------------------------------------------------------------
 ;; Whitespace and long lines
@@ -425,9 +425,9 @@ is no active region."
 ;;   (interactive)
 ;;   (if (not (get-buffer "*ansi-term*"))
 ;;       (progn
-;; 	(split-window-sensibly (selected-window))
-;; 	(other-window 1)
-;; 	(ansi-term "/opt/local/bin/bash"))
+;;      (split-window-sensibly (selected-window))
+;;      (other-window 1)
+;;      (ansi-term "/opt/local/bin/bash"))
 ;;     (switch-to-buffer-other-window "*ansi-term*")))
 
 (defalias 'flip
@@ -494,11 +494,11 @@ is no active region."
   (interactive)
   (when buffer-file-name
     (shell-command (concat
-		    (if (eq system-type 'darwin)
-			"open"
-		      (read-shell-command "Open current file with: "))
-		    " "
-		    buffer-file-name))))
+                    (if (eq system-type 'darwin)
+                        "open"
+                      (read-shell-command "Open current file with: "))
+                    " "
+                    buffer-file-name))))
 (global-set-key (kbd "C-c o") 'open-with)
 
 
@@ -546,8 +546,8 @@ is no active region."
 (defun execute-premake-executable ()
   (interactive)
   (let* ((exe-name (find-premake-executable))
-	 (exe (get-closest-pathname exe-name))
-	 (path (file-name-directory exe)))
+         (exe (get-closest-pathname exe-name))
+         (path (file-name-directory exe)))
     (cd path)
     (shell-command exe)))
 
@@ -558,12 +558,12 @@ is no active region."
   "Walks up from current directory until it finds a particular file."
   (let ((root (expand-file-name "/")))
     (expand-file-name file
-		      (loop
-		       for d = default-directory then (expand-file-name ".." d)
-		       if (file-exists-p (expand-file-name file d))
-		       return d
-		       if (equal d root)
-		       return nil))))
+                      (loop
+                       for d = default-directory then (expand-file-name ".." d)
+                       if (file-exists-p (expand-file-name file d))
+                       return d
+                       if (equal d root)
+                       return nil))))
 
 ;;------------------------------------------------------------------------------
 (server-start)
