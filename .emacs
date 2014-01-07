@@ -4,9 +4,6 @@
 ;; (_)___|_| |_| |_|\__,_|\___|___/
 
 ;;------------------------------------------------------------------------------
-;; Import things
-
-;;------------------------------------------------------------------------------
 ;; Package manager load and setup
 (package-initialize)
 (setq package-enable-at-startup nil)
@@ -38,6 +35,7 @@
                       paredit
                       projectile
                       rainbow-delimiters
+                      s
                       scala-mode2
                       smex
                       solarized-theme
@@ -223,10 +221,11 @@ is no active region."
   (end-of-line)
   (unless (eq (current-column) 0)
     (open-line-above))
-  (let* ((nbeg (string-width comment-start))
+  (let* ((cs-strip (s-trim-right comment-start))
+         (nbeg (string-width cs-strip))
          (nend (string-width comment-end))
          (numchars (- fill-column (+ nbeg nend))))
-    (insert comment-start)
+    (insert cs-strip)
     (insert-char ?- numchars)
     (insert commend-end)))
 (global-set-key (kbd "C-c h") 'comment-header-line)
