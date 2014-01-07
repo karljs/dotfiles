@@ -5,7 +5,6 @@
 
 ;;------------------------------------------------------------------------------
 ;; Import things
-(require 'cl)
 
 ;;------------------------------------------------------------------------------
 ;; Package manager load and setup
@@ -48,15 +47,15 @@
   "Packages to install at launch, when necessary.")
 
 (defun my-packages-installed-p ()
+  "Loop through my preferred packages and determine which are installed."
   (loop for p in my-packages
         when (not (package-installed-p p)) do (return nil)
         finally (return t)))
 
 (defun my-install-packages ()
+  "Install any missing packages."
   (unless (my-packages-installed-p)
-    (message "%s" "Refreshing package database...")
     (package-refresh-contents)
-    (message "%s" " done.")
     (dolist (p my-packages)
       (unless (package-installed-p p)
         (package-install p)))))
@@ -64,47 +63,43 @@
 (my-install-packages)
 
 ;;------------------------------------------------------------------------------
-;; Path stuff.  Machine specific.
+;; Fix broken GUI path on OSX
 (when (eq system-type 'darwin)
-  (exec-path-from-shell-initialize))
+  (exec-path-from-shell-initialize)
+  (setq default-directory "/Users/karl"))
+
 
 ;;------------------------------------------------------------------------------
 ;; GUI Settings
 (if (or (not (display-graphic-p)) (not (eq system-type 'darwin)))
     (menu-bar-mode -1))
 (setq inhibit-startup-message t
-      inhibit-startup-echo-area-message "karl"
-      suggest-key-bindings nil)
+      inhibit-startup-echo-area-message "")
 (tool-bar-mode -1)
 (scroll-bar-mode -1)
-(column-number-mode 1)
 (transient-mark-mode -1)
-
+(column-number-mode 1)
 
 ;;------------------------------------------------------------------------------
 ;; Font & Colors
-;; (setq solarized-broken-srgb t)
+;; (setq solarized-broken-srgb nil)
 ;; (setq ns-use-srgb-colorspace t)
-;; (setq solarized-high-contrast-mode-line t)
 (load-theme 'solarized-light t)
-
 
 ;; Set the font depending on OS and pixel density
 (defun fontify-frame (frame)
   (interactive)
   (when window-system
     (if (> (x-display-pixel-width) 2000)
-        (set-frame-parameter frame 'font "Source Code Pro-15")
-      (set-frame-parameter frame 'font "Inconsolata-15"))))
+        (set-frame-parameter frame 'font "Inconsolata-15")
+      (set-frame-parameter frame 'font "Inconsolata-16"))))
 (if (eq system-type 'darwin)
     (fontify-frame nil)
   (set-face-attribute 'default nil :font "Inconsolata-13"))
-;; (push 'fontify-frame after-make-frame-functions)
 
 ;;------------------------------------------------------------------------------
 ;; Good behavior
 (setq confirm-nonexistent-file-or-buffer nil
-      dired-use-ls-dired nil
       mac-command-modifier 'meta
       mac-option-modifier 'none
       make-backup-files nil
@@ -114,14 +109,11 @@
       scroll-conservatively 1
       require-final-newline t)
 
-(when (eq system-type 'darwin)
-  (setq default-directory "/Users/karl"))
-
 (setq-default fill-column 80
               indent-tabs-mode nil)
-
-(global-auto-revert-mode 1)
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
+(global-auto-revert-mode 1)
+
 
 ;;------------------------------------------------------------------------------
 ;; Global keybindings
@@ -133,15 +125,10 @@
 (global-set-key [M-down] 'windmove-down)
 (global-set-key (kbd "C-'") 'imenu)
 
-;; <3 Unix
 (global-set-key (kbd "C-h") 'delete-backward-char)
 ;; (global-set-key (kbd "M-h") 'backward-kill-word)
 (global-set-key (kbd "C-?") 'help-command)
 ;; (global-set-key (kbd "M-?") 'mark-paragraph)
-
-;; Programming specific
-(global-set-key (kbd "M-g n") 'next-error)
-(global-set-key (kbd "M-g p") 'previous-error)
 
 
 ;;------------------------------------------------------------------------------
@@ -156,7 +143,7 @@
 (define-key global-map (kbd "C-c C-SPC") 'ace-jump-mode)
 
 ;;------------------------------------------------------------------------------
-;; LaTeX
+;; Auctex / LaTeX
 (require 'tex-site)
 
 (setq TeX-PDF-mode t)
@@ -198,7 +185,6 @@
 ;;------------------------------------------------------------------------------
 ;; Org
 ;; (setq org-fontify-emphasized-text nil)
-;; (define-key global-map "\C-ca" 'org-agenda)
 (setq org-pretty-entities 1)
 
 
@@ -207,8 +193,8 @@
 ;; (setq ido-auto-merge-work-directories-length -1)
 ;; (setq ido-enable-flex-matching t)
 ;; (setq ido-everywhere t)
-(setq ido-create-new-buffer 'always)
 ;; (setq ido-default-buffer-method 'selected-window)
+(setq ido-create-new-buffer 'always)
 (ido-mode 1)
 (ido-ubiquitous-mode 1)
 (setq smex-key-advice-ignore-menu-bar t)
@@ -229,8 +215,22 @@ is no active region."
       (setq beg (line-beginning-position)
             end (line-end-position)))
     (comment-or-uncomment-region beg end)))
-
 (global-set-key (kbd "C-x C-;") 'comment-or-uncomment-region-or-line)
+
+(defun comment-header-line ()
+  "Insert a long comment line with hyphens to denote sections in code."
+  (interactive)
+  (end-of-line)
+  (unless (eq (current-column) 0)
+    (open-line-above))
+  (let* ((nbeg (string-width comment-start))
+         (nend (string-width comment-end))
+         (numchars (- fill-column (+ nbeg nend))))
+    (insert comment-start)
+    (insert-char ?- numchars)
+    (insert commend-end)))
+(global-set-key (kbd "C-c h") 'comment-header-line)
+
 
 ;;------------------------------------------------------------------------------
 ;; C/C++
@@ -254,18 +254,10 @@ is no active region."
 
 ;;------------------------------------------------------------------------------
 ;; Haskell
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(haskell-interactive-mode-delete-superseded-errors nil)
- '(haskell-interactive-mode-hide-multi-line-errors nil)
- '(haskell-process-type (quote ghci))
- '(haskell-tags-on-save t))
-
 (add-hook 'haskell-mode-hook 'haskell-hook)
 (defun haskell-hook ()
+  (setq haskell-interactive-mode-hide-multi-line-errors nil
+        haskell-tags-on-save t)
   (turn-on-haskell-indentation)
   (turn-on-haskell-decl-scan)
   (define-key haskell-mode-map (kbd "C-c C-l") 'haskell-process-load-file)
@@ -274,8 +266,7 @@ is no active region."
   (define-key haskell-mode-map (kbd "C-c C-t") 'haskell-process-do-type)
   (define-key haskell-mode-map (kbd "C-c C-i") 'haskell-process-do-info)
   (define-key haskell-mode-map (kbd "M-.") 'haskell-mode-tag-find)
-  (define-key haskell-mode-map (kbd "C-c C-h") 'haskell-check)
-  )
+  (define-key haskell-mode-map (kbd "C-c C-h") 'haskell-check))
 
 
 ;;------------------------------------------------------------------------------
@@ -290,8 +281,7 @@ is no active region."
 
 ;;------------------------------------------------------------------------------
 ;; Clojure/nREPL
-(setq nrepl-popup-stacktraces nil)
-
+;; (setq nrepl-popup-stacktraces nil)
 (defun nrepl-refresh ()
   (interactive)
   (set-buffer "*nrepl*")
@@ -303,52 +293,7 @@ is no active region."
           (lambda () (local-set-key (kbd "C-c r") 'nrepl-refresh)))
 
 ;;------------------------------------------------------------------------------
-;; Paredit / Smartparens
-
-;; None of this smartparens stuff works as is, but the potential keybindings are
-;; worth saving for the future.
-
-;; (require 'smartparens-config)
-
-;; (let ((map smartparens-mode-map))
-;;     ;; Movement and navigation
-;;     (define-key map (kbd "C-M-f") #'sp-forward-sexp)
-;;     (define-key map (kbd "C-M-b") #'sp-backward-sexp)
-;;     (define-key map (kbd "C-M-u") #'sp-backward-up-sexp)
-;;     (define-key map (kbd "C-M-d") #'sp-down-sexp)
-;;     (define-key map (kbd "C-M-p") #'sp-backward-down-sexp)
-;;     (define-key map (kbd "C-M-n") #'sp-up-sexp)
-;;     ;; Deleting and killing
-;;     (define-key map (kbd "C-M-k") #'sp-kill-sexp)
-;;     (define-key map (kbd "C-M-w") #'sp-copy-sexp)
-;;     ;; Depth changing
-;;     (define-key map (kbd "M-s") #'sp-splice-sexp)
-;;     (define-key map (kbd "M-<up>") #'sp-splice-sexp-killing-backward)
-;;     (define-key map (kbd "M-<down>") #'sp-splice-sexp-killing-forward)
-;;     (define-key map (kbd "M-r") #'sp-splice-sexp-killing-around)
-;;     (define-key map (kbd "M-?") #'sp-convolute-sexp)
-;;     ;; Barfage & Slurpage
-;;     (define-key map (kbd "C-)") #'sp-forward-slurp-sexp)
-;;     (define-key map (kbd "C-<right>") #'sp-forward-slurp-sexp)
-;;     (define-key map (kbd "C-}") #'sp-forward-barf-sexp)
-;;     (define-key map (kbd "C-<left>") #'sp-forward-barf-sexp)
-;;     (define-key map (kbd "C-(") #'sp-backward-slurp-sexp)
-;;     (define-key map (kbd "C-M-<left>") #'sp-backward-slurp-sexp)
-;;     (define-key map (kbd "C-{") #'sp-backward-barf-sexp)
-;;     (define-key map (kbd "C-M-<right>") #'sp-backward-barf-sexp)
-;;     ;; Miscellaneous commands
-;;     (define-key map (kbd "M-S") #'sp-split-sexp)
-;;     (define-key map (kbd "M-J") #'sp-join-sexp)
-;;     (define-key map (kbd "C-M-t") #'sp-transpose-sexp))
-
-;; ;; Some additional bindings for strict mode
-;; (let ((map smartparens-strict-mode-map))
-;;   (define-key map (kbd "M-q") #'sp-indent-defun)
-;;   (define-key map (kbd "C-j") #'sp-newline))
-
-;; (smartparens-global-mode)
-;; (show-smartparens-global-mode)
-
+;; Paredit
 (add-hook 'clojure-mode-hook 'paredit-mode)
 (add-hook 'clojurescript-mode-hook 'paredit-mode)
 (add-hook 'nrepl-mode-hook 'paredit-mode)
@@ -394,16 +339,19 @@ is no active region."
 ;; (setq yas-snippet-dirs
 ;;       '("~/.emacs.d/snippets"))
 
+
 ;;------------------------------------------------------------------------------
 ;; Whitespace and long lines
 (setq whitespace-style '(face lines))
 (setq whitespace-line-column 80)
 (add-hook 'prog-mode-hook 'whitespace-mode)
 
+
 ;;------------------------------------------------------------------------------
 ;; Web mode
 (require 'web-mode)
 (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
+
 
 ;;------------------------------------------------------------------------------
 ;; Scala stuff
@@ -411,11 +359,9 @@ is no active region."
 ;; (require 'ensime)
 ;; (add-hook 'scala-mode-hook 'ensime-scala-mode-hook)
 
-;;------------------------------------------------------------------------------
-;; Term / Shell
-;; (when (eq system-type 'darwin)
-;;   (setq multi-term-program "/opt/local/bin/bash"))
 
+;;------------------------------------------------------------------------------
+;; Eshell
 (add-hook 'term-mode-hook
           (lambda ()
             (setq term-buffer-maximum-size 10000)))
@@ -434,13 +380,13 @@ is no active region."
   (lambda ()
     (cd "/ssh:smeltzek@flip.engr.oregonstate.edu:~/")))
 
-;; (global-set-key (kbd "C-c t") 'visit-term-buffer)
 (global-set-key (kbd "C-c t") 'eshell)
-
 
 
 ;;------------------------------------------------------------------------------
 ;; GLSL
+
+;; Ensure that file extensions appropriately load glsl-mode.
 (autoload 'glsl-mode "glsl-mode" nil t)
 (add-to-list 'auto-mode-alist '("\\.vert\\'" . glsl-mode))
 (add-to-list 'auto-mode-alist '("\\.frag\\'" . glsl-mode))
@@ -450,16 +396,12 @@ is no active region."
 
 ;;------------------------------------------------------------------------------
 ;; Tramp
+
+;; Stop Tramp from breaking on my prompt.
 (setq tramp-shell-prompt-pattern
       "^[^]#$%>\n]*[]#$%>]$? *\\(\\[[0-9;]*[a-zA-Z] *\\)*")
 (setq ido-enable-tramp-completion t)
 (setq tramp-default-method "ssh")
-
-
-;;------------------------------------------------------------------------------
-;; Rebox
-(setq rebox-style-loop '(13))
-(global-set-key (kbd "C-c b") 'rebox-dwim)
 
 
 ;;------------------------------------------------------------------------------
@@ -470,27 +412,20 @@ is no active region."
 
 ;;------------------------------------------------------------------------------
 ;; Racket
-(require 'quack)
+;; (require 'quack)
+
 
 ;;------------------------------------------------------------------------------
 ;; Misc things that should probably be in a different file
-
-(defun smart-open-line ()
-  "Insert a line below regardless of point position.  Like Vim's 'o' command."
-  (interactive)
-  (move-end-of-line nil)
-  (newline-and-indent))
-(global-set-key [(shift return)] 'smart-open-line)
-
-
 (defun reload-dot-emacs ()
+  "Reload the default configuration file."
   (interactive)
   (load-file "~/.emacs")
   (message "Reloaded .emacs file..."))
 (global-set-key (kbd "C-x C-r") 'reload-dot-emacs)
 
-
 (defun open-with ()
+  "Open current buffer with an external tool, such as a browser."
   (interactive)
   (when buffer-file-name
     (shell-command (concat
@@ -501,8 +436,15 @@ is no active region."
                     buffer-file-name))))
 (global-set-key (kbd "C-c o") 'open-with)
 
+(defun open-line-below ()
+  "Insert a line below regardless of point position.  Like Vim's 'o' command."
+  (interactive)
+  (move-end-of-line nil)
+  (newline-and-indent))
+(global-set-key [(shift return)] 'open-line-below)
 
 (defun open-line-above ()
+  "Open a new line above the current line, like Vim's 'O' command."
   (interactive)
   (beginning-of-line)
   (newline)
@@ -511,7 +453,7 @@ is no active region."
 
 
 ;;------------------------------------------------------------------------------
-;; Creating various tags.
+;; Poorly constructed tags stuff
 (defun htags (dir)
   "Create Haskell tags"
   (interactive)
@@ -534,8 +476,9 @@ is no active region."
 
 
 ;;------------------------------------------------------------------------------
-;; Premake specific stuff for finding a project's executable and running it
+;; Premake-specific stuff for finding a project's executable and running it
 (defun find-premake-executable ()
+  "Find the Premake-generated makefile and grab the name of the executable."
   (let ((mf (get-closest-pathname "Makefile")))
     (with-temp-buffer
       (insert-file-contents mf)
@@ -544,6 +487,7 @@ is no active region."
       (buffer-substring (point) (line-end-position)))))
 
 (defun execute-premake-executable ()
+  "Find and execute the output of a Premake build."
   (interactive)
   (let* ((exe-name (find-premake-executable))
          (exe (get-closest-pathname exe-name))
@@ -553,7 +497,7 @@ is no active region."
 
 
 ;;------------------------------------------------------------------------------
-;; General utilities
+;; Configuration utilities
 (defun* get-closest-pathname (&optional (file "Makefile"))
   "Walks up from current directory until it finds a particular file."
   (let ((root (expand-file-name "/")))
