@@ -78,9 +78,10 @@
 (transient-mark-mode -1)
 (column-number-mode 1)
 
+
 ;;------------------------------------------------------------------------------
 ;; Font & Colors
-;; (setq solarized-broken-srgb nil)
+(setq solarized-broken-srgb 'nil)
 ;; (setq ns-use-srgb-colorspace t)
 (load-theme 'solarized-light t)
 
@@ -89,8 +90,8 @@
   (interactive)
   (when window-system
     (if (> (x-display-pixel-width) 2000)
-        (set-frame-parameter frame 'font "Inconsolata-15")
-      (set-frame-parameter frame 'font "Inconsolata-16"))))
+        (set-frame-parameter frame 'font "Source Code Pro-15")
+      (set-frame-parameter frame 'font "Source Code Pro-14"))))
 (if (eq system-type 'darwin)
     (fontify-frame nil)
   (set-face-attribute 'default nil :font "Inconsolata-13"))
@@ -136,14 +137,15 @@
 (global-set-key (kbd "<C-S-left>") 'buf-move-left)
 (global-set-key (kbd "<C-S-right>") 'buf-move-right)
 
+
 ;;------------------------------------------------------------------------------
 ;; Ace jump mode
 (define-key global-map (kbd "C-c C-SPC") 'ace-jump-mode)
 
+
 ;;------------------------------------------------------------------------------
 ;; Auctex / LaTeX
 (require 'tex-site)
-
 (setq TeX-PDF-mode t)
 (setq TeX-auto-save t)
 (setq TeX-parse-self t)
@@ -218,16 +220,19 @@ is no active region."
 (defun comment-header-line ()
   "Insert a long comment line with hyphens to denote sections in code."
   (interactive)
-  (end-of-line)
-  (unless (eq (current-column) 0)
-    (open-line-above))
-  (let* ((cs-strip (s-trim-right comment-start))
-         (nbeg (string-width cs-strip))
-         (nend (string-width comment-end))
-         (numchars (- fill-column (+ nbeg nend))))
-    (insert cs-strip)
-    (insert-char ?- numchars)
-    (insert commend-end)))
+  (if (and comment-start comment-end)
+      (progn (end-of-line)
+             (unless (eq (current-column) 0)
+               (open-line-above))
+             (let* ((cs-trim (s-trim comment-start))
+                    (ce-trim (s-trim comment-end))
+                    (nbeg (string-width cs-trim))
+                    (nend (string-width ce-trim))
+                    (numchars (- fill-column (+ nbeg nend))))
+               (insert cs-trim)
+               (insert-char ?- numchars)
+               (insert ce-trim)))
+    (message "Comment characters are not set")))  ; looking at you, web-mode
 (global-set-key (kbd "C-c h") 'comment-header-line)
 
 
@@ -270,13 +275,13 @@ is no active region."
 
 ;;------------------------------------------------------------------------------
 ;; Agda
-;; (require 'ucs-utils)
-;; (load-file (let ((coding-system-for-read 'utf-8))
-;;              (shell-command-to-string "agda-mode locate")))
-;; (add-hook 'agda2-mode-hook
-;;           '(lambda ()
-;;              (require 'unicode-fonts)
-;;              (unicode-fonts-setup)))
+(require 'ucs-utils)
+(load-file (let ((coding-system-for-read 'utf-8))
+             (shell-command-to-string "agda-mode locate")))
+(add-hook 'agda2-mode-hook
+          '(lambda ()
+             (require 'unicode-fonts)
+             (unicode-fonts-setup)))
 
 ;;------------------------------------------------------------------------------
 ;; Clojure/nREPL
@@ -314,7 +319,7 @@ is no active region."
 (global-set-key (kbd "C-x g") 'magit-status)
 (when (eq system-type 'darwin)
   (setq magit-emacsclient-executable
-        "/Applications/MacPorts/Emacs.app/Contents/MacOS/bin/emacsclient"))
+        "/usr/local/bin/emacsclient"))
 
 ;;------------------------------------------------------------------------------
 ;; Markdown
@@ -511,3 +516,15 @@ is no active region."
 ;;------------------------------------------------------------------------------
 (server-start)
 (message "%s" "You shouldn't have come back, Karl")
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(agda2-highlight-face-groups nil))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
