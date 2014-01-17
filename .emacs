@@ -238,12 +238,16 @@ is no active region."
 
 ;;------------------------------------------------------------------------------
 ;; C/C++
+
+;; TODO -- write some kind of magic function to automatically determine which
+;; build system to use.  In the mean time, default to scons.
 (defun my-c-mode-hook ()
   (setq c-default-style "k&r"
         c-basic-offset 4)
-  (local-set-key (kbd "C-c C-c") 'my-compile-func)
-  (local-set-key (kbd "C-c C-k") 'my-compile-clean-func)
-  (local-set-key (kbd "C-c C-r") 'execute-premake-executable))
+  ;; (local-set-key (kbd "C-c C-c") 'my-compile-func)
+  ;; (local-set-key (kbd "C-c C-k") 'my-compile-clean-func)
+  (local-set-key (kbd "C-c C-l") 'scons-build)
+  (local-set-key (kbd "C-c C-r") 'scons-run-exec))
 (add-hook 'c-mode-common-hook 'my-c-mode-hook)
 
 (defun my-compile-func ()
@@ -480,29 +484,55 @@ is no active region."
 
 
 ;;------------------------------------------------------------------------------
-;; Premake-specific stuff for finding a project's executable and running it
-(defun find-premake-executable ()
+;; Premake
+(defun premake-find-exec ()
   "Find the Premake-generated makefile and grab the name of the executable."
-  (let ((mf (get-closest-pathname "Makefile")))
-    (with-temp-buffer
-      (insert-file-contents mf)
-      (split-string (buffer-string) "\n" t)
-      (search-forward "PROJECTS := ")
-      (buffer-substring (point) (line-end-position)))))
-
-(defun execute-premake-executable ()
-  "Find and execute the output of a Premake build."
   (interactive)
-  (let* ((exe-name (find-premake-executable))
-         (exe (get-closest-pathname exe-name))
-         (path (file-name-directory exe)))
-    (cd path)
-    (shell-command exe)))
+  (let ((ext (lambda ()
+               (progn (search-forward "PROJECTS := ")
+                      (buffer-substring (point) (line-end-position))))))
+    (extract-exe-from-buildscript "Makefile" ext)))
+
+(defun premake-run-exec ()
+  "Find and run the executable built by Premake."
+  (interactive)
+  (run-buildscript-exe (lambda () (premake-find-exec))))
+
+
+;;------------------------------------------------------------------------------
+;; Scons stuff
+(setq auto-mode-alist
+      (cons '("SConstruct" . python-mode) auto-mode-alist))
+(setq auto-mode-alist
+      (cons '("SConscript" . python-mode) auto-mode-alist))
+
+(defun scons-build ()
+  "Find the 'SConstruct' file and run SCons on it."
+  (interactive)
+  (let ((sc-dir (find-file-upward-dir "SConstruct")))
+    (cd sc-dir)
+    (shell-command "scons")))
+
+(defun scons-find-exec ()
+  "Find the executable produced by SCons in a very failure-prone manner."
+  (interactive)
+  (let ((ext (lambda () (let ((strt (progn (search-forward "target = '")
+                                           (point)))
+                              (end (progn (search-forward "'")
+                                          (backward-char)
+                                          (point))))
+                          (buffer-substring strt end)))))
+    (message (extract-exe-from-buildscript "SConstruct" ext))))
+
+(defun scons-run-exec ()
+  "Find and run the executable built by SCons"
+  (interactive)
+  (run-buildscript-exe (lambda () (scons-find-exec))))
 
 
 ;;------------------------------------------------------------------------------
 ;; Configuration utilities
-(defun* get-closest-pathname (&optional (file "Makefile"))
+(defun find-file-upward-full (file)
   "Walks up from current directory until it finds a particular file."
   (let ((root (expand-file-name "/")))
     (expand-file-name file
@@ -513,18 +543,27 @@ is no active region."
                        if (equal d root)
                        return nil))))
 
+(defun find-file-upward-dir (file)
+  "Walks up from current directory until it finds a particular
+file.  Return just the directory in which it's found."
+  (file-name-directory (find-file-upward-full file)))
+
+(defun extract-exe-from-buildscript (scriptname extractor)
+  "Machinery to extract part of a build script."
+  (interactive)
+  (let ((buildscript (find-file-upward-full scriptname)))
+    (with-temp-buffer
+      (insert-file-contents buildscript)
+      (split-string (buffer-string) "\n" t)
+      (funcall extractor))))
+
+(defun run-buildscript-exe (exe-getter)
+  "Run the executable returned by EXE-GETTER"
+  (let* ((exe-name (funcall exe-getter))
+         (exe (find-file-upward-full exe-name)))
+    (cd (file-name-directory exe))
+    (shell-command exe)))
+
 ;;------------------------------------------------------------------------------
 (server-start)
 (message "%s" "You shouldn't have come back, Karl")
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(agda2-highlight-face-groups nil))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )
