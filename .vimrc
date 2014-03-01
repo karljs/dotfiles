@@ -17,20 +17,25 @@ Bundle 'gmarik/vundle'
 
 " github
 Bundle 'altercation/vim-colors-solarized'
-Bundle 'bling/vim-airline'
-Bundle 'derekwyatt/vim-scala'
+" Bundle 'bling/vim-airline'
 Bundle 'kien/ctrlp.vim'
 Bundle 'kien/rainbow_parentheses.vim'
+Bundle 'LaTeX-Box-Team/LaTeX-Box'
 Bundle 'tomasr/molokai'
-Bundle 'tpope/vim-markdown'
-Bundle 'tpope/vim-surround'
+Bundle 'tomtom/tcomment_vim'
+" Bundle 'tpope/vim-markdown'
+" Bundle 'tpope/vim-surround'
 " Bundle 'tpope/vim-fugitive'
+Bundle 'wikitopian/hardmode'
 
 " vim-scripts
-Bundle 'Align'
+" Bundle 'Align'
+Bundle 'DeleteTrailingWhitespace'
 Bundle 'inkpot'
-Bundle 'tComment'
 Bundle 'twilight'
+
+" other plugins
+" Bundle 'git://git.code.sf.net/p/vim-latex/vim-latex'
 
 filetype plugin indent on
 
@@ -39,6 +44,7 @@ filetype plugin indent on
 set ttyfast
 set shortmess+=I
 set noesckeys
+set shell=/usr/local/bin/bash
 
 "-------------------------------------------------------------------------------
 " Tabs & Indent
@@ -51,7 +57,7 @@ autocmd FileType haskell setlocal shiftwidth=2 softtabstop=2
 
 "-------------------------------------------------------------------------------
 " Programming tool
-set nowrap
+" set nowrap
 set backspace=indent,eol,start
 set nostartofline
 set hidden
@@ -67,6 +73,14 @@ set ruler
 set showcmd
 set showmatch
 set colorcolumn=80
+set foldmethod=syntax
+set foldlevelstart=99
+
+
+"-------------------------------------------------------------------------------
+" LaTeX Box
+" let g:LatexBox_latexmk_async=1
+let g:LatexBox_Folding=1
 
 "-------------------------------------------------------------------------------
 " Airline
@@ -86,6 +100,7 @@ let g:ctrlp_custom_ignore = {
     \ 'dir': '\.git$\|\.svn$\|Library\|Music\|Pictures\|Downloads',
     \ 'file': '\.so$\|\.hi$\|\.o$\|\.swp$\|.zip$'
 \ }
+
 
 "-------------------------------------------------------------------------------
 " Tags
@@ -128,3 +143,5 @@ nnoremap <silent> [a :previous<CR>
 nnoremap <silent> ]a :next<CR>
 
 nmap <leader>v :setlocal paste! paste?<cr>
+
+nnoremap <silent> C-P :CtrlPBuffer<CR>
