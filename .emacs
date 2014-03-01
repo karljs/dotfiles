@@ -5,6 +5,7 @@
 
 ;;------------------------------------------------------------------------------
 ;; Package manager load and setup
+(require 'cl)
 (package-initialize)
 (setq package-enable-at-startup nil)
 
@@ -18,20 +19,19 @@
 (defvar my-packages '(ace-jump-mode
                       ag
                       auctex
+                      auctex-latexmk
                       buffer-move
                       change-inner
-                      clojure-mode
-                      clojurescript-mode
                       exec-path-from-shell
                       fastnav
                       glsl-mode
                       haskell-mode
                       ido-ubiquitous
+                      ido-vertical-mode
                       lua-mode
                       magit
                       markdown-mode
                       monokai-theme
-                      nrepl
                       paredit
                       projectile
                       rainbow-delimiters
@@ -41,7 +41,8 @@
                       solarized-theme
                       ucs-utils
                       unicode-fonts
-                      web-mode)
+                      web-mode
+                      zenburn-theme)
   "Packages to install at launch, when necessary.")
 
 (defun my-packages-installed-p ()
@@ -66,7 +67,6 @@
   (exec-path-from-shell-initialize)
   (setq default-directory "/Users/karl"))
 
-
 ;;------------------------------------------------------------------------------
 ;; GUI Settings
 (if (or (not (display-graphic-p)) (not (eq system-type 'darwin)))
@@ -81,16 +81,16 @@
 
 ;;------------------------------------------------------------------------------
 ;; Font & Colors
-(setq solarized-broken-srgb 'nil)
+;; (setq solarized-broken-srgb 'nil)
 ;; (setq ns-use-srgb-colorspace t)
-(load-theme 'solarized-light t)
+(load-theme 'monokai t)
 
 ;; Set the font depending on OS and pixel density
 (defun fontify-frame (frame)
   (interactive)
   (when window-system
     (if (> (x-display-pixel-width) 2000)
-        (set-frame-parameter frame 'font "Source Code Pro-15")
+        (set-frame-parameter frame 'font "Source Code Pro-14")
       (set-frame-parameter frame 'font "Source Code Pro-14"))))
 (if (eq system-type 'darwin)
     (fontify-frame nil)
@@ -108,7 +108,7 @@
       scroll-conservatively 1
       require-final-newline t)
 
-(setq-default fill-column 80
+(setq-default fill-column 78
               indent-tabs-mode nil)
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
 (global-auto-revert-mode 1)
@@ -150,19 +150,8 @@
 (setq TeX-auto-save t)
 (setq TeX-parse-self t)
 (setq-default TeX-master nil)
-;; (setq font-latex-fontify-script nil)
-;; (setq font-latex-fontify-sectioning 'color)
-(add-hook 'LaTeX-mode-hook 'visual-line-mode)
-;; (add-hook 'LaTeX-mode-hook 'flyspell-mode)
-(add-hook 'LaTeX-mode-hook 'LaTeX-math-mode)
-(add-hook 'LaTeX-mode-hook 'turn-on-reftex)
 (setq reftex-plug-into-AUCTeX t)
-
-;; (add-hook 'LaTeX-mode-hook (lambda ()
-;;   (push
-;;    '("Latexmk" "latexmk -pdf %s" TeX-run-TeX nil t
-;;      :help "Run Latexmk on file")
-;;    TeX-command-list)))
+;; (auctex-latexmk-setup)
 
 (when (eq system-type 'darwin)
   (setq TeX-view-program-list
@@ -175,10 +164,20 @@
         (output-dvi "DVI Viewer")
         (output-html "HTML Viewer")))
 
+(add-hook 'LaTeX-mode-hook 'flyspell-mode)
+(add-hook 'LaTeX-mode-hook (lambda ()
+                             ;; (setq LaTeX-indent-level 0
+                             ;;       LaTeX-item-indent 0)
+                             (turn-on-auto-fill)
+                             ;; (LaTeX-math-mode)
+                             (turn-on-reftex)
+                             (outline-minor-mode)))
+
 ;;------------------------------------------------------------------------------
 ;; Spelling
 ;; (setq speck-engine (quote Hunspell))
 ;; (setq speck-hunspell-default-dictionary-name "en_US")
+(add-hook 'prog-mode-hook 'flyspell-prog-mode)
 (setq-default ispell-program-name "aspell")
 
 
@@ -194,6 +193,7 @@
 ;; (setq ido-enable-flex-matching t)
 ;; (setq ido-everywhere t)
 ;; (setq ido-default-buffer-method 'selected-window)
+
 (setq ido-create-new-buffer 'always)
 (ido-mode 1)
 (ido-ubiquitous-mode 1)
@@ -201,6 +201,7 @@
 (global-set-key (kbd "M-x") 'smex)
 (global-set-key (kbd "M-X") 'smex-major-mode-commands)
 (ido-vertical-mode 1)
+(ido-better-flex/enable)
 
 ;;------------------------------------------------------------------------------
 ;; Commenting
@@ -374,21 +375,21 @@ is no active region."
           (lambda ()
             (setq term-buffer-maximum-size 10000)))
 
-;; (defun visit-term-buffer ()
-;;   "Create or visit a terminal buffer."
-;;   (interactive)
-;;   (if (not (get-buffer "*ansi-term*"))
-;;       (progn
-;;      (split-window-sensibly (selected-window))
-;;      (other-window 1)
-;;      (ansi-term "/opt/local/bin/bash"))
-;;     (switch-to-buffer-other-window "*ansi-term*")))
+(defun visit-term-buffer ()
+  "Create or visit a terminal buffer."
+  (interactive)
+  (if (not (get-buffer "*ansi-term*"))
+      (progn
+     (split-window-sensibly (selected-window))
+     (other-window 1)
+     (ansi-term "/usr/local/bin/bash"))
+    (switch-to-buffer-other-window "*ansi-term*")))
 
 (defalias 'flip
   (lambda ()
     (cd "/ssh:smeltzek@flip.engr.oregonstate.edu:~/")))
 
-(global-set-key (kbd "C-c t") 'eshell)
+(global-set-key (kbd "C-c t") 'visit-term-buffer)
 
 
 ;;------------------------------------------------------------------------------
