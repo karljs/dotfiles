@@ -202,7 +202,7 @@
 (global-set-key (kbd "M-x") 'smex)
 (global-set-key (kbd "M-X") 'smex-major-mode-commands)
 (ido-vertical-mode 1)
-(ido-better-flex/enable)
+;; (ido-better-flex/enable)
 
 ;;------------------------------------------------------------------------------
 ;; Commenting
