@@ -28,6 +28,7 @@
                       haskell-mode
                       ido-ubiquitous
                       ido-vertical-mode
+                      idris-mode
                       lua-mode
                       magit
                       markdown-mode
@@ -81,7 +82,7 @@
 
 ;;------------------------------------------------------------------------------
 ;; Font & Colors
-;; (setq solarized-broken-srgb 'nil)
+; (setq solarized-broken-srgb 'nil)
 ;; (setq ns-use-srgb-colorspace t)
 (load-theme 'monokai t)
 
@@ -90,8 +91,8 @@
   (interactive)
   (when window-system
     (if (> (x-display-pixel-width) 2000)
-        (set-frame-parameter frame 'font "Source Code Pro-14")
-      (set-frame-parameter frame 'font "Source Code Pro-14"))))
+        (set-frame-parameter frame 'font "Inconsolata-14")
+      (set-frame-parameter frame 'font "Inconsolata-15"))))
 (if (eq system-type 'darwin)
     (fontify-frame nil)
   (set-face-attribute 'default nil :font "Inconsolata-13"))
@@ -287,6 +288,17 @@ is no active region."
           '(lambda ()
              (require 'unicode-fonts)
              (unicode-fonts-setup)))
+
+;;------------------------------------------------------------------------------
+;; Idris
+(add-hook 'idris-mode-hook
+          '(lambda ()
+             (set-face-attribute 'idris-semantic-data-face nil
+                                 :foreground "white")
+             (set-face-attribute 'idris-semantic-type-face nil
+                                 :foreground "white")))
+;; (setq idris-semantic-data-face
+;;       idris-semantic-type-face '((t (:inherit white))))
 
 ;;------------------------------------------------------------------------------
 ;; Clojure/nREPL
