@@ -294,11 +294,11 @@ is no active region."
 (add-hook 'idris-mode-hook
           '(lambda ()
              (set-face-attribute 'idris-semantic-data-face nil
-                                 :foreground "white")
+                                 :foreground nil
+                                 :inherit 'font-lock-string-face)
              (set-face-attribute 'idris-semantic-type-face nil
-                                 :foreground "white")))
-;; (setq idris-semantic-data-face
-;;       idris-semantic-type-face '((t (:inherit white))))
+                                 :foreground nil
+                                 :inherit 'font-lock-string-face)))
 
 ;;------------------------------------------------------------------------------
 ;; Clojure/nREPL
