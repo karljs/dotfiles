@@ -17,16 +17,19 @@ Bundle 'gmarik/vundle'
 
 " github
 Bundle 'altercation/vim-colors-solarized'
-" Bundle 'bling/vim-airline'
+Bundle 'bling/vim-airline'
+Bundle 'idris-hackers/idris-vim'
 Bundle 'kien/ctrlp.vim'
 Bundle 'kien/rainbow_parentheses.vim'
-Bundle 'LaTeX-Box-Team/LaTeX-Box'
+Bundle 'lambdatoast/elm.vim'
+" Bundle 'LaTeX-Box-Team/LaTeX-Box'
 Bundle 'tomasr/molokai'
 Bundle 'tomtom/tcomment_vim'
 " Bundle 'tpope/vim-markdown'
 " Bundle 'tpope/vim-surround'
 " Bundle 'tpope/vim-fugitive'
 Bundle 'wikitopian/hardmode'
+Bundle 'w0ng/vim-hybrid'
 
 " vim-scripts
 " Bundle 'Align'
@@ -35,7 +38,7 @@ Bundle 'inkpot'
 Bundle 'twilight'
 
 " other plugins
-" Bundle 'git://git.code.sf.net/p/vim-latex/vim-latex'
+Bundle 'git://git.code.sf.net/p/vim-latex/vim-latex'
 
 filetype plugin indent on
 
@@ -117,14 +120,6 @@ let g:ctrlp_custom_ignore = {
 " \}
 
 "-------------------------------------------------------------------------------
-" Colors
-syntax on
-let g:solarized_italic=0
-let g:solarized_bold=0
-set background=light
-colorscheme solarized
-
-"-------------------------------------------------------------------------------
 " GUI/Terminal specific tweaks
 if has("gui_running")
   set gfn=Source\ Code\ Pro:h14
@@ -134,6 +129,14 @@ if has("gui_running")
 else
   set t_Co=256
 endif
+
+"-------------------------------------------------------------------------------
+" Colors
+syntax on
+let g:solarized_italic=0
+let g:solarized_bold=0
+set background=dark
+colorscheme solarized
 
 "-------------------------------------------------------------------------------
 " Keybindings
