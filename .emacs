@@ -22,7 +22,9 @@
                       auctex-latexmk
                       buffer-move
                       change-inner
+                      elm-mode
                       exec-path-from-shell
+                      evil
                       fastnav
                       glsl-mode
                       haskell-mode
@@ -76,23 +78,23 @@
       inhibit-startup-echo-area-message "")
 (tool-bar-mode -1)
 (scroll-bar-mode -1)
-(transient-mark-mode -1)
+;; (transient-mark-mode -1)
 (column-number-mode 1)
 
 
 ;;------------------------------------------------------------------------------
 ;; Font & Colors
-; (setq solarized-broken-srgb 'nil)
+(setq solarized-broken-srgb 'nil)
 ;; (setq ns-use-srgb-colorspace t)
-(load-theme 'monokai t)
+(load-theme 'solarized-dark t)
 
 ;; Set the font depending on OS and pixel density
 (defun fontify-frame (frame)
   (interactive)
   (when window-system
     (if (> (x-display-pixel-width) 2000)
-        (set-frame-parameter frame 'font "Inconsolata-14")
-      (set-frame-parameter frame 'font "Inconsolata-15"))))
+        (set-frame-parameter frame 'font "Source Code Pro-14")
+      (set-frame-parameter frame 'font "Source Code Pro-14"))))
 (if (eq system-type 'darwin)
     (fontify-frame nil)
   (set-face-attribute 'default nil :font "Inconsolata-13"))
@@ -116,6 +118,11 @@
 
 
 ;;------------------------------------------------------------------------------
+;; Default registers
+(set-register ?e '(file . "~/.emacs"))
+
+
+;;------------------------------------------------------------------------------
 ;; Global keybindings
 (global-set-key (kbd "C-x a r") 'align-regexp)
 (global-set-key (kbd "C-c %") 'replace-regexp)
@@ -129,6 +136,13 @@
 ;; (global-set-key (kbd "M-h") 'backward-kill-word)
 (global-set-key (kbd "C-?") 'help-command)
 ;; (global-set-key (kbd "M-?") 'mark-paragraph)
+
+;;------------------------------------------------------------------------------
+;; Evil
+;; (evil-mode)
+;; (define-key evil-ex-map "e " 'ido-find-file)
+;; (define-key evil-ex-map "w " 'ido-write-file)
+;; (define-key evil-ex-map "b " 'ido-switch-buffer)
 
 
 ;;------------------------------------------------------------------------------
@@ -154,16 +168,18 @@
 (setq reftex-plug-into-AUCTeX t)
 ;; (auctex-latexmk-setup)
 
+(add-to-list 'auto-mode-alist '("\\.tex\\'" . LaTeX-mode))
+
+
 (when (eq system-type 'darwin)
   (setq TeX-view-program-list
         '(("PDF Viewer" "open %o")
           ("DVI Viewer" "open %o")
-          ("HTML Viewer" "open %o"))))
-
-(setq TeX-view-program-selection
-      '((output-pdf "PDF Viewer")
-        (output-dvi "DVI Viewer")
-        (output-html "HTML Viewer")))
+          ("HTML Viewer" "open %o"))
+        TeX-view-program-selection
+        '((output-pdf "PDF Viewer")
+          (output-dvi "DVI Viewer")
+          (output-html "HTML Viewer"))))
 
 (add-hook 'LaTeX-mode-hook 'flyspell-mode)
 (add-hook 'LaTeX-mode-hook (lambda ()
@@ -180,6 +196,7 @@
 ;; (setq speck-hunspell-default-dictionary-name "en_US")
 (add-hook 'prog-mode-hook 'flyspell-prog-mode)
 (setq-default ispell-program-name "aspell")
+(setq ispell-extra-args '("--sug-mode=fast"))
 
 
 ;;------------------------------------------------------------------------------
@@ -281,13 +298,13 @@ is no active region."
 
 ;;------------------------------------------------------------------------------
 ;; Agda
-(require 'ucs-utils)
-(load-file (let ((coding-system-for-read 'utf-8))
-             (shell-command-to-string "agda-mode locate")))
-(add-hook 'agda2-mode-hook
-          '(lambda ()
-             (require 'unicode-fonts)
-             (unicode-fonts-setup)))
+;; (require 'ucs-utils)
+;; (load-file (let ((coding-system-for-read 'utf-8))
+;;              (shell-command-to-string "agda-mode locate")))
+;; (add-hook 'agda2-mode-hook
+;;           '(lambda ()
+;;              (require 'unicode-fonts)
+;;              (unicode-fonts-setup)))
 
 ;;------------------------------------------------------------------------------
 ;; Idris
@@ -456,6 +473,15 @@ is no active region."
                     " "
                     buffer-file-name))))
 (global-set-key (kbd "C-c o") 'open-with)
+
+;; TODO -- this currently only works for OSX
+(defun open-file-externally (fname)
+  "Interactively select a file to open with an external tool."
+  (interactive (list (read-file-name "Open file: ")))
+  (message "Path is %s" fname)
+  (when fname
+    (shell-command (concat
+                    "open " fname))))
 
 (defun open-line-below ()
   "Insert a line below regardless of point position.  Like Vim's 'o' command."
