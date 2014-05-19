@@ -26,6 +26,8 @@
                       exec-path-from-shell
                       evil
                       fastnav
+                      flx
+                      flx-ido
                       glsl-mode
                       haskell-mode
                       ido-ubiquitous
@@ -84,9 +86,9 @@
 
 ;;------------------------------------------------------------------------------
 ;; Font & Colors
-(setq solarized-broken-srgb 'nil)
+;; (setq solarized-broken-srgb 'nil)
 ;; (setq ns-use-srgb-colorspace t)
-(load-theme 'solarized-dark t)
+(load-theme 'solarized-light t)
 
 ;; Set the font depending on OS and pixel density
 (defun fontify-frame (frame)
@@ -170,7 +172,6 @@
 
 (add-to-list 'auto-mode-alist '("\\.tex\\'" . LaTeX-mode))
 
-
 (when (eq system-type 'darwin)
   (setq TeX-view-program-list
         '(("PDF Viewer" "open %o")
@@ -186,17 +187,37 @@
                              ;; (setq LaTeX-indent-level 0
                              ;;       LaTeX-item-indent 0)
                              (turn-on-auto-fill)
-                             ;; (LaTeX-math-mode)
+                             (LaTeX-math-mode)
                              (turn-on-reftex)
-                             (outline-minor-mode)))
+                             ;; (outline-minor-mode)
+                             ))
+
+(defun kjs-bibtex-next-entry ()
+  (interactive)
+  (bibtex-end-of-entry)
+  (search-forward-regexp "^@.*")
+  (beginning-of-line))
+
+(defun kjs-bibtex-prev-entry ()
+  (interactive)
+  (bibtex-beginning-of-entry)
+  (search-backward-regexp "^@.*")
+  (beginning-of-line))
+
+(defun kjs-bibtex-bind-forward-back-keys ()
+  "Change the keys for moving by paragraph to do something
+sensible in bibtex files."
+  (define-key bibtex-mode-map (kbd "M-}") 'kjs-bibtex-next-entry)
+  (define-key bibtex-mode-map (kbd "M-{") 'kjs-bibtex-prev-entry))
+
+(add-hook 'bibtex-mode-hook 'kjs-bibtex-bind-forward-back-keys)
+
 
 ;;------------------------------------------------------------------------------
 ;; Spelling
-;; (setq speck-engine (quote Hunspell))
-;; (setq speck-hunspell-default-dictionary-name "en_US")
 (add-hook 'prog-mode-hook 'flyspell-prog-mode)
 (setq-default ispell-program-name "aspell")
-(setq ispell-extra-args '("--sug-mode=fast"))
+;; (setq ispell-extra-args '("--sug-mode=fast"))
 
 
 ;;------------------------------------------------------------------------------
@@ -207,19 +228,16 @@
 
 ;;------------------------------------------------------------------------------
 ;; Ido / smex / vertical
-;; (setq ido-auto-merge-work-directories-length -1)
-;; (setq ido-enable-flex-matching t)
-;; (setq ido-everywhere t)
-;; (setq ido-default-buffer-method 'selected-window)
-
 (setq ido-create-new-buffer 'always)
+(require 'flx-ido)
 (ido-mode 1)
 (ido-ubiquitous-mode 1)
+(ido-everywhere 1)
+(flx-ido-mode 1)
 (setq smex-key-advice-ignore-menu-bar t)
 (global-set-key (kbd "M-x") 'smex)
 (global-set-key (kbd "M-X") 'smex-major-mode-commands)
 (ido-vertical-mode 1)
-;; (ido-better-flex/enable)
 
 ;;------------------------------------------------------------------------------
 ;; Commenting
@@ -306,6 +324,7 @@ is no active region."
 ;;              (require 'unicode-fonts)
 ;;              (unicode-fonts-setup)))
 
+
 ;;------------------------------------------------------------------------------
 ;; Idris
 (add-hook 'idris-mode-hook
@@ -317,18 +336,21 @@ is no active region."
                                  :foreground nil
                                  :inherit 'font-lock-string-face)))
 
+
 ;;------------------------------------------------------------------------------
 ;; Clojure/nREPL
-;; (setq nrepl-popup-stacktraces nil)
-(defun nrepl-refresh ()
-  (interactive)
-  (set-buffer "*nrepl*")
-  (goto-char (point-max))
-  (insert "(clojure.tools.namespace.repl/refresh)")
-  (nrepl-return))
 
-(add-hook 'nrepl-mode-hook
-          (lambda () (local-set-key (kbd "C-c r") 'nrepl-refresh)))
+;; (setq nrepl-popup-stacktraces nil)
+;; (defun nrepl-refresh ()
+;;   (interactive)
+;;   (set-buffer "*nrepl*")
+;;   (goto-char (point-max))
+;;   (insert "(clojure.tools.namespace.repl/refresh)")
+;;   (nrepl-return))
+
+;; (add-hook 'nrepl-mode-hook
+;;           (lambda () (local-set-key (kbd "C-c r") 'nrepl-refresh)))
+
 
 ;;------------------------------------------------------------------------------
 ;; Paredit
@@ -340,35 +362,42 @@ is no active region."
 (add-hook 'scheme-mode-hook 'paredit-mode)
 (add-hook 'geiser-repl-mode-hook 'paredit-mode)
 
+
 ;;------------------------------------------------------------------------------
 ;; Rainbows!
 (add-hook 'prog-mode-hook 'rainbow-delimiters-mode)
 
+
 ;;------------------------------------------------------------------------------
 ;; GDB
 (setq gdb-many-windows t)
+
 
 ;;------------------------------------------------------------------------------
 ;; Magit
 (global-set-key (kbd "C-x g") 'magit-status)
 (when (eq system-type 'darwin)
   (setq magit-emacsclient-executable
-        "/usr/local/bin/emacsclient"))
+        "/Applications/MacPorts/Emacs.app/Contents/MacOS/bin/emacsclient"))
+
 
 ;;------------------------------------------------------------------------------
 ;; Markdown
 (add-to-list 'auto-mode-alist '("\\.md\\'" . gfm-mode))
+
 
 ;;------------------------------------------------------------------------------
 ;; FastNav
 (global-set-key "\M-z" 'fastnav-zap-up-to-char-forward)
 (global-set-key "\M-Z" 'fastnav-zap-up-to-char-backward)
 
+
 ;;------------------------------------------------------------------------------
 ;; Change Inner
 (require 'change-inner)
 (global-set-key (kbd "M-i") 'change-inner)
 (global-set-key (kbd "M-o") 'change-outer)
+
 
 ;;------------------------------------------------------------------------------
 ;; Yasnippet
@@ -411,7 +440,7 @@ is no active region."
       (progn
      (split-window-sensibly (selected-window))
      (other-window 1)
-     (ansi-term "/usr/local/bin/bash"))
+     (ansi-term "/opt/local/bin/bash"))
     (switch-to-buffer-other-window "*ansi-term*")))
 
 (defalias 'flip
@@ -423,8 +452,6 @@ is no active region."
 
 ;;------------------------------------------------------------------------------
 ;; GLSL
-
-;; Ensure that file extensions appropriately load glsl-mode.
 (autoload 'glsl-mode "glsl-mode" nil t)
 (add-to-list 'auto-mode-alist '("\\.vert\\'" . glsl-mode))
 (add-to-list 'auto-mode-alist '("\\.frag\\'" . glsl-mode))
@@ -434,8 +461,6 @@ is no active region."
 
 ;;------------------------------------------------------------------------------
 ;; Tramp
-
-;; Stop Tramp from breaking on my prompt.
 (setq tramp-shell-prompt-pattern
       "^[^]#$%>\n]*[]#$%>]$? *\\(\\[[0-9;]*[a-zA-Z] *\\)*")
 (setq ido-enable-tramp-completion t)
@@ -446,6 +471,7 @@ is no active region."
 ;; Projectile
 (projectile-global-mode)
 (setq projectile-indexing-method 'native)
+(global-set-key (kbd "M-p") 'projectile-find-file)
 
 
 ;;------------------------------------------------------------------------------
@@ -460,7 +486,7 @@ is no active region."
   (interactive)
   (load-file "~/.emacs")
   (message "Reloaded .emacs file..."))
-(global-set-key (kbd "C-x C-r") 'reload-dot-emacs)
+;; (global-set-key (kbd "C-x C-r") 'reload-dot-emacs)
 
 (defun open-with ()
   "Open current buffer with an external tool, such as a browser."
@@ -489,6 +515,7 @@ is no active region."
   (move-end-of-line nil)
   (newline-and-indent))
 (global-set-key [(shift return)] 'open-line-below)
+(global-set-key (kbd "C-o") 'open-line-below)
 
 (defun open-line-above ()
   "Open a new line above the current line, like Vim's 'O' command."
@@ -496,7 +523,7 @@ is no active region."
   (beginning-of-line)
   (newline)
   (forward-line -1))
-(global-set-key (kbd "C-O") 'open-line-above)
+(global-set-key (kbd "C-S-o") 'open-line-above)
 
 
 ;;------------------------------------------------------------------------------
@@ -602,6 +629,7 @@ file.  Return just the directory in which it's found."
          (exe (find-file-upward-full exe-name)))
     (cd (file-name-directory exe))
     (shell-command exe)))
+
 
 ;;------------------------------------------------------------------------------
 (server-start)
