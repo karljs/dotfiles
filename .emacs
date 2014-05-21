@@ -163,11 +163,15 @@
 ;;------------------------------------------------------------------------------
 ;; Auctex / LaTeX
 (require 'tex-site)
-(setq TeX-PDF-mode t)
-(setq TeX-auto-save t)
-(setq TeX-parse-self t)
-(setq-default TeX-master nil)
-(setq reftex-plug-into-AUCTeX t)
+
+(setq TeX-PDF-mode t
+      TeX-auto-save t
+      TeX-parse-self t
+      LaTeX-command-style '(("" "%(PDF)%(latex) -file-line-error %S%(PDFout)")))
+
+(setq-default TeX-master nil
+              reftex-plug-into-AUCTeX t)
+
 ;; (auctex-latexmk-setup)
 
 (add-to-list 'auto-mode-alist '("\\.tex\\'" . LaTeX-mode))
@@ -187,9 +191,9 @@
                              ;; (setq LaTeX-indent-level 0
                              ;;       LaTeX-item-indent 0)
                              (turn-on-auto-fill)
-                             (LaTeX-math-mode)
+                             ;; (LaTeX-math-mode)
                              (turn-on-reftex)
-                             ;; (outline-minor-mode)
+                             (outline-minor-mode)
                              ))
 
 (defun kjs-bibtex-next-entry ()
