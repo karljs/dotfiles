@@ -18,6 +18,7 @@ Bundle 'gmarik/vundle'
 " github
 Bundle 'altercation/vim-colors-solarized'
 Bundle 'bling/vim-airline'
+Bundle 'chriskempson/vim-tomorrow-theme'
 Bundle 'idris-hackers/idris-vim'
 Bundle 'kien/ctrlp.vim'
 Bundle 'kien/rainbow_parentheses.vim'
@@ -28,8 +29,7 @@ Bundle 'tomtom/tcomment_vim'
 " Bundle 'tpope/vim-markdown'
 " Bundle 'tpope/vim-surround'
 " Bundle 'tpope/vim-fugitive'
-Bundle 'wikitopian/hardmode'
-Bundle 'w0ng/vim-hybrid'
+Bundle 'wting/rust.vim'
 
 " vim-scripts
 " Bundle 'Align'
@@ -47,7 +47,7 @@ filetype plugin indent on
 set ttyfast
 set shortmess+=I
 set noesckeys
-set shell=/usr/local/bin/bash
+set shell=/opt/local/bin/bash
 
 "-------------------------------------------------------------------------------
 " Tabs & Indent
@@ -76,18 +76,18 @@ set ruler
 set showcmd
 set showmatch
 set colorcolumn=80
-set foldmethod=syntax
-set foldlevelstart=99
+" set foldmethod=syntax
+" set foldlevelstart=99
 
 
 "-------------------------------------------------------------------------------
 " LaTeX Box
 " let g:LatexBox_latexmk_async=1
-let g:LatexBox_Folding=1
+let g:LatexBox_Folding=0
 
 "-------------------------------------------------------------------------------
 " Airline
-let g:airline_theme='solarized'
+let g:airline_theme='tomorrow'
 
 "-------------------------------------------------------------------------------
 " Searching
@@ -135,8 +135,7 @@ endif
 syntax on
 let g:solarized_italic=0
 let g:solarized_bold=0
-set background=dark
-colorscheme solarized
+colorscheme Tomorrow-Night
 
 "-------------------------------------------------------------------------------
 " Keybindings
@@ -147,4 +146,3 @@ nnoremap <silent> ]a :next<CR>
 
 nmap <leader>v :setlocal paste! paste?<cr>
 
-nnoremap <silent> C-P :CtrlPBuffer<CR>
