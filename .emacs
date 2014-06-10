@@ -11,8 +11,6 @@
 
 (add-to-list 'package-archives
              '("melpa" . "http://melpa.milkbox.net/packages/") t)
-(add-to-list 'package-archives
-             '("marmalade" . "http://marmalade-repo.org/packages/") t)
 
 ;;------------------------------------------------------------------------------
 ;; Install packages as necessary on startup. Credit to the Prelude project.
@@ -88,7 +86,7 @@
 ;; Font & Colors
 ;; (setq solarized-broken-srgb 'nil)
 ;; (setq ns-use-srgb-colorspace t)
-(load-theme 'solarized-light t)
+(load-theme 'monokai t)
 
 ;; Set the font depending on OS and pixel density
 (defun fontify-frame (frame)
@@ -176,6 +174,8 @@
 
 (add-to-list 'auto-mode-alist '("\\.tex\\'" . LaTeX-mode))
 
+
+
 (when (eq system-type 'darwin)
   (setq TeX-view-program-list
         '(("PDF Viewer" "open %o")
@@ -186,15 +186,19 @@
           (output-dvi "DVI Viewer")
           (output-html "HTML Viewer"))))
 
+(customize-set-variable 'LaTeX-verbatim-environments
+                        '("verbatim" "verbatim*" "program" "programc"))
+
 (add-hook 'LaTeX-mode-hook 'flyspell-mode)
 (add-hook 'LaTeX-mode-hook (lambda ()
                              ;; (setq LaTeX-indent-level 0
                              ;;       LaTeX-item-indent 0)
                              (turn-on-auto-fill)
-                             ;; (LaTeX-math-mode)
+                             (LaTeX-math-mode)
                              (turn-on-reftex)
                              (outline-minor-mode)
-                             ))
+                             (append '("program" "programC")
+                                     LaTeX-verbatim-environments)))
 
 (defun kjs-bibtex-next-entry ()
   (interactive)
@@ -303,15 +307,16 @@ is no active region."
 
 ;;------------------------------------------------------------------------------
 ;; Haskell
-(add-hook 'haskell-mode-hook 'haskell-hook)
-(defun haskell-hook ()
+(add-hook 'haskell-mode-hook 'kjs-haskell-hook)
+(defun kjs-haskell-hook ()
   (setq haskell-interactive-mode-hide-multi-line-errors nil
-        haskell-tags-on-save t)
+        haskell-tags-on-save t
+        haskell-process-type 'cabal-repl)
   (turn-on-haskell-indentation)
   (turn-on-haskell-decl-scan)
   (define-key haskell-mode-map (kbd "C-c C-l") 'haskell-process-load-file)
   (define-key haskell-mode-map (kbd "C-c C-r") 'haskell-process-reload-file)
-  (define-key haskell-mode-map (kbd "C-c C-b") 'haskell-interactive-switch)
+  (define-key haskell-mode-map (kbd "C-c C-z") 'haskell-interactive-switch)
   (define-key haskell-mode-map (kbd "C-c C-t") 'haskell-process-do-type)
   (define-key haskell-mode-map (kbd "C-c C-i") 'haskell-process-do-info)
   (define-key haskell-mode-map (kbd "M-.") 'haskell-mode-tag-find)
