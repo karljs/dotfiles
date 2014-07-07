@@ -85,8 +85,8 @@
 ;;------------------------------------------------------------------------------
 ;; Font & Colors
 ;; (setq solarized-broken-srgb 'nil)
-;; (setq ns-use-srgb-colorspace t)
-(load-theme 'monokai t)
+(setq ns-use-srgb-colorspace t)
+(load-theme 'solarized-dark t)
 
 ;; Set the font depending on OS and pixel density
 (defun fontify-frame (frame)
@@ -231,17 +231,20 @@ sensible in bibtex files."
 ;;------------------------------------------------------------------------------
 ;; Org
 ;; (setq org-fontify-emphasized-text nil)
+(setq org-todo-keywords
+      '((sequence "TODO" "FEEDBACK" "HOLD" "REVIEW" "|" "DONE")))
 (setq org-pretty-entities 1)
+(setq org-startup-indented t)
 
 
 ;;------------------------------------------------------------------------------
 ;; Ido / smex / vertical
 (setq ido-create-new-buffer 'always)
-(require 'flx-ido)
+;; (require 'flx-ido)
 (ido-mode 1)
 (ido-ubiquitous-mode 1)
 (ido-everywhere 1)
-(flx-ido-mode 1)
+;; (flx-ido-mode 1)
 (setq smex-key-advice-ignore-menu-bar t)
 (global-set-key (kbd "M-x") 'smex)
 (global-set-key (kbd "M-X") 'smex-major-mode-commands)
@@ -487,6 +490,15 @@ is no active region."
 ;; Racket
 ;; (require 'quack)
 
+
+;;------------------------------------------------------------------------------
+;; Eww
+(global-set-key (kbd "C-c b") 'eww)
+
+
+;;------------------------------------------------------------------------------
+;; Alert
+(setq alert-default-style 'notifier)
 
 ;;------------------------------------------------------------------------------
 ;; Misc things that should probably be in a different file
