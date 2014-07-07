@@ -13,32 +13,35 @@ filetype off
 set rtp+=~/.vim/bundle/vundle/
 call vundle#rc()
 
-Bundle 'gmarik/vundle'
+Plugin 'gmarik/vundle'
 
 " github
-Bundle 'altercation/vim-colors-solarized'
-Bundle 'bling/vim-airline'
-Bundle 'chriskempson/vim-tomorrow-theme'
-Bundle 'idris-hackers/idris-vim'
-Bundle 'kien/ctrlp.vim'
-Bundle 'kien/rainbow_parentheses.vim'
-Bundle 'lambdatoast/elm.vim'
-" Bundle 'LaTeX-Box-Team/LaTeX-Box'
-Bundle 'tomasr/molokai'
-Bundle 'tomtom/tcomment_vim'
-" Bundle 'tpope/vim-markdown'
-" Bundle 'tpope/vim-surround'
-" Bundle 'tpope/vim-fugitive'
-Bundle 'wting/rust.vim'
+Plugin 'altercation/vim-colors-solarized'
+Plugin 'bling/vim-airline'
+Plugin 'chriskempson/base16-vim'
+Plugin 'chriskempson/vim-tomorrow-theme'
+Plugin 'idris-hackers/idris-vim'
+Plugin 'kien/ctrlp.vim'
+Plugin 'kien/rainbow_parentheses.vim'
+Plugin 'lambdatoast/elm.vim'
+" Plugin 'LaTeX-Box-Team/LaTeX-Box'
+Plugin 'lsdr/monokai'
+Plugin 'tomasr/molokai'
+Plugin 'tomtom/tcomment_vim'
+" Plugin 'tpope/vim-markdown'
+" Plugin 'tpope/vim-surround'
+" Plugin 'tpope/vim-fugitive'
+Plugin 'wting/rust.vim'
 
 " vim-scripts
-" Bundle 'Align'
-Bundle 'DeleteTrailingWhitespace'
-Bundle 'inkpot'
-Bundle 'twilight'
+" Plugin 'Align'
+Plugin 'DeleteTrailingWhitespace'
+Plugin 'inkpot'
+Plugin 'twilight'
+Plugin 'zenburn'
 
 " other plugins
-Bundle 'git://git.code.sf.net/p/vim-latex/vim-latex'
+" Plugin 'git://git.code.sf.net/p/vim-latex/vim-latex'
 
 filetype plugin indent on
 
@@ -47,7 +50,7 @@ filetype plugin indent on
 set ttyfast
 set shortmess+=I
 set noesckeys
-set shell=/opt/local/bin/bash
+set shell=/usr/local/bin/bash
 
 "-------------------------------------------------------------------------------
 " Tabs & Indent
@@ -75,7 +78,7 @@ set laststatus=2
 set ruler
 set showcmd
 set showmatch
-set colorcolumn=80
+" set colorcolumn=80
 " set foldmethod=syntax
 " set foldlevelstart=99
 
@@ -87,7 +90,7 @@ let g:LatexBox_Folding=0
 
 "-------------------------------------------------------------------------------
 " Airline
-let g:airline_theme='tomorrow'
+let g:airline_theme='solarized'
 
 "-------------------------------------------------------------------------------
 " Searching
@@ -127,7 +130,7 @@ if has("gui_running")
   set guioptions-=r
   set guioptions-=L
 else
-  set t_Co=256
+  set t_Co=16
 endif
 
 "-------------------------------------------------------------------------------
@@ -135,7 +138,9 @@ endif
 syntax on
 let g:solarized_italic=0
 let g:solarized_bold=0
-colorscheme Tomorrow-Night
+let g:solarized_termcolors=16
+set background=dark
+colorscheme solarized
 
 "-------------------------------------------------------------------------------
 " Keybindings
