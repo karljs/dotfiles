@@ -4,8 +4,11 @@
 ;; (_)___|_| |_| |_|\__,_|\___|___/
 
 ;;------------------------------------------------------------------------------
-;; Deal with local files / packages
+;; Load local files / packages
 (add-to-list 'load-path "~/.emacs.d/lisp")
+(load "wrap.el")
+(load "buildscript.el")
+(load "tagutils.el")
 
 ;;------------------------------------------------------------------------------
 ;; Package manager load and setup
@@ -85,7 +88,6 @@
 ;; (transient-mark-mode -1)
 (column-number-mode 1)
 
-
 ;;------------------------------------------------------------------------------
 ;; Font & Colors
 ;; (setq solarized-broken-srgb 'nil)
@@ -126,11 +128,9 @@
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
 (global-auto-revert-mode 1)
 
-
 ;;------------------------------------------------------------------------------
 ;; Default registers
 (set-register ?e '(file . "~/.emacs"))
-
 
 ;;------------------------------------------------------------------------------
 ;; Global keybindings
@@ -141,7 +141,7 @@
 (global-set-key [M-up] 'windmove-up)
 (global-set-key [M-down] 'windmove-down)
 (global-set-key (kbd "C-'") 'imenu)
-
+(global-set-key (kbd "C-c w") 'wrap-region)
 (global-set-key (kbd "C-h") 'delete-backward-char)
 ;; (global-set-key (kbd "M-h") 'backward-kill-word)
 (global-set-key (kbd "C-?") 'help-command)
@@ -154,7 +154,6 @@
 ;; (define-key evil-ex-map "w " 'ido-write-file)
 ;; (define-key evil-ex-map "b " 'ido-switch-buffer)
 
-
 ;;------------------------------------------------------------------------------
 ;; buffer-move
 (global-set-key (kbd "<C-S-up>") 'buf-move-up)
@@ -162,11 +161,9 @@
 (global-set-key (kbd "<C-S-left>") 'buf-move-left)
 (global-set-key (kbd "<C-S-right>") 'buf-move-right)
 
-
 ;;------------------------------------------------------------------------------
 ;; Ace jump mode
 (define-key global-map (kbd "C-c C-SPC") 'ace-jump-mode)
-
 
 ;;------------------------------------------------------------------------------
 ;; Auctex / LaTeX
@@ -230,13 +227,11 @@ sensible in bibtex files."
 
 (add-hook 'bibtex-mode-hook 'kjs-bibtex-bind-forward-back-keys)
 
-
 ;;------------------------------------------------------------------------------
 ;; Spelling
 (add-hook 'prog-mode-hook 'flyspell-prog-mode)
 (setq-default ispell-program-name "aspell")
 ;; (setq ispell-extra-args '("--sug-mode=fast"))
-
 
 ;;------------------------------------------------------------------------------
 ;; Org
@@ -245,7 +240,6 @@ sensible in bibtex files."
       '((sequence "TODO" "FEEDBACK" "HOLD" "REVIEW" "|" "DONE")))
 (setq org-pretty-entities 1)
 (setq org-startup-indented t)
-
 
 ;;------------------------------------------------------------------------------
 ;; Ido / smex / vertical
@@ -293,7 +287,6 @@ is no active region."
     (message "Comment characters are not set")))  ; looking at you, web-mode
 (global-set-key (kbd "C-c h") 'comment-header-line)
 
-
 ;;------------------------------------------------------------------------------
 ;; C/C++
 
@@ -317,7 +310,6 @@ is no active region."
   (compile (format "make -C %s clean"
                    (file-name-directory (get-closest-pathname)))))
 
-
 ;;------------------------------------------------------------------------------
 ;; Haskell
 (add-hook 'haskell-mode-hook 'kjs-haskell-hook)
@@ -335,7 +327,6 @@ is no active region."
   (define-key haskell-mode-map (kbd "M-.") 'haskell-mode-tag-find)
   (define-key haskell-mode-map (kbd "C-c C-h") 'haskell-check))
 
-
 ;;------------------------------------------------------------------------------
 ;; Agda
 ;; (require 'ucs-utils)
@@ -345,7 +336,6 @@ is no active region."
 ;;           '(lambda ()
 ;;              (require 'unicode-fonts)
 ;;              (unicode-fonts-setup)))
-
 
 ;;------------------------------------------------------------------------------
 ;; Idris
@@ -357,7 +347,6 @@ is no active region."
              (set-face-attribute 'idris-semantic-type-face nil
                                  :foreground nil
                                  :inherit 'font-lock-string-face)))
-
 
 ;;------------------------------------------------------------------------------
 ;; Clojure/nREPL
@@ -373,7 +362,6 @@ is no active region."
 ;; (add-hook 'nrepl-mode-hook
 ;;           (lambda () (local-set-key (kbd "C-c r") 'nrepl-refresh)))
 
-
 ;;------------------------------------------------------------------------------
 ;; Paredit
 (add-hook 'clojure-mode-hook 'paredit-mode)
@@ -384,16 +372,13 @@ is no active region."
 (add-hook 'scheme-mode-hook 'paredit-mode)
 (add-hook 'geiser-repl-mode-hook 'paredit-mode)
 
-
 ;;------------------------------------------------------------------------------
 ;; Rainbows!
 (add-hook 'prog-mode-hook 'rainbow-delimiters-mode)
 
-
 ;;------------------------------------------------------------------------------
 ;; GDB
 (setq gdb-many-windows t)
-
 
 ;;------------------------------------------------------------------------------
 ;; Magit
@@ -402,24 +387,20 @@ is no active region."
   (setq magit-emacsclient-executable
         "/Applications/MacPorts/Emacs.app/Contents/MacOS/bin/emacsclient"))
 
-
 ;;------------------------------------------------------------------------------
 ;; Markdown
 (add-to-list 'auto-mode-alist '("\\.md\\'" . gfm-mode))
-
 
 ;;------------------------------------------------------------------------------
 ;; FastNav
 (global-set-key "\M-z" 'fastnav-zap-up-to-char-forward)
 (global-set-key "\M-Z" 'fastnav-zap-up-to-char-backward)
 
-
 ;;------------------------------------------------------------------------------
 ;; Change Inner
 (require 'change-inner)
 (global-set-key (kbd "M-i") 'change-inner)
 (global-set-key (kbd "M-o") 'change-outer)
-
 
 ;;------------------------------------------------------------------------------
 ;; Yasnippet
@@ -428,26 +409,22 @@ is no active region."
 ;; (setq yas-snippet-dirs
 ;;       '("~/.emacs.d/snippets"))
 
-
 ;;------------------------------------------------------------------------------
 ;; Whitespace and long lines
 (setq whitespace-style '(face lines))
 (setq whitespace-line-column 80)
 (add-hook 'prog-mode-hook 'whitespace-mode)
 
-
 ;;------------------------------------------------------------------------------
 ;; Web mode
 (require 'web-mode)
 (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
-
 
 ;;------------------------------------------------------------------------------
 ;; Scala stuff
 ;; (add-to-list 'load-path "/Users/karl/.emacs.d/ensime_2.10.0-0.9.8.9/elisp/")
 ;; (require 'ensime)
 ;; (add-hook 'scala-mode-hook 'ensime-scala-mode-hook)
-
 
 ;;------------------------------------------------------------------------------
 ;; Eshell
@@ -471,7 +448,6 @@ is no active region."
 
 (global-set-key (kbd "C-c t") 'visit-term-buffer)
 
-
 ;;------------------------------------------------------------------------------
 ;; GLSL
 (autoload 'glsl-mode "glsl-mode" nil t)
@@ -480,7 +456,6 @@ is no active region."
 (add-to-list 'auto-mode-alist '("\\.glvs\\'" . glsl-mode))
 (add-to-list 'auto-mode-alist '("\\.glfs\\'" . glsl-mode))
 
-
 ;;------------------------------------------------------------------------------
 ;; Tramp
 (setq tramp-shell-prompt-pattern
@@ -488,31 +463,23 @@ is no active region."
 (setq ido-enable-tramp-completion t)
 (setq tramp-default-method "ssh")
 
-
 ;;------------------------------------------------------------------------------
 ;; Projectile
 (projectile-global-mode)
 (setq projectile-indexing-method 'native)
 (global-set-key (kbd "M-p") 'projectile-find-file)
 
-
 ;;------------------------------------------------------------------------------
 ;; Racket
 ;; (require 'quack)
-
 
 ;;------------------------------------------------------------------------------
 ;; Eww
 (global-set-key (kbd "C-c b") 'eww)
 
-
 ;;------------------------------------------------------------------------------
 ;; Alert
 (setq alert-default-style 'notifier)
-
-;;------------------------------------------------------------------------------
-;; Wrap
-(load "wrap/wrap.el")
 
 ;;------------------------------------------------------------------------------
 ;; Misc things that should probably be in a different file
@@ -559,111 +526,6 @@ is no active region."
   (newline)
   (forward-line -1))
 (global-set-key (kbd "C-S-o") 'open-line-above)
-
-
-;;------------------------------------------------------------------------------
-;; Poorly constructed tags stuff
-(defun htags (dir)
-  "Create Haskell tags"
-  (interactive)
-  (shell-command (concat "cd " dir "&& hasktags -e -o ./TAGS ."))
-  (message "Created Haskell tags."))
-
-(defun ctags (dir)
-  "Create ctags"
-  (interactive)
-  (shell-command (concat "cd " dir "&& ctags -e -R ."))
-  (message "Created ctags."))
-
-(defun tags (dir)
-  "Create tags"
-  (interactive (list (read-directory-name "Directory: ")))
-  (if (equal major-mode 'haskell-mode)
-      (htags dir)
-    (ctags dir)))
-;; (global-set-key (kbd "C-c t") 'tags)
-
-
-;;------------------------------------------------------------------------------
-;; Premake
-(defun premake-find-exec ()
-  "Find the Premake-generated makefile and grab the name of the executable."
-  (interactive)
-  (let ((ext (lambda ()
-               (progn (search-forward "PROJECTS := ")
-                      (buffer-substring (point) (line-end-position))))))
-    (extract-exe-from-buildscript "Makefile" ext)))
-
-(defun premake-run-exec ()
-  "Find and run the executable built by Premake."
-  (interactive)
-  (run-buildscript-exe (lambda () (premake-find-exec))))
-
-
-;;------------------------------------------------------------------------------
-;; Scons stuff
-(setq auto-mode-alist
-      (cons '("SConstruct" . python-mode) auto-mode-alist))
-(setq auto-mode-alist
-      (cons '("SConscript" . python-mode) auto-mode-alist))
-
-(defun scons-build ()
-  "Find the 'SConstruct' file and run SCons on it."
-  (interactive)
-  (let ((sc-dir (find-file-upward-dir "SConstruct")))
-    (cd sc-dir)
-    (shell-command "scons")))
-
-(defun scons-find-exec ()
-  "Find the executable produced by SCons in a very failure-prone manner."
-  (interactive)
-  (let ((ext (lambda () (let ((strt (progn (search-forward "target = '")
-                                           (point)))
-                              (end (progn (search-forward "'")
-                                          (backward-char)
-                                          (point))))
-                          (buffer-substring strt end)))))
-    (message (extract-exe-from-buildscript "SConstruct" ext))))
-
-(defun scons-run-exec ()
-  "Find and run the executable built by SCons"
-  (interactive)
-  (run-buildscript-exe (lambda () (scons-find-exec))))
-
-
-;;------------------------------------------------------------------------------
-;; Configuration utilities
-(defun find-file-upward-full (file)
-  "Walks up from current directory until it finds a particular file."
-  (let ((root (expand-file-name "/")))
-    (expand-file-name file
-                      (loop
-                       for d = default-directory then (expand-file-name ".." d)
-                       if (file-exists-p (expand-file-name file d))
-                       return d
-                       if (equal d root)
-                       return nil))))
-
-(defun find-file-upward-dir (file)
-  "Walks up from current directory until it finds a particular
-file.  Return just the directory in which it's found."
-  (file-name-directory (find-file-upward-full file)))
-
-(defun extract-exe-from-buildscript (scriptname extractor)
-  "Machinery to extract part of a build script."
-  (interactive)
-  (let ((buildscript (find-file-upward-full scriptname)))
-    (with-temp-buffer
-      (insert-file-contents buildscript)
-      (split-string (buffer-string) "\n" t)
-      (funcall extractor))))
-
-(defun run-buildscript-exe (exe-getter)
-  "Run the executable returned by EXE-GETTER"
-  (let* ((exe-name (funcall exe-getter))
-         (exe (find-file-upward-full exe-name)))
-    (cd (file-name-directory exe))
-    (shell-command exe)))
 
 
 ;;------------------------------------------------------------------------------
