@@ -4,6 +4,10 @@
 ;; (_)___|_| |_| |_|\__,_|\___|___/
 
 ;;------------------------------------------------------------------------------
+;; Deal with local files / packages
+(add-to-list 'load-path "~/.emacs.d/lisp")
+
+;;------------------------------------------------------------------------------
 ;; Package manager load and setup
 (require 'cl)
 (package-initialize)
@@ -88,15 +92,21 @@
 (setq ns-use-srgb-colorspace t)
 (load-theme 'solarized-dark t)
 
-;; Set the font depending on OS and pixel density
-(defun fontify-frame (frame)
+(defun kjs-osx-fonts (frame)
+  "Set the font depending on OS and pixel density"
   (interactive)
-  (when window-system
-    (if (> (x-display-pixel-width) 2000)
-        (set-frame-parameter frame 'font "Source Code Pro-14")
-      (set-frame-parameter frame 'font "Source Code Pro-14"))))
+  ;; These are just easier to change.  Maybe create an assoc list for common
+  ;; fonts some day.
+  (let ((fname "M+ 2m")
+        (laptop-size "14")
+        (extern-size "14"))
+    (when window-system
+      (if (> (x-display-pixel-width) 2000)
+          (set-frame-parameter frame 'font (concat fname "-" extern-size))
+        (set-frame-parameter frame 'font (concat fname "-" laptop-size))))))
+
 (if (eq system-type 'darwin)
-    (fontify-frame nil)
+    (kjs-osx-fonts nil)
   (set-face-attribute 'default nil :font "Inconsolata-13"))
 
 ;;------------------------------------------------------------------------------
@@ -452,7 +462,7 @@ is no active region."
       (progn
      (split-window-sensibly (selected-window))
      (other-window 1)
-     (ansi-term "/opt/local/bin/bash"))
+     (ansi-term "/usr/local/bin/bash"))
     (switch-to-buffer-other-window "*ansi-term*")))
 
 (defalias 'flip
@@ -499,6 +509,10 @@ is no active region."
 ;;------------------------------------------------------------------------------
 ;; Alert
 (setq alert-default-style 'notifier)
+
+;;------------------------------------------------------------------------------
+;; Wrap
+(load "wrap/wrap.el")
 
 ;;------------------------------------------------------------------------------
 ;; Misc things that should probably be in a different file
