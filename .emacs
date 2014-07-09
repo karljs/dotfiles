@@ -385,7 +385,7 @@ is no active region."
 (global-set-key (kbd "C-x g") 'magit-status)
 (when (eq system-type 'darwin)
   (setq magit-emacsclient-executable
-        "/Applications/MacPorts/Emacs.app/Contents/MacOS/bin/emacsclient"))
+        "/Applications/Emacs.app/Contents/MacOS/bin-x86_64-10.9/emacsclient"))
 
 ;;------------------------------------------------------------------------------
 ;; Markdown
