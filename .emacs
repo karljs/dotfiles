@@ -3,12 +3,6 @@
 ;;  |  __/ | | | | | (_| | (__\__ \
 ;; (_)___|_| |_| |_|\__,_|\___|___/
 
-;;------------------------------------------------------------------------------
-;; Load local files / packages
-(add-to-list 'load-path "~/.emacs.d/lisp")
-(load "wrap.el")
-(load "buildscript.el")
-(load "tagutils.el")
 
 ;;------------------------------------------------------------------------------
 ;; Package manager load and setup
@@ -24,7 +18,7 @@
 (defvar my-packages '(ace-jump-mode
                       ag
                       auctex
-                      auctex-latexmk
+;;                      auctex-latexmk
                       buffer-move
                       change-inner
                       elm-mode
@@ -91,25 +85,21 @@
 ;;------------------------------------------------------------------------------
 ;; Font & Colors
 ;; (setq solarized-broken-srgb 'nil)
-(setq ns-use-srgb-colorspace t)
-(load-theme 'solarized-dark t)
+;; (setq ns-use-srgb-colorspace t)
+(load-theme 'monokai t)
 
-(defun kjs-osx-fonts (frame)
-  "Set the font depending on OS and pixel density"
+(defun kjs-set-all-fonts (fontname)
+  (set-face-attribute 'default nil :font fontname)
+  (set-face-attribute 'fixed-pitch nil :font fontname)
+  (set-face-attribute 'variable-pitch nil :font fontname))
+
+(defun kjs-resize-fonts ()
   (interactive)
-  ;; These are just easier to change.  Maybe create an assoc list for common
-  ;; fonts some day.
-  (let ((fname "M+ 2m")
-        (laptop-size "14")
-        (extern-size "14"))
-    (when window-system
-      (if (> (x-display-pixel-width) 2000)
-          (set-frame-parameter frame 'font (concat fname "-" extern-size))
-        (set-frame-parameter frame 'font (concat fname "-" laptop-size))))))
-
-(if (eq system-type 'darwin)
-    (kjs-osx-fonts nil)
-  (set-face-attribute 'default nil :font "Inconsolata-13"))
+  (when window-system
+    (if (> (x-display-pixel-width) 2000)
+        (kjs-set-all-fonts "Inconsolata-18")
+      (kjs-set-all-fonts "Inconsolata-16"))))
+(kjs-resize-fonts)
 
 ;;------------------------------------------------------------------------------
 ;; Good behavior
@@ -167,21 +157,15 @@
 
 ;;------------------------------------------------------------------------------
 ;; Auctex / LaTeX
-(require 'tex-site)
-
 (setq TeX-PDF-mode t
       TeX-auto-save t
       TeX-parse-self t
-      LaTeX-command-style '(("" "%(PDF)%(latex) -file-line-error %S%(PDFout)")))
+      LaTeX-command-style '(("" "%(PDF)%(latex) -file-line-error %S%(PDFout)"))
+      reftex-plug-into-AUCTeX t)
 
-(setq-default TeX-master nil
-              reftex-plug-into-AUCTeX t)
-
-;; (auctex-latexmk-setup)
+(setq-default TeX-master nil)
 
 (add-to-list 'auto-mode-alist '("\\.tex\\'" . LaTeX-mode))
-
-
 
 (when (eq system-type 'darwin)
   (setq TeX-view-program-list
@@ -198,14 +182,10 @@
 
 (add-hook 'LaTeX-mode-hook 'flyspell-mode)
 (add-hook 'LaTeX-mode-hook (lambda ()
-                             ;; (setq LaTeX-indent-level 0
-                             ;;       LaTeX-item-indent 0)
                              (turn-on-auto-fill)
-                             (LaTeX-math-mode)
+                             ;; (LaTeX-math-mode)
                              (turn-on-reftex)
-                             (outline-minor-mode)
-                             (append '("program" "programC")
-                                     LaTeX-verbatim-environments)))
+                             (outline-minor-mode)))
 
 (defun kjs-bibtex-next-entry ()
   (interactive)
@@ -239,7 +219,7 @@ sensible in bibtex files."
 (setq org-todo-keywords
       '((sequence "TODO" "FEEDBACK" "HOLD" "REVIEW" "|" "DONE")))
 (setq org-pretty-entities 1)
-(setq org-startup-indented t)
+;; (setq org-startup-indented t)
 
 ;;------------------------------------------------------------------------------
 ;; Ido / smex / vertical
@@ -292,20 +272,20 @@ is no active region."
 
 ;; TODO -- write some kind of magic function to automatically determine which
 ;; build system to use.  In the mean time, default to scons.
-(defun my-c-mode-hook ()
+(defun kjs-c-mode-hook ()
   (setq c-default-style "k&r"
         c-basic-offset 4)
-  ;; (local-set-key (kbd "C-c C-c") 'my-compile-func)
-  ;; (local-set-key (kbd "C-c C-k") 'my-compile-clean-func)
+  ;; (local-set-key (kbd "C-c C-c") 'kjs-compile-func)
+  ;; (local-set-key (kbd "C-c C-k") 'kjs-compile-clean-func)
   (local-set-key (kbd "C-c C-l") 'scons-build)
   (local-set-key (kbd "C-c C-r") 'scons-run-exec))
-(add-hook 'c-mode-common-hook 'my-c-mode-hook)
+(add-hook 'c-mode-common-hook 'kjs-c-mode-hook)
 
-(defun my-compile-func ()
+(defun kjs-compile-func ()
   (interactive)
   (compile (format "make -C %s" (file-name-directory (get-closest-pathname)))))
 
-(defun my-compile-clean-func ()
+(defun kjs-compile-clean-func ()
   (interactive)
   (compile (format "make -C %s clean"
                    (file-name-directory (get-closest-pathname)))))
@@ -341,12 +321,20 @@ is no active region."
 ;; Idris
 (add-hook 'idris-mode-hook
           '(lambda ()
+             (idris-define-loading-keys)
+             (idris-define-docs-keys)
+             (idris-define-editing-keys)
+             (idris-define-general-keys)
+             (turn-on-idris-simple-indent)
              (set-face-attribute 'idris-semantic-data-face nil
                                  :foreground nil
                                  :inherit 'font-lock-string-face)
              (set-face-attribute 'idris-semantic-type-face nil
                                  :foreground nil
-                                 :inherit 'font-lock-string-face)))
+                                 :inherit 'font-lock-string-face)
+             (set-face-attribute 'idris-loaded-region-face nil
+                                 :background nil)))
+
 
 ;;------------------------------------------------------------------------------
 ;; Clojure/nREPL
@@ -428,9 +416,11 @@ is no active region."
 
 ;;------------------------------------------------------------------------------
 ;; Eshell
+(add-hook 'eshell-mode-hook
+          (lambda () (setq pcomplete-cycle-completions nil)))
+
 (add-hook 'term-mode-hook
-          (lambda ()
-            (setq term-buffer-maximum-size 10000)))
+          (lambda () (setq term-buffer-maximum-size 10000)))
 
 (defun visit-term-buffer ()
   "Create or visit a terminal buffer."
@@ -442,11 +432,14 @@ is no active region."
      (ansi-term "/usr/local/bin/bash"))
     (switch-to-buffer-other-window "*ansi-term*")))
 
+(defalias 'ff 'find-file)
+(defalias 'ffo 'find-file-other-window)
+
 (defalias 'flip
   (lambda ()
     (cd "/ssh:smeltzek@flip.engr.oregonstate.edu:~/")))
 
-(global-set-key (kbd "C-c t") 'visit-term-buffer)
+(global-set-key (kbd "C-c t") 'eshell)
 
 ;;------------------------------------------------------------------------------
 ;; GLSL
@@ -526,6 +519,14 @@ is no active region."
   (newline)
   (forward-line -1))
 (global-set-key (kbd "C-S-o") 'open-line-above)
+
+
+;;------------------------------------------------------------------------------
+;; Load local files / packages
+(add-to-list 'load-path "~/.emacs.d/lisp")
+(load "wrap.el")
+(load "buildscript.el")
+(load "tagutils.el")
 
 
 ;;------------------------------------------------------------------------------
