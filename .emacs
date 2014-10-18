@@ -12,13 +12,16 @@
 
 (add-to-list 'package-archives
              '("melpa" . "http://melpa.milkbox.net/packages/") t)
+(add-to-list 'package-archives
+             '("e6h" . "http://www.e6h.org/packages/"))
 
 ;;------------------------------------------------------------------------------
 ;; Install packages as necessary on startup. Credit to the Prelude project.
-(defvar my-packages '(ace-jump-mode
+(defvar my-packages '(
+                      ace-jump-mode
                       ag
                       auctex
-;;                      auctex-latexmk
+                      ;; auctex-latexmk
                       buffer-move
                       change-inner
                       elm-mode
@@ -86,7 +89,7 @@
 ;; Font & Colors
 ;; (setq solarized-broken-srgb 'nil)
 ;; (setq ns-use-srgb-colorspace t)
-(load-theme 'monokai t)
+(load-theme 'solarized-dark t)
 
 (defun kjs-set-all-fonts (fontname)
   (set-face-attribute 'default nil :font fontname)
@@ -97,8 +100,8 @@
   (interactive)
   (when window-system
     (if (> (x-display-pixel-width) 2000)
-        (kjs-set-all-fonts "Inconsolata-18")
-      (kjs-set-all-fonts "Inconsolata-16"))))
+        (kjs-set-all-fonts "Source Code Pro-16")
+      (kjs-set-all-fonts "Anonymous Pro-18"))))
 (kjs-resize-fonts)
 
 ;;------------------------------------------------------------------------------
@@ -146,10 +149,10 @@
 
 ;;------------------------------------------------------------------------------
 ;; buffer-move
-(global-set-key (kbd "<C-S-up>") 'buf-move-up)
-(global-set-key (kbd "<C-S-down>") 'buf-move-down)
-(global-set-key (kbd "<C-S-left>") 'buf-move-left)
-(global-set-key (kbd "<C-S-right>") 'buf-move-right)
+(global-set-key (kbd "<C-S-up>")     'buf-move-up)
+(global-set-key (kbd "<C-S-down>")   'buf-move-down)
+(global-set-key (kbd "<C-S-left>")   'buf-move-left)
+(global-set-key (kbd "<C-S-right>")  'buf-move-right)
 
 ;;------------------------------------------------------------------------------
 ;; Ace jump mode
@@ -178,7 +181,7 @@
           (output-html "HTML Viewer"))))
 
 (customize-set-variable 'LaTeX-verbatim-environments
-                        '("verbatim" "verbatim*" "program" "programc"))
+                        '("verbatim" "verbatim*" "program" "programc" "prog"))
 
 (add-hook 'LaTeX-mode-hook 'flyspell-mode)
 (add-hook 'LaTeX-mode-hook (lambda ()
@@ -372,8 +375,7 @@ is no active region."
 ;; Magit
 (global-set-key (kbd "C-x g") 'magit-status)
 (when (eq system-type 'darwin)
-  (setq magit-emacsclient-executable
-        "/Applications/Emacs.app/Contents/MacOS/bin-x86_64-10.9/emacsclient"))
+  (setq magit-emacsclient-executable "/usr/local/bin/emacsclient"))
 
 ;;------------------------------------------------------------------------------
 ;; Markdown
@@ -532,3 +534,15 @@ is no active region."
 ;;------------------------------------------------------------------------------
 (server-start)
 (message "%s" "You shouldn't have come back, Karl")
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(doc-view-resolution 200))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
