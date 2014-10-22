@@ -1,4 +1,11 @@
 #-------------------------------------------------------------------------------
+# bash completion
+if [ -f /usr/local/etc/bash_completion ]; then
+  . /usr/local/etc/bash_completion
+fi
+
+
+#-------------------------------------------------------------------------------
 # Github, why do you hate me so?
 export HOMEBREW_GITHUB_API_TOKEN=3e6bb5aa1cc7e5275231c5a4eea480ee530cc1cc
 
@@ -7,8 +14,8 @@ export HOMEBREW_GITHUB_API_TOKEN=3e6bb5aa1cc7e5275231c5a4eea480ee530cc1cc
 export PATH=$PATH:$HOME/bin
 
 # Haskell, Cabal
-# export PATH=$PATH:$HOME/src/ghc-7.8.3/bin
 export PKG_CONFIG_PATH=$PKG_CONFIG_PATH:/opt/X11/lib/pkgconfig
+export PATH=$HOME/.cabal/bin:$PATH
 
 #-------------------------------------------------------------------------------
 # Tweak a few variables
@@ -24,8 +31,6 @@ shopt -s globstar
 # Aliases and trivial functions
 
 alias cdb='. bookmark.sh'
-
-alias nw="/Applications/node-webkit.app/Contents/MacOS/node-webkit"
 
 # tmux
 alias tmux='tmux -2'
