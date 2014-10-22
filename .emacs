@@ -101,7 +101,7 @@
   (when window-system
     (if (> (x-display-pixel-width) 2000)
         (kjs-set-all-fonts "Source Code Pro-16")
-      (kjs-set-all-fonts "Anonymous Pro-18"))))
+      (kjs-set-all-fonts "Source Code Pro-15"))))
 (kjs-resize-fonts)
 
 ;;------------------------------------------------------------------------------
@@ -525,7 +525,7 @@ is no active region."
 
 ;;------------------------------------------------------------------------------
 ;; Load local files / packages
-(add-to-list 'load-path "~/.emacs.d/lisp")
+(add-to-list 'load-path "~/.emacs.d/elisp")
 (load "wrap.el")
 (load "buildscript.el")
 (load "tagutils.el")
@@ -534,15 +534,3 @@ is no active region."
 ;;------------------------------------------------------------------------------
 (server-start)
 (message "%s" "You shouldn't have come back, Karl")
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(doc-view-resolution 200))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )
