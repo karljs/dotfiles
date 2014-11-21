@@ -11,14 +11,11 @@
 (setq package-enable-at-startup nil)
 
 (add-to-list 'package-archives
-             '("melpa" . "http://melpa.milkbox.net/packages/") t)
-(add-to-list 'package-archives
-             '("e6h" . "http://www.e6h.org/packages/"))
+             '("melpa" . "http://melpa.org/packages/") t)
 
 ;;------------------------------------------------------------------------------
 ;; Install packages as necessary on startup. Credit to the Prelude project.
-(defvar my-packages '(
-                      ace-jump-mode
+(defvar my-packages '(ace-jump-mode
                       ag
                       auctex
                       ;; auctex-latexmk
@@ -43,7 +40,6 @@
                       projectile
                       rainbow-delimiters
                       s
-                      scala-mode2
                       smex
                       solarized-theme
                       ucs-utils
@@ -84,12 +80,12 @@
 (scroll-bar-mode -1)
 ;; (transient-mark-mode -1)
 (column-number-mode 1)
+;; (set-fringe-mode 0)
 
 ;;------------------------------------------------------------------------------
 ;; Font & Colors
-;; (setq solarized-broken-srgb 'nil)
 ;; (setq ns-use-srgb-colorspace t)
-(load-theme 'solarized-dark t)
+(load-theme 'monokai t)
 
 (defun kjs-set-all-fonts (fontname)
   (set-face-attribute 'default nil :font fontname)
@@ -101,7 +97,7 @@
   (when window-system
     (if (> (x-display-pixel-width) 2000)
         (kjs-set-all-fonts "Source Code Pro-16")
-      (kjs-set-all-fonts "Source Code Pro-15"))))
+      (kjs-set-all-fonts "Source Code Pro-14"))))
 (kjs-resize-fonts)
 
 ;;------------------------------------------------------------------------------
@@ -302,7 +298,7 @@ is no active region."
         haskell-process-type 'cabal-repl)
   (turn-on-haskell-indentation)
   (turn-on-haskell-decl-scan)
-  (define-key haskell-mode-map (kbd "C-c C-l") 'haskell-process-load-file)
+  (define-key haskell-mode-map (kbd "C-c C-l") 'haskell-process-load-or-reload)
   (define-key haskell-mode-map (kbd "C-c C-r") 'haskell-process-reload-file)
   (define-key haskell-mode-map (kbd "C-c C-z") 'haskell-interactive-switch)
   (define-key haskell-mode-map (kbd "C-c C-t") 'haskell-process-do-type)
@@ -313,12 +309,12 @@ is no active region."
 ;;------------------------------------------------------------------------------
 ;; Agda
 ;; (require 'ucs-utils)
-;; (load-file (let ((coding-system-for-read 'utf-8))
-;;              (shell-command-to-string "agda-mode locate")))
-;; (add-hook 'agda2-mode-hook
-;;           '(lambda ()
-;;              (require 'unicode-fonts)
-;;              (unicode-fonts-setup)))
+(load-file (let ((coding-system-for-read 'utf-8))
+             (shell-command-to-string "agda-mode locate")))
+(add-hook 'agda2-mode-hook
+          '(lambda ()
+             (require 'unicode-fonts)
+             (unicode-fonts-setup)))
 
 ;;------------------------------------------------------------------------------
 ;; Idris
@@ -411,12 +407,6 @@ is no active region."
 (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
 
 ;;------------------------------------------------------------------------------
-;; Scala stuff
-;; (add-to-list 'load-path "/Users/karl/.emacs.d/ensime_2.10.0-0.9.8.9/elisp/")
-;; (require 'ensime)
-;; (add-hook 'scala-mode-hook 'ensime-scala-mode-hook)
-
-;;------------------------------------------------------------------------------
 ;; Eshell
 (add-hook 'eshell-mode-hook
           (lambda () (setq pcomplete-cycle-completions nil)))
@@ -441,7 +431,7 @@ is no active region."
   (lambda ()
     (cd "/ssh:smeltzek@flip.engr.oregonstate.edu:~/")))
 
-(global-set-key (kbd "C-c t") 'eshell)
+(global-set-key (kbd "C-c t") 'visit-term-buffer)
 
 ;;------------------------------------------------------------------------------
 ;; GLSL
@@ -467,6 +457,13 @@ is no active region."
 ;;------------------------------------------------------------------------------
 ;; Racket
 ;; (require 'quack)
+
+;;------------------------------------------------------------------------------
+;; Proof General & Coq
+;; (load-file "/Users/karl/src/ProofGeneral-4.2/generic/proof-site.el")
+;; (add-to-list 'load-path "/usr/local/opt/coq/lib/emacs/site-lisp")
+;; (setq auto-mode-alist (cons '("\\.v$" . coq-mode) auto-mode-alist))
+;; (autoload 'coq-mode "coq" "Major mode for editing Coq vernacular." t)
 
 ;;------------------------------------------------------------------------------
 ;; Eww
@@ -526,9 +523,9 @@ is no active region."
 ;;------------------------------------------------------------------------------
 ;; Load local files / packages
 (add-to-list 'load-path "~/.emacs.d/elisp")
-(load "wrap.el")
-(load "buildscript.el")
-(load "tagutils.el")
+(load-library "wrap")
+(load-library "buildscript")
+(load-library "tagutils")
 
 
 ;;------------------------------------------------------------------------------
