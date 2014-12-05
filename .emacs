@@ -21,13 +21,14 @@
                       ;; auctex-latexmk
                       buffer-move
                       change-inner
-                      elm-mode
+                      ;; elm-mode
                       exec-path-from-shell
-                      evil
+                      ;; evil
                       fastnav
-                      flx
-                      flx-ido
+                      ;; flx
+                      ;; flx-ido
                       glsl-mode
+                      gnugo
                       haskell-mode
                       ido-ubiquitous
                       ido-vertical-mode
@@ -39,7 +40,6 @@
                       paredit
                       projectile
                       rainbow-delimiters
-                      s
                       smex
                       solarized-theme
                       ucs-utils
@@ -96,8 +96,8 @@
   (interactive)
   (when window-system
     (if (> (x-display-pixel-width) 2000)
-        (kjs-set-all-fonts "Source Code Pro-16")
-      (kjs-set-all-fonts "Source Code Pro-14"))))
+        (kjs-set-all-fonts "PragmataPro-16")
+      (kjs-set-all-fonts "PragmataPro-14"))))
 (kjs-resize-fonts)
 
 ;;------------------------------------------------------------------------------
@@ -125,10 +125,10 @@
 ;; Global keybindings
 (global-set-key (kbd "C-x a r") 'align-regexp)
 (global-set-key (kbd "C-c %") 'replace-regexp)
-(global-set-key [M-left] 'windmove-left)
-(global-set-key [M-right] 'windmove-right)
-(global-set-key [M-up] 'windmove-up)
-(global-set-key [M-down] 'windmove-down)
+(global-set-key (kbd "C-x <left>") 'windmove-left)
+(global-set-key (kbd "C-x <right>") 'windmove-right)
+(global-set-key (kbd "C-x <up>") 'windmove-up)
+(global-set-key (kbd "C-x <down>") 'windmove-down)
 (global-set-key (kbd "C-'") 'imenu)
 (global-set-key (kbd "C-c w") 'wrap-region)
 (global-set-key (kbd "C-h") 'delete-backward-char)
@@ -214,11 +214,9 @@ sensible in bibtex files."
 
 ;;------------------------------------------------------------------------------
 ;; Org
-;; (setq org-fontify-emphasized-text nil)
 (setq org-todo-keywords
       '((sequence "TODO" "FEEDBACK" "HOLD" "REVIEW" "|" "DONE")))
 (setq org-pretty-entities 1)
-;; (setq org-startup-indented t)
 
 ;;------------------------------------------------------------------------------
 ;; Ido / smex / vertical
@@ -292,10 +290,11 @@ is no active region."
 ;;------------------------------------------------------------------------------
 ;; Haskell
 (add-hook 'haskell-mode-hook 'kjs-haskell-hook)
+(add-hook 'haskell-mode-hook 'interactive-haskell-mode)
 (defun kjs-haskell-hook ()
   (setq haskell-interactive-mode-hide-multi-line-errors nil
         haskell-tags-on-save t
-        haskell-process-type 'cabal-repl)
+        haskell-process-type 'auto)
   (turn-on-haskell-indentation)
   (turn-on-haskell-decl-scan)
   (define-key haskell-mode-map (kbd "C-c C-l") 'haskell-process-load-or-reload)
@@ -309,12 +308,12 @@ is no active region."
 ;;------------------------------------------------------------------------------
 ;; Agda
 ;; (require 'ucs-utils)
-(load-file (let ((coding-system-for-read 'utf-8))
-             (shell-command-to-string "agda-mode locate")))
-(add-hook 'agda2-mode-hook
-          '(lambda ()
-             (require 'unicode-fonts)
-             (unicode-fonts-setup)))
+;; (load-file (let ((coding-system-for-read 'utf-8))
+;;              (shell-command-to-string "agda-mode locate")))
+;; (add-hook 'agda2-mode-hook
+;;           '(lambda ()
+;;              (require 'unicode-fonts)
+;;              (unicode-fonts-setup)))
 
 ;;------------------------------------------------------------------------------
 ;; Idris
@@ -333,21 +332,6 @@ is no active region."
                                  :inherit 'font-lock-string-face)
              (set-face-attribute 'idris-loaded-region-face nil
                                  :background nil)))
-
-
-;;------------------------------------------------------------------------------
-;; Clojure/nREPL
-
-;; (setq nrepl-popup-stacktraces nil)
-;; (defun nrepl-refresh ()
-;;   (interactive)
-;;   (set-buffer "*nrepl*")
-;;   (goto-char (point-max))
-;;   (insert "(clojure.tools.namespace.repl/refresh)")
-;;   (nrepl-return))
-
-;; (add-hook 'nrepl-mode-hook
-;;           (lambda () (local-set-key (kbd "C-c r") 'nrepl-refresh)))
 
 ;;------------------------------------------------------------------------------
 ;; Paredit
@@ -451,7 +435,6 @@ is no active region."
 ;;------------------------------------------------------------------------------
 ;; Projectile
 (projectile-global-mode)
-(setq projectile-indexing-method 'native)
 (global-set-key (kbd "M-p") 'projectile-find-file)
 
 ;;------------------------------------------------------------------------------
@@ -472,6 +455,20 @@ is no active region."
 ;;------------------------------------------------------------------------------
 ;; Alert
 (setq alert-default-style 'notifier)
+
+;;------------------------------------------------------------------------------
+;; Gnu-Go
+(setq gnugo-xpms 'gnugo-imgen-create-xpms)
+(add-hook 'gnugo-start-game-hook 'gnugo-image-display-mode)
+
+;;------------------------------------------------------------------------------
+;; Prolog
+;; TODO: Start caring about Perl
+(add-hook 'prolog-mode-hook 'kjs-prolog-hook)
+(defun kjs-prolog-hook ()
+  (setq prolog-system 'swi)
+  (define-key prolog-mode-map (kbd "C-c C-l") 'prolog-compile-file))
+(add-to-list 'auto-mode-alist '("\\.pl\\'" . prolog-mode))
 
 ;;------------------------------------------------------------------------------
 ;; Misc things that should probably be in a different file
