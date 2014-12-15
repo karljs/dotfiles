@@ -23,7 +23,7 @@
                       change-inner
                       ;; elm-mode
                       exec-path-from-shell
-                      ;; evil
+                      evil
                       fastnav
                       ;; flx
                       ;; flx-ido
@@ -85,7 +85,7 @@
 ;;------------------------------------------------------------------------------
 ;; Font & Colors
 ;; (setq ns-use-srgb-colorspace t)
-(load-theme 'monokai t)
+(load-theme 'solarized-light t)
 
 (defun kjs-set-all-fonts (fontname)
   (set-face-attribute 'default nil :font fontname)
@@ -96,8 +96,8 @@
   (interactive)
   (when window-system
     (if (> (x-display-pixel-width) 2000)
-        (kjs-set-all-fonts "PragmataPro-16")
-      (kjs-set-all-fonts "PragmataPro-14"))))
+        (kjs-set-all-fonts "Source Code Pro-16")
+      (kjs-set-all-fonts "Source Code Pro-12"))))
 (kjs-resize-fonts)
 
 ;;------------------------------------------------------------------------------
@@ -209,6 +209,7 @@ sensible in bibtex files."
 ;;------------------------------------------------------------------------------
 ;; Spelling
 (add-hook 'prog-mode-hook 'flyspell-prog-mode)
+(add-hook 'org-mode-hook 'flyspell-mode)
 (setq-default ispell-program-name "aspell")
 ;; (setq ispell-extra-args '("--sug-mode=fast"))
 
@@ -219,21 +220,30 @@ sensible in bibtex files."
 (setq org-pretty-entities 1)
 
 ;;------------------------------------------------------------------------------
-;; Ido / smex / vertical
+;; Ido / Smex
 (setq ido-create-new-buffer 'always)
-;; (require 'flx-ido)
 (ido-mode 1)
 (ido-ubiquitous-mode 1)
 (ido-everywhere 1)
-;; (flx-ido-mode 1)
-(setq smex-key-advice-ignore-menu-bar t)
+(ido-vertical-mode 1)
 (global-set-key (kbd "M-x") 'smex)
 (global-set-key (kbd "M-X") 'smex-major-mode-commands)
-(ido-vertical-mode 1)
+
+;;------------------------------------------------------------------------------
+;; Helm
+;; (require 'helm-config)
+;; (global-set-key (kbd "M-x") 'helm-M-x)
+;; (global-set-key (kbd "M-y") 'helm-show-kill-ring)
+;; (global-set-key (kbd "C-x b") 'helm-mini)
+;; (global-set-key (kbd "C-x C-f") 'helm-find-files)
+
+;; (defun kjs-helm-hook
+;;     (define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action))
+;; (add-hook 'helm-mode-hook 'kjs-helm-hook)
 
 ;;------------------------------------------------------------------------------
 ;; Commenting
-(defun comment-or-uncomment-region-or-line ()
+(defun kjs-comment-or-uncomment-region-or-line ()
   "Comments or uncomments the region or the current line if there
 is no active region."
   (interactive)
@@ -244,7 +254,15 @@ is no active region."
       (setq beg (line-beginning-position)
             end (line-end-position)))
     (comment-or-uncomment-region beg end)))
-(global-set-key (kbd "C-x C-;") 'comment-or-uncomment-region-or-line)
+
+(defun kjs-test-web-mode ()
+  "Handles web-modes stupid special commenting stuff"
+  (interactive)
+  (if (equal major-mode 'web-mode)
+      (web-mode-comment-or-uncomment)
+    (kjs-comment-or-uncomment-region-or-line)))
+
+(global-set-key (kbd "C-x C-;") 'kjs-test-web-mode)
 
 (defun comment-header-line ()
   "Insert a long comment line with hyphens to denote sections in code."
