@@ -4,7 +4,6 @@ if [ -f /usr/local/etc/bash_completion ]; then
   . /usr/local/etc/bash_completion
 fi
 
-
 #-------------------------------------------------------------------------------
 # Github, why do you hate me so?
 export HOMEBREW_GITHUB_API_TOKEN=3e6bb5aa1cc7e5275231c5a4eea480ee530cc1cc
@@ -38,7 +37,7 @@ alias tl='tmux list-sessions'
 function ta() { tmux -2 attach -t $@ ;}
 function tn() { tmux -2 new-session -s $@ ;}
 
-alias serve='python -m SimpleHTTPServer'
+alias serve='python3 -m http.server'
 
 mkcd () {
     mkdir -p "$*"
