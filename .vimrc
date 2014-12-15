@@ -24,6 +24,7 @@ set shortmess+=I
 set noesckeys
 set shell=/usr/local/bin/bash
 let g:netrw_liststyle=3
+set foldlevelstart=99
 
 "-------------------------------------------------------------------------------
 " Tabs & Indent
@@ -47,16 +48,13 @@ set mouse=a
 set autoread
 
 "-------------------------------------------------------------------------------
-" Aesthetics
-set number
-set laststatus=2
-set ruler
-set showcmd
-set showmatch
+" Airline
+let g:airline_theme = 'base16'
+let g:airline_powerline_fonts = 1
 
 "-------------------------------------------------------------------------------
-" Airline
-let g:airline_theme = 'molokai'
+" Haskell
+let g:haddock_browser="open"
 
 "-------------------------------------------------------------------------------
 " Searching
@@ -95,8 +93,19 @@ syntax on
 "let g:solarized_italic=0
 "let g:solarized_bold=0
 "let g:solarized_termcolors=16
-colorscheme base16-monokai
-set background=dark
+colorscheme base16-solarized
+set background=light
+
+"-------------------------------------------------------------------------------
+" Aesthetics
+" hi StatusLine ctermbg=10
+hi Visual ctermbg=10
+set number
+set laststatus=2
+set ruler
+set showcmd
+set showmatch
+
 
 "-------------------------------------------------------------------------------
 " Keybindings
@@ -104,6 +113,5 @@ nnoremap <silent> [b :bprevious<CR>
 nnoremap <silent> ]b :bnext<CR>
 nnoremap <silent> [a :previous<CR>
 nnoremap <silent> ]a :next<CR>
-
 nmap <leader>v :setlocal paste! paste?<cr>
 
