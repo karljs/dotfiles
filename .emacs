@@ -14,24 +14,17 @@
              '("melpa" . "http://melpa.org/packages/") t)
 
 ;;------------------------------------------------------------------------------
-;; Install packages as necessary on startup. Credit to the Prelude project.
+;; Install packages as necessary on startup. Credit largely to Emacs Prelude.
 (defvar my-packages '(ace-jump-mode
-                      ag
                       auctex
-                      ;; auctex-latexmk
-                      buffer-move
                       change-inner
-                      ;; elm-mode
                       exec-path-from-shell
-                      evil
                       fastnav
-                      ;; flx
-                      ;; flx-ido
                       glsl-mode
                       gnugo
                       haskell-mode
-                      ido-ubiquitous
-                      ido-vertical-mode
+                      helm
+                      helm-projectile
                       idris-mode
                       lua-mode
                       magit
@@ -40,7 +33,6 @@
                       paredit
                       projectile
                       rainbow-delimiters
-                      smex
                       solarized-theme
                       ucs-utils
                       unicode-fonts
@@ -65,10 +57,10 @@
 (my-install-packages)
 
 ;;------------------------------------------------------------------------------
-;; Fix broken GUI path on OSX
+;; Fix broken $PATH on OS X with GUI
 (when (eq system-type 'darwin)
   (exec-path-from-shell-initialize)
-  (setq default-directory "/Users/karl"))
+  (setq default-directory "/Users/karl/"))
 
 ;;------------------------------------------------------------------------------
 ;; GUI Settings
@@ -78,13 +70,12 @@
       inhibit-startup-echo-area-message "")
 (tool-bar-mode -1)
 (scroll-bar-mode -1)
-;; (transient-mark-mode -1)
+(transient-mark-mode -1)
 (column-number-mode 1)
 ;; (set-fringe-mode 0)
 
 ;;------------------------------------------------------------------------------
 ;; Font & Colors
-;; (setq ns-use-srgb-colorspace t)
 (load-theme 'solarized-light t)
 
 (defun kjs-set-all-fonts (fontname)
@@ -112,10 +103,13 @@
       scroll-conservatively 1
       require-final-newline t)
 
-(setq-default fill-column 78
+(setq-default dired-use-ls-dired nil
+              fill-column 78
               indent-tabs-mode nil)
+
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
 (global-auto-revert-mode 1)
+
 
 ;;------------------------------------------------------------------------------
 ;; Default registers
@@ -129,26 +123,12 @@
 (global-set-key (kbd "C-x <right>") 'windmove-right)
 (global-set-key (kbd "C-x <up>") 'windmove-up)
 (global-set-key (kbd "C-x <down>") 'windmove-down)
-(global-set-key (kbd "C-'") 'imenu)
+
 (global-set-key (kbd "C-c w") 'wrap-region)
-(global-set-key (kbd "C-h") 'delete-backward-char)
+;; (global-set-key (kbd "C-h") 'delete-backward-char)
 ;; (global-set-key (kbd "M-h") 'backward-kill-word)
-(global-set-key (kbd "C-?") 'help-command)
+;; (global-set-key (kbd "C-?") 'help-command)
 ;; (global-set-key (kbd "M-?") 'mark-paragraph)
-
-;;------------------------------------------------------------------------------
-;; Evil
-;; (evil-mode)
-;; (define-key evil-ex-map "e " 'ido-find-file)
-;; (define-key evil-ex-map "w " 'ido-write-file)
-;; (define-key evil-ex-map "b " 'ido-switch-buffer)
-
-;;------------------------------------------------------------------------------
-;; buffer-move
-(global-set-key (kbd "<C-S-up>")     'buf-move-up)
-(global-set-key (kbd "<C-S-down>")   'buf-move-down)
-(global-set-key (kbd "<C-S-left>")   'buf-move-left)
-(global-set-key (kbd "<C-S-right>")  'buf-move-right)
 
 ;;------------------------------------------------------------------------------
 ;; Ace jump mode
@@ -182,7 +162,7 @@
 (add-hook 'LaTeX-mode-hook 'flyspell-mode)
 (add-hook 'LaTeX-mode-hook (lambda ()
                              (turn-on-auto-fill)
-                             ;; (LaTeX-math-mode)
+                             (LaTeX-math-mode)
                              (turn-on-reftex)
                              (outline-minor-mode)))
 
@@ -220,26 +200,40 @@ sensible in bibtex files."
 (setq org-pretty-entities 1)
 
 ;;------------------------------------------------------------------------------
-;; Ido / Smex
-(setq ido-create-new-buffer 'always)
-(ido-mode 1)
-(ido-ubiquitous-mode 1)
-(ido-everywhere 1)
-(ido-vertical-mode 1)
-(global-set-key (kbd "M-x") 'smex)
-(global-set-key (kbd "M-X") 'smex-major-mode-commands)
+;; Projectile
+(projectile-global-mode)
 
 ;;------------------------------------------------------------------------------
 ;; Helm
-;; (require 'helm-config)
-;; (global-set-key (kbd "M-x") 'helm-M-x)
-;; (global-set-key (kbd "M-y") 'helm-show-kill-ring)
-;; (global-set-key (kbd "C-x b") 'helm-mini)
-;; (global-set-key (kbd "C-x C-f") 'helm-find-files)
+(require 'helm-config)
+(require 'helm-projectile)
 
-;; (defun kjs-helm-hook
-;;     (define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action))
-;; (add-hook 'helm-mode-hook 'kjs-helm-hook)
+(when (executable-find "curl")
+  (setq helm-google-suggest-use-curl-p t))
+
+(setq helm-split-window-in-side-p t
+      helm-buffers-fuzzy-matching t
+      helm-ff-newfile-prompt-p nil
+      helm-M-x-fuzzy-math t)
+
+(global-set-key (kbd "M-x") 'helm-M-x)
+(global-set-key (kbd "M-y") 'helm-show-kill-ring)
+(global-set-key (kbd "C-x b") 'helm-mini)
+(global-set-key (kbd "C-x C-f") 'helm-find-files)
+(global-set-key (kbd "C-'") 'helm-semantic-or-imenu)
+(global-set-key (kbd "M-p") 'helm-projectile)
+(global-set-key (kbd "C-c h") 'helm-command-prefix)
+(global-unset-key (kbd "C-x c"))
+
+(define-key helm-command-map (kbd "o") 'helm-occur)
+(define-key helm-command-map (kbd "g") 'helm-do-grep)
+(define-key helm-command-map (kbd "C-c w") 'helm-wikipedia-suggest)
+(define-key helm-command-map (kbd "SPC") 'helm-all-mark-rings)
+
+(define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action)
+(define-key helm-map (kbd "C-z") 'helm-select-action)
+
+(helm-mode 1)
 
 ;;------------------------------------------------------------------------------
 ;; Commenting
@@ -280,7 +274,7 @@ is no active region."
                (insert-char ?- numchars)
                (insert ce-trim)))
     (message "Comment characters are not set")))  ; looking at you, web-mode
-(global-set-key (kbd "C-c h") 'comment-header-line)
+(global-set-key (kbd "C-c C-h") 'comment-header-line)
 
 ;;------------------------------------------------------------------------------
 ;; C/C++
@@ -405,11 +399,22 @@ is no active region."
 
 ;;------------------------------------------------------------------------------
 ;; Web mode
-(require 'web-mode)
+;; (require 'web-mode)
 (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
 
+;; This is a true hack, and should be fixed
+(defun kjs-run-tidy ()
+  (interactive)
+  (shell-command "./tidy.sh")
+  (revert-buffer t t))
+
+(defun kjs-web-mode-hook ()
+  (setq web-mode-markup-indent-offset 2)
+  (define-key web-mode-map (kbd "C-c C-c t") 'kjs-run-tidy))
+(add-hook 'web-mode-hook 'kjs-web-mode-hook)
+
 ;;------------------------------------------------------------------------------
-;; Eshell
+;; Eshell and other terminals
 (add-hook 'eshell-mode-hook
           (lambda () (setq pcomplete-cycle-completions nil)))
 
@@ -451,15 +456,6 @@ is no active region."
 (setq tramp-default-method "ssh")
 
 ;;------------------------------------------------------------------------------
-;; Projectile
-(projectile-global-mode)
-(global-set-key (kbd "M-p") 'projectile-find-file)
-
-;;------------------------------------------------------------------------------
-;; Racket
-;; (require 'quack)
-
-;;------------------------------------------------------------------------------
 ;; Proof General & Coq
 ;; (load-file "/Users/karl/src/ProofGeneral-4.2/generic/proof-site.el")
 ;; (add-to-list 'load-path "/usr/local/opt/coq/lib/emacs/site-lisp")
@@ -469,10 +465,6 @@ is no active region."
 ;;------------------------------------------------------------------------------
 ;; Eww
 (global-set-key (kbd "C-c b") 'eww)
-
-;;------------------------------------------------------------------------------
-;; Alert
-(setq alert-default-style 'notifier)
 
 ;;------------------------------------------------------------------------------
 ;; Gnu-Go
@@ -534,14 +526,12 @@ is no active region."
   (forward-line -1))
 (global-set-key (kbd "C-S-o") 'open-line-above)
 
-
 ;;------------------------------------------------------------------------------
 ;; Load local files / packages
 (add-to-list 'load-path "~/.emacs.d/elisp")
 (load-library "wrap")
 (load-library "buildscript")
 (load-library "tagutils")
-
 
 ;;------------------------------------------------------------------------------
 (server-start)
