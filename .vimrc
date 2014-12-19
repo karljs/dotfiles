@@ -28,6 +28,7 @@ set foldlevelstart=99
 
 "-------------------------------------------------------------------------------
 " Tabs & Indent
+set textwidth=80
 set expandtab
 set softtabstop=4
 set shiftwidth=4
@@ -35,6 +36,7 @@ set tabstop=4
 set autoindent
 autocmd FileType haskell setlocal shiftwidth=2 softtabstop=2
 autocmd FileType idris setlocal shiftwidth=2 softtabstop=2
+autocmd FileType html setlocal shiftwidth=2 softtabstop=2
 " autocmd BufWritePre * DeleteTrailingWhitespace
 
 "-------------------------------------------------------------------------------
@@ -50,7 +52,7 @@ set autoread
 "-------------------------------------------------------------------------------
 " Airline
 let g:airline_theme = 'base16'
-let g:airline_powerline_fonts = 1
+" let g:airline_powerline_fonts = 1
 
 "-------------------------------------------------------------------------------
 " Haskell

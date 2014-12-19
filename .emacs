@@ -481,6 +481,10 @@ is no active region."
 (add-to-list 'auto-mode-alist '("\\.pl\\'" . prolog-mode))
 
 ;;------------------------------------------------------------------------------
+;; Dash
+(global-set-key (kbd "C-c d") 'dash-at-point)
+
+;;------------------------------------------------------------------------------
 ;; Misc things that should probably be in a different file
 (defun reload-dot-emacs ()
   "Reload the default configuration file."
