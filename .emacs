@@ -19,6 +19,7 @@
                       auctex
                       change-inner
                       exec-path-from-shell
+                      expand-region
                       fastnav
                       glsl-mode
                       gnugo
@@ -77,6 +78,7 @@
 ;;------------------------------------------------------------------------------
 ;; Font & Colors
 (load-theme 'solarized-light t)
+;; (unicode-fonts-setup)
 
 (defun kjs-set-all-fonts (fontname)
   (set-face-attribute 'default nil :font fontname)
@@ -84,15 +86,14 @@
   ;; (set-face-attribute 'variable-pitch nil :font fontname)
   (set-fontset-font "fontset-startup" 'unicode fontname)
   (set-fontset-font "fontset-default" 'unicode fontname)
-  (set-fontset-font "fontset-standard" 'unicode fontname)
-  )
+  (set-fontset-font "fontset-standard" 'unicode fontname))
 
 (defun kjs-resize-fonts ()
   (interactive)
   (when window-system
     (if (> (x-display-pixel-width) 2000)
         (kjs-set-all-fonts "Source Code Pro-16")
-      (kjs-set-all-fonts "Source Code Pro-12"))))
+      (kjs-set-all-fonts "Source Code Pro-14"))))
 (kjs-resize-fonts)
 
 ;;------------------------------------------------------------------------------
@@ -324,12 +325,15 @@ is no active region."
 ;;------------------------------------------------------------------------------
 ;; Agda
 ;; (require 'ucs-utils)
-;; (load-file (let ((coding-system-for-read 'utf-8))
-;;              (shell-command-to-string "agda-mode locate")))
-;; (add-hook 'agda2-mode-hook
-;;           '(lambda ()
-;;              (require 'unicode-fonts)
-;;              (unicode-fonts-setup)))
+
+(load-file (let ((coding-system-for-read 'utf-8))
+             (shell-command-to-string "agda-mode locate")))
+(add-hook 'agda2-mode-hook
+          '(lambda ()
+             (customize-set-variable
+              'agda2-highlight-face-groups 'default-faces)
+             (customize-set-variable
+              'agda2-include-dirs '("." "/Users/karl/src/agda-stdlib/src"))))
 
 ;;------------------------------------------------------------------------------
 ;; Idris
@@ -479,14 +483,19 @@ is no active region."
 ;; Prolog
 ;; TODO: Start caring about Perl
 (add-hook 'prolog-mode-hook 'kjs-prolog-hook)
+(setq prolog-system 'swi)
 (defun kjs-prolog-hook ()
-  (setq prolog-system 'swi)
+  (setq prolog-indent-width 4)
   (define-key prolog-mode-map (kbd "C-c C-l") 'prolog-compile-file))
 (add-to-list 'auto-mode-alist '("\\.pl\\'" . prolog-mode))
 
 ;;------------------------------------------------------------------------------
 ;; Dash
 (global-set-key (kbd "C-c d") 'dash-at-point)
+
+;;------------------------------------------------------------------------------
+;; Expand Region
+(global-set-key (kbd "C-=") 'er/expand-region)
 
 ;;------------------------------------------------------------------------------
 ;; Misc things that should probably be in a different file
