@@ -80,8 +80,12 @@
 
 (defun kjs-set-all-fonts (fontname)
   (set-face-attribute 'default nil :font fontname)
-  (set-face-attribute 'fixed-pitch nil :font fontname)
-  (set-face-attribute 'variable-pitch nil :font fontname))
+  ;; (set-face-attribute 'fixed-pitch nil :font fontname)
+  ;; (set-face-attribute 'variable-pitch nil :font fontname)
+  (set-fontset-font "fontset-startup" 'unicode fontname)
+  (set-fontset-font "fontset-default" 'unicode fontname)
+  (set-fontset-font "fontset-standard" 'unicode fontname)
+  )
 
 (defun kjs-resize-fonts ()
   (interactive)
@@ -538,5 +542,4 @@ is no active region."
 (load-library "tagutils")
 
 ;;------------------------------------------------------------------------------
-(server-start)
 (message "%s" "You shouldn't have come back, Karl")
