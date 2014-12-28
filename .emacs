@@ -78,23 +78,34 @@
 ;;------------------------------------------------------------------------------
 ;; Font & Colors
 (load-theme 'solarized-light t)
-;; (unicode-fonts-setup)
 
-(defun kjs-set-all-fonts (fontname)
-  (set-face-attribute 'default nil :font fontname)
-  ;; (set-face-attribute 'fixed-pitch nil :font fontname)
-  ;; (set-face-attribute 'variable-pitch nil :font fontname)
-  (set-fontset-font "fontset-startup" 'unicode fontname)
-  (set-fontset-font "fontset-default" 'unicode fontname)
-  (set-fontset-font "fontset-standard" 'unicode fontname))
-
-(defun kjs-resize-fonts ()
+(defun kjs-size-font ()
   (interactive)
-  (when window-system
-    (if (> (x-display-pixel-width) 2000)
-        (kjs-set-all-fonts "Source Code Pro-16")
-      (kjs-set-all-fonts "Source Code Pro-14"))))
-(kjs-resize-fonts)
+  (message
+   (concat "PragmataPro"
+           (when window-system
+             (if (> (x-display-pixel-width) 2000)
+                 "-16"
+               "-14")))))
+
+(let ((font-name (kjs-size-font))
+      (font-sets '("fontset-default"
+                   "fontset-standard"
+                   "fontset-startup")))
+  (mapcar
+   (lambda (font-set)
+     (set-fontset-font font-set '(#x000000 . #x3FFFFF) font-name)
+     (set-fontset-font font-set nil font-name))
+   font-sets))
+
+;; (defun kjs-set-all-fonts (fontname)
+;;   (set-face-attribute 'default nil :font fontname)
+;;   ;; (set-face-attribute 'fixed-pitch nil :font fontname)
+;;   ;; (set-face-attribute 'variable-pitch nil :font fontname)
+;;   (set-fontset-font "fontset-startup" '(#x000000 . #x3FFFFF) fontname)
+;;   (set-fontset-font "fontset-default" '(#x000000 . #x3FFFFF) fontname)
+;;   (set-fontset-font "fontset-standard" '(#x000000 . #x3FFFFF) fontname))
+
 
 ;;------------------------------------------------------------------------------
 ;; Good behavior
