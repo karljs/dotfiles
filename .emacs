@@ -78,25 +78,29 @@
 ;;------------------------------------------------------------------------------
 ;; Font & Colors
 (load-theme 'solarized-light t)
+(setq-default line-spacing 0)
 
 (defun kjs-size-font ()
   (interactive)
-  (message
-   (concat "PragmataPro"
-           (when window-system
-             (if (> (x-display-pixel-width) 2000)
-                 "-16"
-               "-14")))))
+  (concat "PragmataPro"
+          (when window-system
+            (if (> (x-display-pixel-width) 2000)
+                "-16"
+              "-14"))))
 
-(let ((font-name (kjs-size-font))
-      (font-sets '("fontset-default"
-                   "fontset-standard"
-                   "fontset-startup")))
-  (mapcar
-   (lambda (font-set)
-     (set-fontset-font font-set '(#x000000 . #x3FFFFF) font-name)
-     (set-fontset-font font-set nil font-name))
-   font-sets))
+(let ((font-name (kjs-size-font)))
+  (add-to-list 'default-frame-alist (cons 'font font-name))
+  (set-face-attribute 'default t :font font-name))
+
+;; (let ((font-name (kjs-size-font))
+;;       (font-sets '("fontset-default"
+;;                    "fontset-standard"
+;;                    "fontset-startup")))
+;;   (mapcar
+;;    (lambda (font-set)
+;;      (set-fontset-font font-set '(#x000000 . #x3FFFFF) font-name)
+;;      (set-fontset-font font-set nil font-name))
+;;    font-sets))
 
 ;; (defun kjs-set-all-fonts (fontname)
 ;;   (set-face-attribute 'default nil :font fontname)
@@ -424,7 +428,7 @@ is no active region."
 ;; This is a true hack, and should be fixed
 (defun kjs-run-tidy ()
   (interactive)
-  (shell-command "./tidy.sh")
+  (shell-command "tidy-dir")
   (revert-buffer t t))
 
 (defun kjs-web-mode-hook ()
@@ -453,9 +457,12 @@ is no active region."
 (defalias 'ff 'find-file)
 (defalias 'ffo 'find-file-other-window)
 
-(defalias 'flip
+(defalias 'access
   (lambda ()
-    (cd "/ssh:smeltzek@flip.engr.oregonstate.edu:~/")))
+    (cd "/ssh:smeltzek@access.engr.oregonstate.edu:~/")))
+(defalias 'nome
+  (lambda ()
+    (cd "/ssh:smeltzek@nome.eecs.oregonstate.edu:~/")))
 
 (global-set-key (kbd "C-c t") 'visit-term-buffer)
 
