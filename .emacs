@@ -3,7 +3,6 @@
 ;;  |  __/ | | | | | (_| | (__\__ \
 ;; (_)___|_| |_| |_|\__,_|\___|___/
 
-
 ;;------------------------------------------------------------------------------
 ;; Package manager load and setup
 (require 'cl)
@@ -24,9 +23,8 @@
                       glsl-mode
                       gnugo
                       haskell-mode
-                      helm
-                      helm-projectile
                       idris-mode
+                      ido-vertical-mode
                       lua-mode
                       magit
                       markdown-mode
@@ -76,40 +74,21 @@
 ;; (set-fringe-mode 0)
 
 ;;------------------------------------------------------------------------------
-;; Font & Colors
-(load-theme 'solarized-light t)
-(setq-default line-spacing 0)
-
+;; Fonts, colors, aesthetics
 (defun kjs-size-font ()
   (interactive)
-  (concat "PragmataPro"
+  (concat "PragmataPro" "-"
           (when window-system
             (if (> (x-display-pixel-width) 2000)
-                "-16"
-              "-14"))))
+                "16"
+              "14"))))
 
 (let ((font-name (kjs-size-font)))
   (add-to-list 'default-frame-alist (cons 'font font-name))
   (set-face-attribute 'default t :font font-name))
 
-;; (let ((font-name (kjs-size-font))
-;;       (font-sets '("fontset-default"
-;;                    "fontset-standard"
-;;                    "fontset-startup")))
-;;   (mapcar
-;;    (lambda (font-set)
-;;      (set-fontset-font font-set '(#x000000 . #x3FFFFF) font-name)
-;;      (set-fontset-font font-set nil font-name))
-;;    font-sets))
-
-;; (defun kjs-set-all-fonts (fontname)
-;;   (set-face-attribute 'default nil :font fontname)
-;;   ;; (set-face-attribute 'fixed-pitch nil :font fontname)
-;;   ;; (set-face-attribute 'variable-pitch nil :font fontname)
-;;   (set-fontset-font "fontset-startup" '(#x000000 . #x3FFFFF) fontname)
-;;   (set-fontset-font "fontset-default" '(#x000000 . #x3FFFFF) fontname)
-;;   (set-fontset-font "fontset-standard" '(#x000000 . #x3FFFFF) fontname))
-
+(load-theme 'solarized-light t)
+(setq-default line-spacing 0)
 
 ;;------------------------------------------------------------------------------
 ;; Good behavior
@@ -224,36 +203,12 @@ sensible in bibtex files."
 (projectile-global-mode)
 
 ;;------------------------------------------------------------------------------
-;; Helm
-(require 'helm-config)
-(require 'helm-projectile)
-
-(when (executable-find "curl")
-  (setq helm-google-suggest-use-curl-p t))
-
-(setq helm-split-window-in-side-p t
-      helm-buffers-fuzzy-matching t
-      helm-ff-newfile-prompt-p nil
-      helm-M-x-fuzzy-math t)
-
-(global-set-key (kbd "M-x") 'helm-M-x)
-(global-set-key (kbd "M-y") 'helm-show-kill-ring)
-(global-set-key (kbd "C-x b") 'helm-mini)
-(global-set-key (kbd "C-x C-f") 'helm-find-files)
-(global-set-key (kbd "C-'") 'helm-semantic-or-imenu)
-(global-set-key (kbd "M-p") 'helm-projectile)
-(global-set-key (kbd "C-c h") 'helm-command-prefix)
-(global-unset-key (kbd "C-x c"))
-
-(define-key helm-command-map (kbd "o") 'helm-occur)
-(define-key helm-command-map (kbd "g") 'helm-do-grep)
-(define-key helm-command-map (kbd "C-c w") 'helm-wikipedia-suggest)
-(define-key helm-command-map (kbd "SPC") 'helm-all-mark-rings)
-
-(define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action)
-(define-key helm-map (kbd "C-z") 'helm-select-action)
-
-(helm-mode 1)
+;; Ido
+(ido-mode 1)
+(ido-everywhere 1)
+(ido-vertical-mode 1)
+(setq ido-create-new-buffer 'always
+      ido-enable-flex-matching t)
 
 ;;------------------------------------------------------------------------------
 ;; Commenting
@@ -443,6 +398,8 @@ is no active region."
 
 (add-hook 'term-mode-hook
           (lambda () (setq term-buffer-maximum-size 10000)))
+
+(setq explicit-shell-file-name "/usr/local/bin/bash")
 
 (defun visit-term-buffer ()
   "Create or visit a terminal buffer."
