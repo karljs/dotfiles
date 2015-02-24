@@ -32,7 +32,9 @@
                       paredit
                       projectile
                       rainbow-delimiters
+                      smex
                       solarized-theme
+                      transpose-frame
                       ucs-utils
                       unicode-fonts
                       web-mode
@@ -87,8 +89,10 @@
   (add-to-list 'default-frame-alist (cons 'font font-name))
   (set-face-attribute 'default t :font font-name))
 
-(load-theme 'solarized-light t)
+(setq solarized-scale-org-headlines nil
+      solarized-use-variable-pitch nil)
 (setq-default line-spacing 0)
+(load-theme 'solarized-light t)
 
 ;;------------------------------------------------------------------------------
 ;; Good behavior
@@ -141,8 +145,6 @@
       LaTeX-command-style '(("" "%(PDF)%(latex) -file-line-error %S%(PDFout)"))
       reftex-plug-into-AUCTeX t)
 
-(setq-default TeX-master nil)
-
 (add-to-list 'auto-mode-alist '("\\.tex\\'" . LaTeX-mode))
 
 (when (eq system-type 'darwin)
@@ -156,7 +158,8 @@
           (output-html "HTML Viewer"))))
 
 (customize-set-variable 'LaTeX-verbatim-environments
-                        '("verbatim" "verbatim*" "program" "programc" "prog"))
+                        '("verbatim" "verbatim*" "program" "programc" "prog"
+                          "BVerbatim"))
 
 (add-hook 'LaTeX-mode-hook 'flyspell-mode)
 (add-hook 'LaTeX-mode-hook (lambda ()
@@ -203,12 +206,15 @@ sensible in bibtex files."
 (projectile-global-mode)
 
 ;;------------------------------------------------------------------------------
-;; Ido
+;; Ido + Smex
 (ido-mode 1)
 (ido-everywhere 1)
 (ido-vertical-mode 1)
 (setq ido-create-new-buffer 'always
       ido-enable-flex-matching t)
+(smex-initialize)
+(global-set-key (kbd "M-x") 'smex)
+(global-set-key (kbd "M-X") 'smex-major-mode-commands)
 
 ;;------------------------------------------------------------------------------
 ;; Commenting
@@ -294,8 +300,6 @@ is no active region."
 
 ;;------------------------------------------------------------------------------
 ;; Agda
-;; (require 'ucs-utils)
-
 (load-file (let ((coding-system-for-read 'utf-8))
              (shell-command-to-string "agda-mode locate")))
 (add-hook 'agda2-mode-hook
@@ -440,10 +444,10 @@ is no active region."
 
 ;;------------------------------------------------------------------------------
 ;; Proof General & Coq
-;; (load-file "/Users/karl/src/ProofGeneral-4.2/generic/proof-site.el")
-;; (add-to-list 'load-path "/usr/local/opt/coq/lib/emacs/site-lisp")
-;; (setq auto-mode-alist (cons '("\\.v$" . coq-mode) auto-mode-alist))
-;; (autoload 'coq-mode "coq" "Major mode for editing Coq vernacular." t)
+(load-file "/Users/karl/src/ProofGeneral/generic/proof-site.el")
+(add-to-list 'load-path "/usr/local/opt/coq/lib/emacs/site-lisp")
+(setq auto-mode-alist (cons '("\\.v$" . coq-mode) auto-mode-alist))
+(autoload 'coq-mode "coq" "Major mode for editing Coq vernacular." t)
 
 ;;------------------------------------------------------------------------------
 ;; Eww
@@ -471,6 +475,10 @@ is no active region."
 ;;------------------------------------------------------------------------------
 ;; Expand Region
 (global-set-key (kbd "C-=") 'er/expand-region)
+
+;;------------------------------------------------------------------------------
+;; Transpose Frame
+(require 'transpose-frame)
 
 ;;------------------------------------------------------------------------------
 ;; Misc things that should probably be in a different file
