@@ -15,6 +15,7 @@
 ;;------------------------------------------------------------------------------
 ;; Install packages as necessary on startup. Credit largely to Emacs Prelude.
 (defvar my-packages '(ace-jump-mode
+                      ag
                       auctex
                       change-inner
                       exec-path-from-shell
@@ -147,19 +148,30 @@
 
 (add-to-list 'auto-mode-alist '("\\.tex\\'" . LaTeX-mode))
 
-(when (eq system-type 'darwin)
-  (setq TeX-view-program-list
-        '(("PDF Viewer" "open %o")
-          ("DVI Viewer" "open %o")
-          ("HTML Viewer" "open %o"))
-        TeX-view-program-selection
-        '((output-pdf "PDF Viewer")
-          (output-dvi "DVI Viewer")
-          (output-html "HTML Viewer"))))
+;; (when (eq system-type 'darwin)
+;;   (setq TeX-view-program-list
+;;         '(("PDF Viewer" "open %o")
+;;           ("DVI Viewer" "open %o")
+;;           ("HTML Viewer" "open %o"))
+;;         TeX-view-program-selection
+;;         '((output-pdf "PDF Viewer")
+;;           (output-dvi "DVI Viewer")
+;;           (output-html "HTML Viewer"))))
 
 (customize-set-variable 'LaTeX-verbatim-environments
                         '("verbatim" "verbatim*" "program" "programc" "prog"
                           "BVerbatim"))
+
+(add-hook 'LaTeX-mode-hook
+          (lambda () (push '("latexmk" "latexmk -pdf %s" TeX-run-TeX nil t
+                             :help "Run latexmk on file")
+                           TeX-command-list)))
+(add-hook 'TeX-mode-hook '(lambda () (setq TeX-command-default "latexmk")))
+
+(setq TeX-view-program-selection '((output-pdf "PDF Viewer")))
+(setq TeX-view-program-list
+      '(("PDF Viewer"
+         "/Applications/Skim.app/Contents/SharedSupport/displayline -b -g %n %o %b")))
 
 (add-hook 'LaTeX-mode-hook 'flyspell-mode)
 (add-hook 'LaTeX-mode-hook (lambda ()
@@ -167,6 +179,8 @@
                              (LaTeX-math-mode)
                              (turn-on-reftex)
                              (outline-minor-mode)))
+
+
 
 (defun kjs-bibtex-next-entry ()
   (interactive)
