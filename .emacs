@@ -26,6 +26,7 @@
                       haskell-mode
                       idris-mode
                       ido-vertical-mode
+                      latex-preview-pane
                       lua-mode
                       magit
                       markdown-mode
@@ -80,7 +81,7 @@
 ;; Fonts, colors, aesthetics
 (defun kjs-size-font ()
   (interactive)
-  (concat "PragmataPro" "-"
+  (concat "PragmataPro Mono" "-"
           (when window-system
             (if (> (x-display-pixel-width) 2000)
                 "16"
@@ -93,7 +94,7 @@
 (setq solarized-scale-org-headlines nil
       solarized-use-variable-pitch nil)
 (setq-default line-spacing 0)
-(load-theme 'solarized-light t)
+(load-theme 'solarized-dark t)
 
 ;;------------------------------------------------------------------------------
 ;; Good behavior
@@ -122,7 +123,7 @@
 ;;------------------------------------------------------------------------------
 ;; Global keybindings
 (global-set-key (kbd "C-x a r") 'align-regexp)
-(global-set-key (kbd "C-c %") 'replace-regexp)
+;; (global-set-key (kbd "C-c %") 'replace-regexp)
 (global-set-key (kbd "C-x <left>") 'windmove-left)
 (global-set-key (kbd "C-x <right>") 'windmove-right)
 (global-set-key (kbd "C-x <up>") 'windmove-up)
@@ -138,48 +139,55 @@
 ;; Ace jump mode
 (define-key global-map (kbd "C-c C-SPC") 'ace-jump-mode)
 
+
+;;------------------------------------------------------------------------------
+;; Spelling
+(when (executable-find "hunspell")
+  (setq-default ispell-program-name "hunspell")
+  (setq ispell-reall-hunspell t))
+(eval-after-load "flyspell"
+  '(progn
+     (define-key flyspell-mouse-map [down-mouse-3] #'flyspell-correct-word)
+     (define-key flyspell-mouse-map [mouse-3] #'undefined)))
+
+(add-hook 'prog-mode-hook 'flyspell-prog-mode)
+(add-hook 'org-mode-hook 'flyspell-mode)
+(setq-default ispell-program-name "aspell")
+;; (setq ispell-extra-args '("--sug-mode=fast"))
+
+
 ;;------------------------------------------------------------------------------
 ;; Auctex / LaTeX
+(add-to-list 'auto-mode-alist '("\\.tex\\'" . LaTeX-mode))
 (setq TeX-PDF-mode t
       TeX-auto-save t
       TeX-parse-self t
-      LaTeX-command-style '(("" "%(PDF)%(latex) -file-line-error %S%(PDFout)"))
+      ;; LaTeX-command-style '(("" "%(PDF)%(latex) -file-line-error %S%(PDFout)"))
       reftex-plug-into-AUCTeX t)
-
-(add-to-list 'auto-mode-alist '("\\.tex\\'" . LaTeX-mode))
-
-;; (when (eq system-type 'darwin)
-;;   (setq TeX-view-program-list
-;;         '(("PDF Viewer" "open %o")
-;;           ("DVI Viewer" "open %o")
-;;           ("HTML Viewer" "open %o"))
-;;         TeX-view-program-selection
-;;         '((output-pdf "PDF Viewer")
-;;           (output-dvi "DVI Viewer")
-;;           (output-html "HTML Viewer"))))
-
 (customize-set-variable 'LaTeX-verbatim-environments
                         '("verbatim" "verbatim*" "program" "programc" "prog"
                           "BVerbatim"))
 
-(add-hook 'LaTeX-mode-hook
-          (lambda () (push '("latexmk" "latexmk -pdf %s" TeX-run-TeX nil t
-                             :help "Run latexmk on file")
-                           TeX-command-list)))
-(add-hook 'TeX-mode-hook '(lambda () (setq TeX-command-default "latexmk")))
+;; Use Skim.  Fix for other OS.
+;; (setq TeX-view-program-selection '((output-pdf "PDF Viewer")))
+;; (setq TeX-view-program-list
+;;       '(("PDF Viewer"
+;;          "/Applications/Skim.app/Contents/SharedSupport/displayline -g %n %o %b"
+;;          )))
 
-(setq TeX-view-program-selection '((output-pdf "PDF Viewer")))
-(setq TeX-view-program-list
-      '(("PDF Viewer"
-         "/Applications/Skim.app/Contents/SharedSupport/displayline -b -g %n %o %b")))
-
+;; Spell checking
 (add-hook 'LaTeX-mode-hook 'flyspell-mode)
+
+;; Synctex
+(setq TeX-source-correlate-start-server nil)
+(setq TeX-source-correlate-method 'synctex)
+(add-hook 'LaTeX-mode-hook 'TeX-source-correlate-mode)
+
 (add-hook 'LaTeX-mode-hook (lambda ()
                              (turn-on-auto-fill)
                              (LaTeX-math-mode)
                              (turn-on-reftex)
                              (outline-minor-mode)))
-
 
 
 (defun kjs-bibtex-next-entry ()
@@ -202,18 +210,16 @@ sensible in bibtex files."
 
 (add-hook 'bibtex-mode-hook 'kjs-bibtex-bind-forward-back-keys)
 
-;;------------------------------------------------------------------------------
-;; Spelling
-(add-hook 'prog-mode-hook 'flyspell-prog-mode)
-(add-hook 'org-mode-hook 'flyspell-mode)
-(setq-default ispell-program-name "aspell")
-;; (setq ispell-extra-args '("--sug-mode=fast"))
 
 ;;------------------------------------------------------------------------------
 ;; Org
+(set-register ?o (cons 'file "~/todo.org"))
 (setq org-todo-keywords
-      '((sequence "TODO" "FEEDBACK" "HOLD" "REVIEW" "|" "DONE")))
-(setq org-pretty-entities 1)
+      '((sequence "TODO" "FEEDBACK" "HOLD" "REVIEW" "|" "DONE"))
+      org-refile-targets '((org-agenda-files . (:maxlevel . 6)))
+      org-pretty-entities 1
+      org-agenda-files (list "~/notes/todo.org"))
+(define-key global-map "\C-ca" 'org-agenda)
 
 ;;------------------------------------------------------------------------------
 ;; Projectile
@@ -296,12 +302,18 @@ is no active region."
 
 ;;------------------------------------------------------------------------------
 ;; Haskell
+
+;; Haskell Mode dev
+;; (add-to-list 'load-path "~/src/haskell-mode/")
+;; (require 'haskell-mode-autoloads)
+
 (add-hook 'haskell-mode-hook 'kjs-haskell-hook)
 (add-hook 'haskell-mode-hook 'interactive-haskell-mode)
 (defun kjs-haskell-hook ()
   (setq haskell-interactive-mode-hide-multi-line-errors nil
         haskell-tags-on-save t
-        haskell-process-type 'auto)
+        haskell-process-type 'auto
+        haskell-indentation-show-indentations nil)
   (turn-on-haskell-indentation)
   (turn-on-haskell-decl-scan)
   (define-key haskell-mode-map (kbd "C-c C-l") 'haskell-process-load-or-reload)
@@ -325,21 +337,21 @@ is no active region."
 
 ;;------------------------------------------------------------------------------
 ;; Idris
-(add-hook 'idris-mode-hook
-          '(lambda ()
-             (idris-define-loading-keys)
-             (idris-define-docs-keys)
-             (idris-define-editing-keys)
-             (idris-define-general-keys)
-             (turn-on-idris-simple-indent)
-             (set-face-attribute 'idris-semantic-data-face nil
-                                 :foreground nil
-                                 :inherit 'font-lock-string-face)
-             (set-face-attribute 'idris-semantic-type-face nil
-                                 :foreground nil
-                                 :inherit 'font-lock-string-face)
-             (set-face-attribute 'idris-loaded-region-face nil
-                                 :background nil)))
+;; (add-hook 'idris-mode-hook
+;;           '(lambda ()
+;;              (idris-define-loading-keys)
+;;              (idris-define-docs-keys)
+;;              (idris-define-editing-keys)
+;;              (idris-define-general-keys)
+;;              (turn-on-idris-simple-indent)
+             ;; (set-face-attribute 'idris-semantic-data-face nil
+             ;;                     :foreground nil
+             ;;                     :inherit 'font-lock-string-face)
+             ;; (set-face-attribute 'idris-semantic-type-face nil
+             ;;                     :foreground nil
+             ;;                     :inherit 'font-lock-string-face)
+             ;; (set-face-attribute 'idris-loaded-region-face nil
+             ;;                     :background nil)))
 
 ;;------------------------------------------------------------------------------
 ;; Paredit
@@ -361,9 +373,13 @@ is no active region."
 
 ;;------------------------------------------------------------------------------
 ;; Magit
+(setq magit-last-seen-setup-instructions "1.4.0")
 (global-set-key (kbd "C-x g") 'magit-status)
 (when (eq system-type 'darwin)
-  (setq magit-emacsclient-executable "/usr/local/bin/emacsclient"))
+  (setq magit-emacsclient-executable
+        "/usr/local/Cellar/emacs-mac/emacs-24.5-z-mac-5.7/bin/emacsclient"))
+
+
 
 ;;------------------------------------------------------------------------------
 ;; Markdown
@@ -389,9 +405,9 @@ is no active region."
 
 ;;------------------------------------------------------------------------------
 ;; Whitespace and long lines
-(setq whitespace-style '(face lines))
-(setq whitespace-line-column 80)
-(add-hook 'prog-mode-hook 'whitespace-mode)
+;; (setq whitespace-style '(face lines))
+;; (setq whitespace-line-column 80)
+;; (add-hook 'prog-mode-hook 'whitespace-mode)
 
 ;;------------------------------------------------------------------------------
 ;; Web mode
@@ -463,6 +479,9 @@ is no active region."
 (setq auto-mode-alist (cons '("\\.v$" . coq-mode) auto-mode-alist))
 (autoload 'coq-mode "coq" "Major mode for editing Coq vernacular." t)
 
+(setq proof-splash-enable nil
+      proof-electric-terminator-enable)
+
 ;;------------------------------------------------------------------------------
 ;; Eww
 (global-set-key (kbd "C-c b") 'eww)
@@ -493,6 +512,11 @@ is no active region."
 ;;------------------------------------------------------------------------------
 ;; Transpose Frame
 (require 'transpose-frame)
+
+;;------------------------------------------------------------------------------
+;; Modified version of Brent's indent trickeration
+;; (require 'vim-indent-mode)
+;; (global-vim-indent-mode 1)
 
 ;;------------------------------------------------------------------------------
 ;; Misc things that should probably be in a different file
@@ -546,6 +570,7 @@ is no active region."
 (load-library "wrap")
 (load-library "buildscript")
 (load-library "tagutils")
+
 
 ;;------------------------------------------------------------------------------
 (message "%s" "You shouldn't have come back, Karl")
