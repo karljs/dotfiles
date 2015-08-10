@@ -51,8 +51,9 @@ set autoread
 
 "-------------------------------------------------------------------------------
 " Airline
+" let g:airline_theme = 'monochrome'
 let g:airline_theme = 'base16'
-" let g:airline_powerline_fonts = 1
+let g:airline_powerline_fonts = 1
 
 "-------------------------------------------------------------------------------
 " Haskell
@@ -95,8 +96,8 @@ syntax on
 "let g:solarized_italic=0
 "let g:solarized_bold=0
 "let g:solarized_termcolors=16
-colorscheme base16-solarized
-set background=light
+colorscheme base16-monokai
+set background=dark
 
 "-------------------------------------------------------------------------------
 " Aesthetics
@@ -117,3 +118,5 @@ nnoremap <silent> [a :previous<CR>
 nnoremap <silent> ]a :next<CR>
 nmap <leader>v :setlocal paste! paste?<cr>
 
+"-------------------------------------------------------------------------------
+" Haskell

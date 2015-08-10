@@ -156,12 +156,11 @@
 
 
 ;;------------------------------------------------------------------------------
-;; Auctex / LaTeX
+;; Auctex / LaTeX / latexmk
 (add-to-list 'auto-mode-alist '("\\.tex\\'" . LaTeX-mode))
 (setq TeX-PDF-mode t
       TeX-auto-save t
       TeX-parse-self t
-      ;; LaTeX-command-style '(("" "%(PDF)%(latex) -file-line-error %S%(PDFout)"))
       reftex-plug-into-AUCTeX t)
 (customize-set-variable 'LaTeX-verbatim-environments
                         '("verbatim" "verbatim*" "program" "programc" "prog"
@@ -178,9 +177,9 @@
 (add-hook 'LaTeX-mode-hook 'flyspell-mode)
 
 ;; Synctex
-(setq TeX-source-correlate-start-server nil)
-(setq TeX-source-correlate-method 'synctex)
-(add-hook 'LaTeX-mode-hook 'TeX-source-correlate-mode)
+;; (setq TeX-source-correlate-start-server nil)
+;; (setq TeX-source-correlate-method 'synctex)
+;; (add-hook 'LaTeX-mode-hook 'TeX-source-correlate-mode)
 
 (add-hook 'LaTeX-mode-hook (lambda ()
                              (turn-on-auto-fill)
@@ -188,6 +187,7 @@
                              (turn-on-reftex)
                              (outline-minor-mode)))
 
+(auctex-latexmk-setup)
 
 (defun kjs-bibtex-next-entry ()
   (interactive)
@@ -332,7 +332,9 @@ is no active region."
              (customize-set-variable
               'agda2-highlight-face-groups 'default-faces)
              (customize-set-variable
-              'agda2-include-dirs '("." "/Users/karl/src/agda-stdlib/src"))))
+              ; 'agda2-include-dirs '("." "/Users/karl/src/agda-stdlib/src"
+              'agda-include-dirs
+              '("." "/usr/local/Cellar/agda/2.4.2.3_1/agda-stdlib/src"))))
 
 ;;------------------------------------------------------------------------------
 ;; Idris
