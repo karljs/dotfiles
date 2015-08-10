@@ -81,7 +81,7 @@
 ;; Fonts, colors, aesthetics
 (defun kjs-size-font ()
   (interactive)
-  (concat "PragmataPro Mono" "-"
+  (concat "PragmataPro" "-"
           (when window-system
             (if (> (x-display-pixel-width) 2000)
                 "16"
@@ -153,7 +153,6 @@
 (add-hook 'prog-mode-hook 'flyspell-prog-mode)
 (add-hook 'org-mode-hook 'flyspell-mode)
 (setq-default ispell-program-name "aspell")
-;; (setq ispell-extra-args '("--sug-mode=fast"))
 
 
 ;;------------------------------------------------------------------------------
@@ -373,13 +372,7 @@ is no active region."
 
 ;;------------------------------------------------------------------------------
 ;; Magit
-(setq magit-last-seen-setup-instructions "1.4.0")
 (global-set-key (kbd "C-x g") 'magit-status)
-(when (eq system-type 'darwin)
-  (setq magit-emacsclient-executable
-        "/usr/local/Cellar/emacs-mac/emacs-24.5-z-mac-5.7/bin/emacsclient"))
-
-
 
 ;;------------------------------------------------------------------------------
 ;; Markdown
