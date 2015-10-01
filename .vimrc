@@ -97,7 +97,7 @@ syntax on
 "let g:solarized_bold=0
 "let g:solarized_termcolors=16
 colorscheme base16-monokai
-set background=dark
+set background=light
 
 "-------------------------------------------------------------------------------
 " Aesthetics

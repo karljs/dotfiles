@@ -5,10 +5,6 @@ if [ -f /usr/local/etc/bash_completion ]; then
 fi
 
 #-------------------------------------------------------------------------------
-# Github, why do you hate me so?
-export HOMEBREW_GITHUB_API_TOKEN=3e6bb5aa1cc7e5275231c5a4eea480ee530cc1cc
-
-#-------------------------------------------------------------------------------
 # Local things
 export PATH=$HOME/bin:$PATH
 
