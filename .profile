@@ -24,7 +24,8 @@ export PATH=$HOME/bin:$PATH
 
 #-------------------------------------------------------------------------------
 # Tweak a few variables
-export EDITOR="vim"
+export EDITOR="nvim"
+export VISUAL="nvim"
 export PAGER="vimpager"
 export CLICOLOR=1
 export HISTIGNORE="&;ls;[bf]g:exit"
@@ -50,6 +51,8 @@ mkcd () {
     mkdir -p "$*"
     cd "$*"
 }
+
+alias vim=nvim
 
 #-------------------------------------------------------------------------------
 # Party time

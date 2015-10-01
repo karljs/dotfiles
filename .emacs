@@ -17,6 +17,7 @@
 (defvar my-packages '(ace-jump-mode
                       ag
                       auctex
+                      auctex-latexmk
                       change-inner
                       exec-path-from-shell
                       expand-region
@@ -94,7 +95,7 @@
 (setq solarized-scale-org-headlines nil
       solarized-use-variable-pitch nil)
 (setq-default line-spacing 0)
-(load-theme 'solarized-dark t)
+(load-theme 'solarized-light t)
 
 ;;------------------------------------------------------------------------------
 ;; Good behavior
@@ -161,7 +162,10 @@
 (setq TeX-PDF-mode t
       TeX-auto-save t
       TeX-parse-self t
-      reftex-plug-into-AUCTeX t)
+      reftex-plug-into-AUCTeX t
+      LaTeX-indent-level 0
+      LaTeX-item-indent 0
+      TeX-brace-indent-level 0)
 (customize-set-variable 'LaTeX-verbatim-environments
                         '("verbatim" "verbatim*" "program" "programc" "prog"
                           "BVerbatim"))
@@ -186,7 +190,6 @@
                              (LaTeX-math-mode)
                              (turn-on-reftex)
                              (outline-minor-mode)))
-
 (auctex-latexmk-setup)
 
 (defun kjs-bibtex-next-entry ()
@@ -332,9 +335,7 @@ is no active region."
              (customize-set-variable
               'agda2-highlight-face-groups 'default-faces)
              (customize-set-variable
-              ; 'agda2-include-dirs '("." "/Users/karl/src/agda-stdlib/src"
-              'agda-include-dirs
-              '("." "/usr/local/Cellar/agda/2.4.2.3_1/agda-stdlib/src"))))
+              'agda2-include-dirs '("." "/Users/karl/src/agda-stdlib/src"))))
 
 ;;------------------------------------------------------------------------------
 ;; Idris
@@ -569,3 +570,15 @@ is no active region."
 
 ;;------------------------------------------------------------------------------
 (message "%s" "You shouldn't have come back, Karl")
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(idris-semantic-source-highlighting nil))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
