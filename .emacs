@@ -19,6 +19,9 @@
                       auctex
                       auctex-latexmk
                       change-inner
+                      company
+                      company-coq
+                      ;; company-ghc
                       exec-path-from-shell
                       expand-region
                       fastnav
@@ -41,6 +44,7 @@
                       ucs-utils
                       unicode-fonts
                       web-mode
+                      yasnippet
                       zenburn-theme)
   "Packages to install at launch, when necessary.")
 
@@ -71,12 +75,14 @@
 (if (or (not (display-graphic-p)) (not (eq system-type 'darwin)))
     (menu-bar-mode -1))
 (setq inhibit-startup-message t
-      inhibit-startup-echo-area-message "")
+      inhibit-startup-echo-area-message ""
+      frame-title-format "%b")
 (tool-bar-mode -1)
 (scroll-bar-mode -1)
 (transient-mark-mode -1)
 (column-number-mode 1)
 ;; (set-fringe-mode 0)
+
 
 ;;------------------------------------------------------------------------------
 ;; Fonts, colors, aesthetics
@@ -151,7 +157,7 @@
      (define-key flyspell-mouse-map [down-mouse-3] #'flyspell-correct-word)
      (define-key flyspell-mouse-map [mouse-3] #'undefined)))
 
-(add-hook 'prog-mode-hook 'flyspell-prog-mode)
+;; (add-hook 'prog-mode-hook 'flyspell-prog-mode)
 (add-hook 'org-mode-hook 'flyspell-mode)
 (setq-default ispell-program-name "aspell")
 
@@ -310,13 +316,12 @@ is no active region."
 ;; (require 'haskell-mode-autoloads)
 
 (add-hook 'haskell-mode-hook 'kjs-haskell-hook)
-(add-hook 'haskell-mode-hook 'interactive-haskell-mode)
+;; (add-hook 'haskell-mode-hook 'interactive-haskell-mode)
 (defun kjs-haskell-hook ()
   (setq haskell-interactive-mode-hide-multi-line-errors nil
         haskell-tags-on-save t
-        haskell-process-type 'auto
-        haskell-indentation-show-indentations nil)
-  (turn-on-haskell-indentation)
+        haskell-process-type 'auto)
+  ;; (turn-on-haskell-indentation)
   (turn-on-haskell-decl-scan)
   (define-key haskell-mode-map (kbd "C-c C-l") 'haskell-process-load-or-reload)
   (define-key haskell-mode-map (kbd "C-c C-r") 'haskell-process-reload-file)
@@ -429,17 +434,17 @@ is no active region."
 (add-hook 'term-mode-hook
           (lambda () (setq term-buffer-maximum-size 10000)))
 
-(setq explicit-shell-file-name "/usr/local/bin/bash")
+;; (setq explicit-shell-file-name "/usr/local/bin/bash")
 
-(defun visit-term-buffer ()
-  "Create or visit a terminal buffer."
-  (interactive)
-  (if (not (get-buffer "*ansi-term*"))
-      (progn
-     (split-window-sensibly (selected-window))
-     (other-window 1)
-     (ansi-term "/usr/local/bin/bash"))
-    (switch-to-buffer-other-window "*ansi-term*")))
+;; (defun visit-term-buffer ()
+;;   "Create or visit a terminal buffer."
+;;   (interactive)
+;;   (if (not (get-buffer "*ansi-term*"))
+;;       (progn
+;;      (split-window-sensibly (selected-window))
+;;      (other-window 1)
+;;      (ansi-term))
+;;     (switch-to-buffer-other-window "*ansi-term*")))
 
 (defalias 'ff 'find-file)
 (defalias 'ffo 'find-file-other-window)
@@ -451,7 +456,7 @@ is no active region."
   (lambda ()
     (cd "/ssh:smeltzek@nome.eecs.oregonstate.edu:~/")))
 
-(global-set-key (kbd "C-c t") 'visit-term-buffer)
+(global-set-key (kbd "C-c t") 'eshell)
 
 ;;------------------------------------------------------------------------------
 ;; GLSL
@@ -470,11 +475,11 @@ is no active region."
 
 ;;------------------------------------------------------------------------------
 ;; Proof General & Coq
-(load-file "/Users/karl/src/ProofGeneral/generic/proof-site.el")
+(load-file "/Users/karl/src/ProofGeneral/generic/proof-site.elc")
 (add-to-list 'load-path "/usr/local/opt/coq/lib/emacs/site-lisp")
 (setq auto-mode-alist (cons '("\\.v$" . coq-mode) auto-mode-alist))
 (autoload 'coq-mode "coq" "Major mode for editing Coq vernacular." t)
-
+(add-hook 'coq-mode-hook #'company-coq-initialize)
 (setq proof-splash-enable nil
       proof-electric-terminator-enable)
 
@@ -496,6 +501,11 @@ is no active region."
   (setq prolog-indent-width 4)
   (define-key prolog-mode-map (kbd "C-c C-l") 'prolog-compile-file))
 (add-to-list 'auto-mode-alist '("\\.pl\\'" . prolog-mode))
+
+;;------------------------------------------------------------------------------
+;; Company
+(add-hook 'after-init-hook 'global-company-mode)
+;; (add-to-list 'company-backends 'company-ghc)
 
 ;;------------------------------------------------------------------------------
 ;; Dash
@@ -575,6 +585,7 @@ is no active region."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(idris-interpreter-flags (quote ("--total")))
  '(idris-semantic-source-highlighting nil))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
