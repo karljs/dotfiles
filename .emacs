@@ -10,7 +10,7 @@
 (setq package-enable-at-startup nil)
 
 (add-to-list 'package-archives
-             '("melpa" . "http://melpa.org/packages/") t)
+             '("melpa" . "https://melpa.org/packages/"))
 
 ;;------------------------------------------------------------------------------
 ;; Install packages as necessary on startup. Credit largely to Emacs Prelude.
@@ -19,19 +19,17 @@
                       auctex
                       auctex-latexmk
                       change-inner
-                      company
-                      company-coq
-                      ;; company-ghc
+                      elm-mode
                       exec-path-from-shell
                       expand-region
                       fastnav
-                      glsl-mode
+                      flx-ido
                       gnugo
+		      gruvbox-theme
                       haskell-mode
                       idris-mode
                       ido-vertical-mode
-                      latex-preview-pane
-                      lua-mode
+                      ;; latex-preview-pane
                       magit
                       markdown-mode
                       monokai-theme
@@ -40,11 +38,9 @@
                       rainbow-delimiters
                       smex
                       solarized-theme
+                      spaceline
                       transpose-frame
-                      ucs-utils
-                      unicode-fonts
                       web-mode
-                      yasnippet
                       zenburn-theme)
   "Packages to install at launch, when necessary.")
 
@@ -88,20 +84,28 @@
 ;; Fonts, colors, aesthetics
 (defun kjs-size-font ()
   (interactive)
-  (concat "PragmataPro" "-"
+  (concat "PragmataPro Mono" "-"
           (when window-system
             (if (> (x-display-pixel-width) 2000)
                 "16"
               "14"))))
 
 (let ((font-name (kjs-size-font)))
-  (add-to-list 'default-frame-alist (cons 'font font-name))
-  (set-face-attribute 'default t :font font-name))
+  ;; (add-to-list 'default-frame-alist (cons 'font font-name))
+  (set-face-attribute 'default nil :font font-name))
 
-(setq solarized-scale-org-headlines nil
-      solarized-use-variable-pitch nil)
+;; (setq solarized-scale-org-headlines nil
+;;       solarized-use-variable-pitch nil)
 (setq-default line-spacing 0)
-(load-theme 'solarized-light t)
+(load-theme 'monokai t)
+
+;; Spaceline in particular
+(require 'spaceline-config)
+(setq powerline-default-separator 'nil
+      ;; powerline-height 1.1
+      )
+(spaceline-emacs-theme)
+
 
 ;;------------------------------------------------------------------------------
 ;; Good behavior
@@ -129,6 +133,9 @@
 
 ;;------------------------------------------------------------------------------
 ;; Global keybindings
+
+;; (evil-mode 1)
+
 (global-set-key (kbd "C-x a r") 'align-regexp)
 ;; (global-set-key (kbd "C-c %") 'replace-regexp)
 (global-set-key (kbd "C-x <left>") 'windmove-left)
@@ -196,7 +203,7 @@
                              (LaTeX-math-mode)
                              (turn-on-reftex)
                              (outline-minor-mode)))
-(auctex-latexmk-setup)
+; (auctex-latexmk-setup)
 
 (defun kjs-bibtex-next-entry ()
   (interactive)
@@ -231,15 +238,17 @@ sensible in bibtex files."
 
 ;;------------------------------------------------------------------------------
 ;; Projectile
-(projectile-global-mode)
+;; (projectile-global-mode)
 
 ;;------------------------------------------------------------------------------
 ;; Ido + Smex
 (ido-mode 1)
 (ido-everywhere 1)
 (ido-vertical-mode 1)
+(flx-ido-mode 1)
 (setq ido-create-new-buffer 'always
-      ido-enable-flex-matching t)
+      ido-enable-flex-matching t
+      ido-use-faces nil)
 (smex-initialize)
 (global-set-key (kbd "M-x") 'smex)
 (global-set-key (kbd "M-X") 'smex-major-mode-commands)
@@ -316,15 +325,13 @@ is no active region."
 ;; (require 'haskell-mode-autoloads)
 
 (add-hook 'haskell-mode-hook 'kjs-haskell-hook)
-;; (add-hook 'haskell-mode-hook 'interactive-haskell-mode)
 (defun kjs-haskell-hook ()
   (setq haskell-interactive-mode-hide-multi-line-errors nil
         haskell-tags-on-save t
         haskell-process-type 'auto)
-  ;; (turn-on-haskell-indentation)
-  (turn-on-haskell-decl-scan)
-  (define-key haskell-mode-map (kbd "C-c C-l") 'haskell-process-load-or-reload)
-  (define-key haskell-mode-map (kbd "C-c C-r") 'haskell-process-reload-file)
+  (haskell-decl-scan-mode)
+  (define-key haskell-mode-map (kbd "C-c C-l") 'haskell-process-load-file)
+  (define-key haskell-mode-map (kbd "C-c C-r") 'haskell-process-reload)
   (define-key haskell-mode-map (kbd "C-c C-z") 'haskell-interactive-switch)
   (define-key haskell-mode-map (kbd "C-c C-t") 'haskell-process-do-type)
   (define-key haskell-mode-map (kbd "C-c C-i") 'haskell-process-do-info)
@@ -333,32 +340,33 @@ is no active region."
 
 ;;------------------------------------------------------------------------------
 ;; Agda
+(modify-syntax-entry ?⟪ "w")  ;; Emacs level up
+(modify-syntax-entry ?⟫ "w")  ;; Customize the default syntax table
+
 (load-file (let ((coding-system-for-read 'utf-8))
              (shell-command-to-string "agda-mode locate")))
+             ;; (shell-command-to-string "/Users/karl/bin/agda-mode locate")))
 (add-hook 'agda2-mode-hook
           '(lambda ()
              (customize-set-variable
               'agda2-highlight-face-groups 'default-faces)
-             (customize-set-variable
-              'agda2-include-dirs '("." "/Users/karl/src/agda-stdlib/src"))))
+             ;; (setq agda2-program-args "-i" "/Users/karl/src/agda-stdlib/src")
+             ))
 
 ;;------------------------------------------------------------------------------
 ;; Idris
-;; (add-hook 'idris-mode-hook
-;;           '(lambda ()
-;;              (idris-define-loading-keys)
-;;              (idris-define-docs-keys)
-;;              (idris-define-editing-keys)
-;;              (idris-define-general-keys)
-;;              (turn-on-idris-simple-indent)
-             ;; (set-face-attribute 'idris-semantic-data-face nil
-             ;;                     :foreground nil
-             ;;                     :inherit 'font-lock-string-face)
-             ;; (set-face-attribute 'idris-semantic-type-face nil
-             ;;                     :foreground nil
-             ;;                     :inherit 'font-lock-string-face)
-             ;; (set-face-attribute 'idris-loaded-region-face nil
-             ;;                     :background nil)))
+(setq idris-interpreter-flags '("-p" "contrib"))
+(add-hook 'idris-mode-hook
+          '(lambda ()
+             ;; (setq idris-semantic-source-highlighting t)
+             (set-face-attribute 'idris-semantic-data-face nil
+                                 :foreground nil
+                                 :inherit 'font-lock-string-face)
+             (set-face-attribute 'idris-semantic-type-face nil
+                                 :foreground nil
+                                 :inherit 'font-lock-string-face)
+             (set-face-attribute 'idris-loaded-region-face nil
+                                 :background nil)))
 
 ;;------------------------------------------------------------------------------
 ;; Paredit
@@ -393,7 +401,6 @@ is no active region."
 
 ;;------------------------------------------------------------------------------
 ;; Change Inner
-(require 'change-inner)
 (global-set-key (kbd "M-i") 'change-inner)
 (global-set-key (kbd "M-o") 'change-outer)
 
@@ -412,7 +419,6 @@ is no active region."
 
 ;;------------------------------------------------------------------------------
 ;; Web mode
-;; (require 'web-mode)
 (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
 
 ;; This is a true hack, and should be fixed
@@ -460,11 +466,11 @@ is no active region."
 
 ;;------------------------------------------------------------------------------
 ;; GLSL
-(autoload 'glsl-mode "glsl-mode" nil t)
-(add-to-list 'auto-mode-alist '("\\.vert\\'" . glsl-mode))
-(add-to-list 'auto-mode-alist '("\\.frag\\'" . glsl-mode))
-(add-to-list 'auto-mode-alist '("\\.glvs\\'" . glsl-mode))
-(add-to-list 'auto-mode-alist '("\\.glfs\\'" . glsl-mode))
+;; (autoload 'glsl-mode "glsl-mode" nil t)
+;; (add-to-list 'auto-mode-alist '("\\.vert\\'" . glsl-mode))
+;; (add-to-list 'auto-mode-alist '("\\.frag\\'" . glsl-mode))
+;; (add-to-list 'auto-mode-alist '("\\.glvs\\'" . glsl-mode))
+;; (add-to-list 'auto-mode-alist '("\\.glfs\\'" . glsl-mode))
 
 ;;------------------------------------------------------------------------------
 ;; Tramp
@@ -479,7 +485,7 @@ is no active region."
 (add-to-list 'load-path "/usr/local/opt/coq/lib/emacs/site-lisp")
 (setq auto-mode-alist (cons '("\\.v$" . coq-mode) auto-mode-alist))
 (autoload 'coq-mode "coq" "Major mode for editing Coq vernacular." t)
-(add-hook 'coq-mode-hook #'company-coq-initialize)
+;; (add-hook 'coq-mode-hook #'company-coq-initialize)
 (setq proof-splash-enable nil
       proof-electric-terminator-enable)
 
@@ -504,7 +510,7 @@ is no active region."
 
 ;;------------------------------------------------------------------------------
 ;; Company
-(add-hook 'after-init-hook 'global-company-mode)
+;; (add-hook 'after-init-hook 'global-company-mode)
 ;; (add-to-list 'company-backends 'company-ghc)
 
 ;;------------------------------------------------------------------------------
@@ -517,7 +523,7 @@ is no active region."
 
 ;;------------------------------------------------------------------------------
 ;; Transpose Frame
-(require 'transpose-frame)
+;; (require 'transpose-frame)
 
 ;;------------------------------------------------------------------------------
 ;; Modified version of Brent's indent trickeration
@@ -580,16 +586,3 @@ is no active region."
 
 ;;------------------------------------------------------------------------------
 (message "%s" "You shouldn't have come back, Karl")
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(idris-interpreter-flags (quote ("--total")))
- '(idris-semantic-source-highlighting nil))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )
