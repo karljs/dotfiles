@@ -57,13 +57,21 @@
   (interactive)
   arg)
 
+(defun kjs-packages-installed-p ()
+  "Loop through selected packages and determine if any are missing."
+  (loop for p in package-selected-packages
+        when (not (package-installed-p p)) do (return nil)
+        finally (return t)))
+
+;; Consider switching to using 'advice' system
 (defun kjs-verify-packages ()
   "Ensure all packages are installed."
-  (require 'noflet)
-  (progn (package-refresh-contents)
-         (noflet
-          ((y-or-n-p (prompt) t))
-           (package-install-selected-packages))))
+  (unless (kjs-packages-installed-p)
+    (require 'noflet)
+    (package-refresh-contents)
+    (noflet
+      ((y-or-n-p (prompt) t))
+      (package-install-selected-packages))))
 
 (kjs-verify-packages)
 
