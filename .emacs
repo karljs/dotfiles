@@ -3,6 +3,9 @@
 ;;  |  __/ | | | | | (_| | (__\__ \
 ;; (_)___|_| |_| |_|\__,_|\___|___/
 
+;; NOTE!!
+;; Requires Emacs 25 pre-release or newer.
+
 ;;------------------------------------------------------------------------------
 ;; Package manager load and setup
 (require 'cl)
@@ -11,57 +14,62 @@
 
 (add-to-list 'package-archives
              '("melpa" . "https://melpa.org/packages/"))
+;; (add-to-list 'package-archives
+;;              '("marmalade" . "https://marmalade-repo.org/packages/"))
+
+
 
 ;;------------------------------------------------------------------------------
 ;; Install packages as necessary on startup. Credit largely to Emacs Prelude.
-(defvar my-packages '(ace-jump-mode
-                      ag
-                      auctex
-                      auctex-latexmk
-                      change-inner
-                      elm-mode
-                      exec-path-from-shell
-                      expand-region
-                      fastnav
-                      flx-ido
-                      gnugo
-		      gruvbox-theme
-                      haskell-mode
-                      idris-mode
-                      ido-vertical-mode
-                      ;; latex-preview-pane
-                      magit
-                      markdown-mode
-                      monokai-theme
-                      paredit
-                      projectile
-                      rainbow-delimiters
-                      smex
-                      solarized-theme
-                      spaceline
-                      transpose-frame
-                      web-mode
-                      zenburn-theme)
-  "Packages to install at launch, when necessary.")
+(customize-set-variable 'package-selected-packages '(ace-jump-mode
+						     ag
+						     auctex
+						     auctex-latexmk
+						     change-inner
+						     elm-mode
+						     exec-path-from-shell
+						     expand-region
+						     fastnav
+						     flx-ido
+						     gnugo
+						     gruvbox-theme
+						     haskell-mode
+						     idris-mode
+						     ido-vertical-mode
+						     ;; intero
+						     ;; latex-preview-pane
+						     magit
+						     markdown-mode
+						     monokai-theme
+                                                     noflet
+						     paredit
+						     projectile
+						     rainbow-delimiters
+						     smex
+						     solarized-theme
+						     spaceline
+						     transpose-frame
+						     web-mode
+						     zenburn-theme))
 
-(defun my-packages-installed-p ()
-  "Loop through my preferred packages and determine which are installed."
-  (loop for p in my-packages
-        when (not (package-installed-p p)) do (return nil)
-        finally (return t)))
+(defun kjs-const (arg)
+  "Const function for miscellaneous hackery"
+  (interactive)
+  arg)
 
-(defun my-install-packages ()
-  "Install any missing packages."
-  (unless (my-packages-installed-p)
-    (package-refresh-contents)
-    (dolist (p my-packages)
-      (unless (package-installed-p p)
-        (package-install p)))))
+(defun kjs-verify-packages ()
+  "Ensure all packages are installed."
+  (require 'noflet)
+  (progn (package-refresh-contents)
+         (noflet
+          ((y-or-n-p (prompt) t))
+           (package-install-selected-packages))))
 
-(my-install-packages)
+(kjs-verify-packages)
+
 
 ;;------------------------------------------------------------------------------
-;; Fix broken $PATH on OS X with GUI
+;; fix broken $PATH on OS X with GUI
 (when (eq system-type 'darwin)
   (exec-path-from-shell-initialize)
   (setq default-directory "/Users/karl/"))
@@ -84,7 +92,7 @@
 ;; Fonts, colors, aesthetics
 (defun kjs-size-font ()
   (interactive)
-  (concat "PragmataPro Mono" "-"
+  (concat "PragmataPro" "-"
           (when window-system
             (if (> (x-display-pixel-width) 2000)
                 "16"
@@ -97,7 +105,7 @@
 ;; (setq solarized-scale-org-headlines nil
 ;;       solarized-use-variable-pitch nil)
 (setq-default line-spacing 0)
-(load-theme 'monokai t)
+(load-theme 'solarized-light t)
 
 ;; Spaceline in particular
 (require 'spaceline-config)
@@ -324,7 +332,6 @@ is no active region."
 ;; (add-to-list 'load-path "~/src/haskell-mode/")
 ;; (require 'haskell-mode-autoloads)
 
-(add-hook 'haskell-mode-hook 'kjs-haskell-hook)
 (defun kjs-haskell-hook ()
   (setq haskell-interactive-mode-hide-multi-line-errors nil
         haskell-tags-on-save t
@@ -337,6 +344,10 @@ is no active region."
   (define-key haskell-mode-map (kbd "C-c C-i") 'haskell-process-do-info)
   (define-key haskell-mode-map (kbd "M-.") 'haskell-mode-tag-find)
   (define-key haskell-mode-map (kbd "C-c C-h") 'haskell-check))
+
+(add-hook 'haskell-mode-hook 'kjs-haskell-hook)
+
+;; (add-hook 'haskell-mode-hook 'intero-mode)
 
 ;;------------------------------------------------------------------------------
 ;; Agda
@@ -367,6 +378,7 @@ is no active region."
                                  :inherit 'font-lock-string-face)
              (set-face-attribute 'idris-loaded-region-face nil
                                  :background nil)))
+
 
 ;;------------------------------------------------------------------------------
 ;; Paredit
@@ -486,8 +498,8 @@ is no active region."
 (setq auto-mode-alist (cons '("\\.v$" . coq-mode) auto-mode-alist))
 (autoload 'coq-mode "coq" "Major mode for editing Coq vernacular." t)
 ;; (add-hook 'coq-mode-hook #'company-coq-initialize)
-(setq proof-splash-enable nil
-      proof-electric-terminator-enable)
+;; (setq proof-splash-enable nil
+;;       proof-electric-terminator-enable)
 
 ;;------------------------------------------------------------------------------
 ;; Eww
@@ -586,3 +598,17 @@ is no active region."
 
 ;;------------------------------------------------------------------------------
 (message "%s" "You shouldn't have come back, Karl")
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(package-selected-packages
+   (quote
+    (ace-jump-mode ag auctex auctex-latexmk change-inner elm-mode exec-path-from-shell expand-region fastnav flx-ido gnugo gruvbox-theme haskell-mode idris-mode ido-vertical-mode magit markdown-mode monokai-theme noflet paredit projectile rainbow-delimiters smex solarized-theme spaceline transpose-frame web-mode zenburn-theme))))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
