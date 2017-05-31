@@ -10,52 +10,52 @@
 ;; Package manager load and setup
 (require 'cl)
 (package-initialize)
-(setq package-enable-at-startup nil)
 
 (add-to-list 'package-archives
              '("melpa" . "https://melpa.org/packages/"))
-;; (add-to-list 'package-archives
-;;              '("marmalade" . "https://marmalade-repo.org/packages/"))
+(add-to-list 'package-archives
+             '("SC" . "http://joseito.republika.pl/sunrise-commander/"))
 
 
 
 ;;------------------------------------------------------------------------------
 ;; Install packages as necessary on startup. Credit largely to Emacs Prelude.
-(customize-set-variable 'package-selected-packages '(ace-jump-mode
-						     ag
-						     auctex
-						     auctex-latexmk
-						     change-inner
-						     elm-mode
-						     exec-path-from-shell
-						     expand-region
-						     fastnav
-						     flx-ido
-						     gnugo
-						     gruvbox-theme
-						     haskell-mode
-						     idris-mode
-						     ido-vertical-mode
-						     ;; intero
-						     ;; latex-preview-pane
-						     magit
-						     markdown-mode
-						     monokai-theme
-                                                     noflet
-						     paredit
-						     projectile
-						     rainbow-delimiters
-						     smex
-						     solarized-theme
-						     spaceline
-						     transpose-frame
-						     web-mode
-						     zenburn-theme))
-
-(defun kjs-const (arg)
-  "Const function for miscellaneous hackery"
-  (interactive)
-  arg)
+(customize-set-variable
+ 'package-selected-packages
+ '(ace-jump-mode
+   ag
+   auctex
+   auctex-latexmk
+   change-inner
+   color-theme-sanityinc-tomorrow
+   elm-mode
+   exec-path-from-shell
+   expand-region
+   fancy-battery
+   fastnav
+   flx-ido
+   gnugo
+   gruvbox-theme
+   haskell-mode
+   ido-vertical-mode
+   idris-mode
+   intero
+   ;; latex-preview-pane
+   magit
+   markdown-mode
+   monokai-theme
+   noflet
+   paredit
+   projectile
+   rainbow-delimiters
+   smex
+   solarized-theme
+   spaceline
+   spotify
+   sunrise-commander
+   transpose-frame
+   web-mode
+   zenburn-theme))
 
 (defun kjs-packages-installed-p ()
   "Loop through selected packages and determine if any are missing."
@@ -100,7 +100,7 @@
 ;; Fonts, colors, aesthetics
 (defun kjs-size-font ()
   (interactive)
-  (concat "PragmataPro" "-"
+  (concat "PragmataPro Mono" "-"
           (when window-system
             (if (> (x-display-pixel-width) 2000)
                 "16"
@@ -118,9 +118,12 @@
 ;; Spaceline in particular
 (require 'spaceline-config)
 (setq powerline-default-separator 'nil
-      ;; powerline-height 1.1
-      )
+      powerline-height 1.1)
 (spaceline-emacs-theme)
+
+;; Enable ligatures in emacs-mac version
+(when (fboundp 'mac-auto-operator-composition-mode)
+  (mac-auto-operator-composition-mode))
 
 
 ;;------------------------------------------------------------------------------
@@ -197,7 +200,7 @@
       TeX-brace-indent-level 0)
 (customize-set-variable 'LaTeX-verbatim-environments
                         '("verbatim" "verbatim*" "program" "programc" "prog"
-                          "BVerbatim"))
+                          "BVerbatim" "programSmall" "programPlain"))
 
 ;; Use Skim.  Fix for other OS.
 ;; (setq TeX-view-program-selection '((output-pdf "PDF Viewer")))
@@ -219,7 +222,7 @@
                              (LaTeX-math-mode)
                              (turn-on-reftex)
                              (outline-minor-mode)))
-; (auctex-latexmk-setup)
+(auctex-latexmk-setup)
 
 (defun kjs-bibtex-next-entry ()
   (interactive)
@@ -241,6 +244,11 @@ sensible in bibtex files."
 
 (add-hook 'bibtex-mode-hook 'kjs-bibtex-bind-forward-back-keys)
 
+
+;;------------------------------------------------------------------------------
+;; Docview for opening PDFs
+;; (when (eq system-type 'darwin)
+;;   (setq doc-view-resolution 300))
 
 ;;------------------------------------------------------------------------------
 ;; Org
@@ -355,37 +363,36 @@ is no active region."
 
 (add-hook 'haskell-mode-hook 'kjs-haskell-hook)
 
-;; (add-hook 'haskell-mode-hook 'intero-mode)
+(add-hook 'haskell-mode-hook 'intero-mode)
 
 ;;------------------------------------------------------------------------------
 ;; Agda
-(modify-syntax-entry ?⟪ "w")  ;; Emacs level up
+(modify-syntax-entry ?⟪ "w")  ;; Emacs level-up
 (modify-syntax-entry ?⟫ "w")  ;; Customize the default syntax table
 
 (load-file (let ((coding-system-for-read 'utf-8))
              (shell-command-to-string "agda-mode locate")))
-             ;; (shell-command-to-string "/Users/karl/bin/agda-mode locate")))
 (add-hook 'agda2-mode-hook
           '(lambda ()
              (customize-set-variable
-              'agda2-highlight-face-groups 'default-faces)
-             ;; (setq agda2-program-args "-i" "/Users/karl/src/agda-stdlib/src")
-             ))
+              'agda2-highlight-face-groups 'default-faces)))
 
 ;;------------------------------------------------------------------------------
 ;; Idris
-(setq idris-interpreter-flags '("-p" "contrib"))
+;; (setq idris-interpreter-flags '("-p" "contrib"))
 (add-hook 'idris-mode-hook
           '(lambda ()
-             ;; (setq idris-semantic-source-highlighting t)
-             (set-face-attribute 'idris-semantic-data-face nil
-                                 :foreground nil
-                                 :inherit 'font-lock-string-face)
-             (set-face-attribute 'idris-semantic-type-face nil
-                                 :foreground nil
-                                 :inherit 'font-lock-string-face)
-             (set-face-attribute 'idris-loaded-region-face nil
-                                 :background nil)))
+             (idris-simple-indent-mode)
+             (setq idris-semantic-source-highlighting nil)
+             ;; (set-face-attribute 'idris-semantic-data-face nil
+             ;;                     :foreground nil
+             ;;                     :inherit 'font-lock-string-face)
+             ;; (set-face-attribute 'idris-semantic-type-face nil
+             ;;                     :foreground nil
+             ;;                     :inherit 'font-lock-string-face)
+             ;; (set-face-attribute 'idris-loaded-region-face nil
+             ;;                     :background nil)
+             ))
 
 
 ;;------------------------------------------------------------------------------
@@ -551,6 +558,10 @@ is no active region."
 ;; (global-vim-indent-mode 1)
 
 ;;------------------------------------------------------------------------------
+;; Wanderlust
+(autoload 'wl "wl" "Wanderlust" t)
+
+;;------------------------------------------------------------------------------
 ;; Misc things that should probably be in a different file
 (defun reload-dot-emacs ()
   "Reload the default configuration file."
@@ -584,7 +595,7 @@ is no active region."
   "Insert a line below regardless of point position.  Like Vim's 'o' command."
   (interactive)
   (move-end-of-line nil)
-  (newline-and-indent))
+  (newline))
 (global-set-key [(shift return)] 'open-line-below)
 (global-set-key (kbd "C-o") 'open-line-below)
 
@@ -603,20 +614,10 @@ is no active region."
 (load-library "buildscript")
 (load-library "tagutils")
 
+;;------------------------------------------------------------------------------
+;; Deal with annoying custom stuff
+(setq custom-file "~/.emacs.d/custom.el")
+(load custom-file 'noerror)
 
 ;;------------------------------------------------------------------------------
 (message "%s" "You shouldn't have come back, Karl")
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(package-selected-packages
-   (quote
-    (ace-jump-mode ag auctex auctex-latexmk change-inner elm-mode exec-path-from-shell expand-region fastnav flx-ido gnugo gruvbox-theme haskell-mode idris-mode ido-vertical-mode magit markdown-mode monokai-theme noflet paredit projectile rainbow-delimiters smex solarized-theme spaceline transpose-frame web-mode zenburn-theme))))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )
