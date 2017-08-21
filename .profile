@@ -6,29 +6,17 @@ fi
 
 #-------------------------------------------------------------------------------
 # Local things
-export PATH=$HOME/bin:$PATH
-
-# Haskell, Cabal
-# export PKG_CONFIG_PATH=$PKG_CONFIG_PATH:/opt/X11/lib/pkgconfig
-# export GHC_DOT_APP="/Applications/ghc-7.8.4.app"
-# if [ -d "$GHC_DOT_APP" ]; then
-#   export PATH="${HOME}/.cabal/bin:${GHC_DOT_APP}/Contents/bin:${PATH}"
-# fi
-
-# Coq Beta
-# export PATH=/Applications/CoqIDE_8.5beta2.app/Contents/Resources/bin:$PATH
+export PATH=$HOME/.local/bin:$PATH
 
 #-------------------------------------------------------------------------------
 # Tweak a few variables
 export EDITOR="nvim"
 export VISUAL="nvim"
-export PAGER="vimpager"
+export PAGER="less"
 export CLICOLOR=1
 export HISTIGNORE="&;ls;[bf]g:exit"
 export HISTFILESIZE=2500
-PS1='\[\033[1;31m\]\w/\[\033[0m\] '
-
-shopt -s globstar
+PS1='\[\033[0;34m\]\w/\[\033[0m\] '
 
 #-------------------------------------------------------------------------------
 # Aliases and trivial functions
@@ -43,13 +31,28 @@ function tn() { tmux -2 new-session -s $@ ;}
 
 alias serve='python3 -m http.server'
 
+alias scan='nmap -sP 192.168.1.*'
+
+alias weather='curl wttr.in/97330'
+
+alias emacs='/Applications/Emacs.app/Contents/MacOS/Emacs.sh -nw'
+
 mkcd () {
     mkdir -p "$*"
     cd "$*"
 }
 
-alias vim=nvim
+edit () {
+    open -a TextEdit "$*"
+}
+
+#-------------------------------------------------------------------------------
+# Things that shouldn't be in a public repo
+source $HOME/.bash_secrets
 
 #-------------------------------------------------------------------------------
 # Party time
 fortune -s | cowsay
+
+# OPAM configuration
+. /Users/karl/.opam/opam-init/init.sh > /dev/null 2> /dev/null || true
