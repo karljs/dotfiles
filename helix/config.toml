@@ -1,0 +1,16 @@
+theme = "gruvbox"
+
+[editor]
+end-of-line-diagnostics = "hint"
+
+[editor.inline-diagnostics]
+cursor-line = "warning"
+
+[editor.soft-wrap]
+enable = true
+
+[keys.normal]
+space.q = ":reflow"
+
+[keys.normal.z]
+W = [":toggle soft-wrap.enable", ":redraw"]
