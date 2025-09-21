@@ -10,6 +10,9 @@ if ! grep -q -F "${source_command}" ~/.bashrc; then
   echo "${source_command}" >> ~/.bashrc
 fi
 
+# Emacs
+ln -sn "$PWD/emacs.d" "$HOME/.emacs.d"
+
 # Helix
 if ! [ -d $HOME/.config/helix ]; then
   mkdir -p $HOME/.config/helix

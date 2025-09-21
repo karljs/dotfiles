@@ -1,0 +1,9 @@
+custom.el
+
+eln-cache
+elpa
+transient
+tree-sitter
+var
+
+.DS_Store
