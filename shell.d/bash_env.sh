@@ -27,10 +27,10 @@ export BAT_THEME="gruvbox-dark"
 
 # must come after PATH is set
 if command -v zellij >/dev/null 2>&1; then
-  eval "$(zellij setup --generate-completion bash)"
+        eval "$(zellij setup --generate-completion bash)"
 fi
 
 # prompt
 if command -v starship >/dev/null 2>&1; then
-  eval "$(starship init bash)"
+        eval "$(starship init bash)"
 fi
