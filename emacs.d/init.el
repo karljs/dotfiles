@@ -422,9 +422,9 @@
   :ensure
   :custom
   (compiler-explorer-output-filters
-   (:binary nil :binaryObject nil :commentOnly t :demangle t :directives
-            t :intel nil :labels t :libraryCode t :trim nil
-            :debugCalls nil)))
+   '(:binary nil =:binaryObject nil :commentOnly t :demangle t :directives
+             t :intel nil :labels t :libraryCode t :trim nil
+             :debugCalls nil)))
 
 (use-package paredit
   :ensure
