@@ -95,8 +95,6 @@
     (exec-path-from-shell-initialize)))
 
 
-
-
 ;;------------------------------------------------------------------------------
 ;; LSP, treesitter
 
@@ -357,9 +355,9 @@
   :hook (emacs-startup . global-jinx-mode)
   :bind (("C-\"" . jinx-correct)))
 
-(use-package vterm
+(use-package eshell
   :ensure
-  :bind (("C-c t" . vterm)))
+  :bind (("C-c t" . eshell)))
 
 (use-package vundo
   :ensure)
@@ -378,7 +376,6 @@
   :config
   (pdf-tools-install)
   (setq-default pdf-view-display-size 'fit-page))
-
 
 
 ;;------------------------------------------------------------------------------
@@ -421,15 +418,13 @@
   (projectile-mode +1)
   (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map))
 
-;; (use-package realgud
-;;   :ensure
-;;   :defer)
-
-;; (use-package realgud-lldb
-;;   :ensure
-;;   :defer
-;;   :after realgud)
-
+(use-package compiler-explorer
+  :ensure
+  :custom
+  (compiler-explorer-output-filters
+   (:binary nil :binaryObject nil :commentOnly t :demangle t :directives
+            t :intel nil :labels t :libraryCode t :trim nil
+            :debugCalls nil)))
 
 (use-package paredit
   :ensure
