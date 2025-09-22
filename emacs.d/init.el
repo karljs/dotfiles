@@ -357,7 +357,11 @@
 
 (use-package eshell
   :ensure
-  :bind (("C-c t" . eshell)))
+  :bind (("C-c t" . eshell))
+  :hook
+  (eshell-hist-mode . (lambda ()
+                        (define-key eshell-hist-mode-map
+                                    (kbd "C-c M-p") nil))))
 
 (use-package vundo
   :ensure)
