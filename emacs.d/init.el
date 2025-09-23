@@ -7,14 +7,14 @@
 ;;
 
 
-
 ;;------------------------------------------------------------------------------
 ;; Setup package manager and bootstrap use-package
 (require 'package)
 (setq package-enable-at-startup nil)
 (add-to-list
  'package-archives
- '("melpa" . "https://melpa.org/packages/")
+ '(("melpa" . "https://melpa.org/packages/")
+   ("nongnu" . "https://elpa.nongnu.org/nongnu/"))
  t)
 (package-initialize)
 
@@ -93,6 +93,23 @@
   :config
   (when (memq window-system '(mac ns x))
     (exec-path-from-shell-initialize)))
+
+;;------------------------------------------------------------------------------
+;; Org
+
+(use-package org
+  :ensure
+  :config
+  (setq org-pretty-entities t)
+  (setq org-directory (expand-file-name "~/Documents/notes"))
+  (setq org-agenda-files (mapcar #'(lambda (f)
+                                     (expand-file-name f org-directory))
+                                 '("personal.org" "canonical.org")))
+  (setq org-refile-targets '((org-agenda-files :maxlevel . 2)))
+  (setq org-default-notes-file (expand-file-name "inbox.org" org-directory))
+  :bind (("C-c l" . org-store-link)
+         ("C-c a" . org-agenda)
+         ("C-c c" . org-capture)))
 
 
 ;;------------------------------------------------------------------------------
@@ -188,7 +205,7 @@
 
 (use-package consult
   :ensure
-  :after perspective
+  ;; :after perspective
   :bind (;; C-c bindings in `mode-specific-map'
          ("C-c M-x" . consult-mode-command)
          ("C-c h" . consult-history)
@@ -261,8 +278,9 @@
   :config
   (setq consult-narrow-key "<")
 
-  (consult-customize consult--source-buffer :hidden t :default nil)
-  (add-to-list 'consult-buffer-sources persp-consult-source))
+  ;; (consult-customize consult--source-buffer :hidden t :default nil)
+  ;; (add-to-list 'consult-buffer-sources persp-consult-source)
+  )
 
 (use-package embark
   :ensure
@@ -317,14 +335,14 @@
 ;;------------------------------------------------------------------------------
 ;; General minor improvements, navigation
 
-(use-package perspective
-  :ensure
-  ;; :bind
-  ;; ("C-x C-b" . persp-list-buffers)         ; or use a nicer switcher, see below
-  :custom
-  (persp-mode-prefix-key (kbd "C-c M-p"))  ; pick your own prefix key here
-  :init
-  (persp-mode))
+;; (use-package perspective
+;;   :ensure
+;;   ;; :bind
+;;   ;; ("C-x C-b" . persp-list-buffers)         ; or use a nicer switcher, see below
+;;   :custom
+;;   (persp-mode-prefix-key (kbd "C-c M-p"))  ; pick your own prefix key here
+;;   :init
+;;   (persp-mode))
 
 
 (use-package eldoc-box
@@ -426,7 +444,7 @@
   :ensure
   :custom
   (compiler-explorer-output-filters
-   '(:binary nil =:binaryObject nil :commentOnly t :demangle t :directives
+   '(:binary nil :binaryObject nil :commentOnly t :demangle t :directives
              t :intel nil :labels t :libraryCode t :trim nil
              :debugCalls nil)))
 
@@ -476,7 +494,7 @@
   :init
   (setq rust-mode-treesitter-derive t)
   :config
-  (setq rust-format-on-save t)
+  (setq rust-format-on-save nil)
   ;; This tells rust-analyzer to use clippy, and to search all kinds
   ;; of symbols since for some reason the default is only types.
   (add-to-list 'eglot-server-programs
