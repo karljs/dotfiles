@@ -60,6 +60,7 @@
           dired-use-ls-dired nil))
 
   ;; Basic behavior changes
+  (recentf-mode)
   (setq save-interprogram-paste-before-kill t)
   (setq yank-pop-change-selection t)
   (setq help-window-select t)
