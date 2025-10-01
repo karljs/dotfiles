@@ -13,8 +13,7 @@
 (setq package-enable-at-startup nil)
 (add-to-list
  'package-archives
- '(("melpa" . "https://melpa.org/packages/")
-   ("nongnu" . "https://elpa.nongnu.org/nongnu/"))
+ '("melpa" . "https://melpa.org/packages/")
  t)
 (package-initialize)
 
@@ -30,6 +29,26 @@
 ;; Global settings, environment, cleanup
 (use-package emacs
   :demand t
+  :preface
+  (defun push-mark-no-activate ()
+    "Pushes `point' to `mark-ring' and does not activate the region
+   Equivalent to \\[set-mark-command] when \\[transient-mark-mode] is disabled"
+    (interactive)
+    (push-mark (point) t nil)
+    (message "Pushed mark to ring"))
+
+  (defun jump-to-mark ()
+    "Jumps to the local mark, respecting the `mark-ring' order.
+  This is the same as using \\[set-mark-command] with the prefix argument."
+    (interactive)
+    (set-mark-command 1))
+
+  (defun exchange-point-and-mark-no-activate ()
+    "Identical to \\[exchange-point-and-mark] but will not activate the region."
+    (interactive)
+    (exchange-point-and-mark)
+    (deactivate-mark nil))
+
   :init
   (setq gc-cons-percentage 0.5
         gc-cons-threshold (* 128 1024 1024))
@@ -77,7 +96,12 @@
   ;; Global keybinds
   :bind (([remap list-buffers] . ibuffer)
          ("C-M-y" . duplicate-dwim)
-         ([remap zap-to-char] . zap-up-to-char)))
+         ([remap zap-to-char] . zap-up-to-char)
+         ("C-`" . push-mark-no-activate)
+         ("C-M-`" . jump-to-mark)
+         ([remap exchange-point-and-mark] . exchange-point-and-mark-no-activate))
+
+  )
 
 
 (use-package no-littering
@@ -415,10 +439,17 @@
   :config
   (setq doom-themes-enable-bold t
         doom-themes-enable-italic t)
-  (load-theme 'doom-gruvbox t)
+  (load-theme 'doom-tomorrow-day t)
 
   (doom-themes-visual-bell-config)
-  (doom-themes-org-config))
+  (doom-themes-org-config)
+  )
+
+(use-package modus-themes
+  :ensure t)
+
+(use-package ef-themes
+  :ensure t)
 
 (use-package rainbow-delimiters
   :ensure
@@ -459,12 +490,15 @@
   :hook
   (emacs-lisp-mode . enable-paredit-mode)
   (eval-expression-minibuffer-setup . enable-paredit-mode)
+  (racket-mode . enable-paredit-mode)
+  (racket-hash-lang-mode . enable-paredit-mode)
+  (scheme-mode . enable-paredit-mode)
   (lisp-mode . enable-paredit-mode)
   (lisp-interaction-mode . enable-paredit-mode)
   (minibuffer-setup . disable-paredit-mode))
 
 (use-package paredit-everywhere
-  :ensure
+  :ensure t
   :after paredit
   :config
   (eval-after-load "paredit-everywhere"
@@ -477,14 +511,16 @@
 ;;------------------------------------------------------------------------------
 ;; Language-specific
 
+(use-package dpkg-dev-el
+  :ensure t)
+
 (use-package haskell-mode
-  :ensure
-  )
+  :ensure t)
 
 (use-package markdown-mode
   :ensure t
   :mode ("README\\.md\\'" . gfm-mode)
-  :init (setq markdown-command "multimarkdown")
+  :init (setq markdown-command "pandoc")
   :bind (:map markdown-mode-map
          ("C-c C-e" . markdown-do)))
 
@@ -507,8 +543,15 @@
                    :workspace
                    (:symbol (:search (:kind "all_symbols"))))))))
 
-;; (use-package geiser
-;;   :ensure)
+(use-package racket-mode
+  :ensure t)
+
+(use-package geiser
+  :ensure)
+
+(use-package geiser-mit
+  :ensure
+  :after geiser)
 
 ;; (use-package geiser-racket
 ;;   :ensure
@@ -560,6 +603,4 @@
   (setq c-ts-mode-indent-offset 4)
   (setq c-ts-mode-indent-style 'linux)
   )
-
-(use-package poke-mode
-  :ensure)
+(put 'narrow-to-region 'disabled nil)
