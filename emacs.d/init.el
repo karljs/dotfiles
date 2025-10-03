@@ -70,6 +70,8 @@
   (set-scroll-bar-mode nil)
   (when (not (eq system-type 'darwin))
     (menu-bar-mode -1))
+  (setq ring-bell-function nil)
+  (setq visible-bell t)
   (add-hook 'prog-mode-hook #'hl-line-mode)
   (add-hook 'text-mode-hook #'hl-line-mode)
 
@@ -84,6 +86,7 @@
   (setq yank-pop-change-selection t)
   (setq help-window-select t)
   (setq enable-recursive-minibuffers t)
+  (setq  compilation-scroll-output t)
   (minibuffer-depth-indicate-mode 1)
   (setq-default indent-tabs-mode nil)
   (add-hook 'before-save-hook 'delete-trailing-whitespace)
@@ -103,6 +106,10 @@
 
   )
 
+(use-package dired
+  :ensure nil
+  :hook (dired-mode . dired-hide-details-mode))
+
 
 (use-package no-littering
   :ensure
@@ -120,21 +127,47 @@
     (exec-path-from-shell-initialize)))
 
 ;;------------------------------------------------------------------------------
-;; Org
+;; Org and note-taking
 
 (use-package org
   :ensure
   :config
   (setq org-pretty-entities t)
   (setq org-directory (expand-file-name "~/Documents/notes"))
-  (setq org-agenda-files (mapcar #'(lambda (f)
-                                     (expand-file-name f org-directory))
-                                 '("personal.org" "canonical.org")))
   (setq org-refile-targets '((org-agenda-files :maxlevel . 2)))
-  (setq org-default-notes-file (expand-file-name "inbox.org" org-directory))
+
+  (with-eval-after-load 'org-capture
+    (add-to-list 'org-capture-templates
+                 '("n" "New note" plain
+                   (file denote-last-path)
+                   #'denote-org-capture
+                   :no-save t
+                   :immediate-finish nil
+                   :kill-buffer t
+                   :jump-to-captured t)))
+
   :bind (("C-c l" . org-store-link)
          ("C-c a" . org-agenda)
          ("C-c c" . org-capture)))
+
+(use-package denote
+  :ensure t
+  :hook (dired-mode . denote-dired-mode)
+  :bind
+  (("C-c n n" . denote)
+   ("C-c n r" . denote-rename-file)
+   ("C-c n l" . denote-link)
+   ("C-c n b" . denote-backlinks)
+   ("C-c n d" . denote-dired)
+   ("C-c n g" . denote-grep))
+  :config
+  (setq denote-directory (expand-file-name "~/Documents/notes/"))
+
+  ;; Automatically rename Denote buffers when opening them so that
+  ;; instead of their long file name they have, for example, a literal
+  ;; "[D]" followed by the file's title.  Read the doc string of
+  ;; `denote-rename-buffer-format' for how to modify this.
+  (denote-rename-buffer-mode 1))
 
 
 ;;------------------------------------------------------------------------------
@@ -426,29 +459,23 @@
 
 
 ;;------------------------------------------------------------------------------
-;; Packages focused on aesthetics
+;; Customizations focused on aesthetics
 
-(use-package doom-modeline
-  :ensure
-  :hook (after-init . doom-modeline-mode)
-  :config
-  (setq nerd-icons-font-family "PragmataPro"))
-
-(use-package doom-themes
+(use-package spacious-padding
   :ensure t
   :config
-  (setq doom-themes-enable-bold t
-        doom-themes-enable-italic t)
-  (load-theme 'doom-tomorrow-day t)
-
-  (doom-themes-visual-bell-config)
-  (doom-themes-org-config)
-  )
+  (setq spacious-padding-subtle-frame-lines t)
+  (spacious-padding-mode 1))
 
 (use-package modus-themes
-  :ensure t)
+  :ensure t
+  :config
+  (load-theme 'modus-operandi t))
 
 (use-package ef-themes
+  :ensure t)
+
+(use-package standard-themes
   :ensure t)
 
 (use-package rainbow-delimiters
@@ -463,6 +490,8 @@
 
 (use-package transient
   :ensure t)
+
+
 
 ;;------------------------------------------------------------------------------
 ;; General programming
