@@ -1,5 +1,14 @@
 ;; -*- lexical-binding: t; -*-
 
+(use-package no-littering
+  :ensure
+  :config
+  (setq auto-save-file-name-transforms
+        `((".*" ,(no-littering-expand-var-file-name "auto-save/") t)))
+  (setq backup-directory-alist
+	`(("." . ,(no-littering-expand-var-file-name "backups/")))))
+
+
 (use-package emacs
   :demand t
   :init
@@ -29,7 +38,7 @@
           mac-option-modifier 'none
           dired-use-ls-dired nil))
 
-  ;; Basic behavior changes
+  ;; basic behavior changes
   (recentf-mode)
   (setq save-interprogram-paste-before-kill t)
   (setq yank-pop-change-selection t)
@@ -67,15 +76,6 @@
 (use-package dired
   :ensure nil
   :hook (dired-mode . dired-hide-details-mode))
-
-
-(use-package no-littering
-  :ensure
-  :config
-  (setq auto-save-file-name-transforms
-        `((".*" ,(no-littering-expand-var-file-name "auto-save/") t)))
-  (setq backup-directory-alist
-	`(("." . ,(no-littering-expand-var-file-name "backups/")))))
 
 
 (use-package exec-path-from-shell

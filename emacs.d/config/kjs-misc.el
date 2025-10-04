@@ -2,6 +2,8 @@
 
 (use-package doom-modeline
   :ensure t
+  :init
+  (setq nerd-icons-font-family "PragmataPro")
   :hook (after-init . doom-modeline-mode))
 
 
