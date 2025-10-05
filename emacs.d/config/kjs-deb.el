@@ -37,13 +37,30 @@ implement in the future."
     dir))
 
 
-(defun kjs--run-dpkg-buildpackage (dir args)
-  "Call `dpkg-buildpackage' as a compile command."
-  (let ((default-directory dir))
-    (kjs-run-compile-command
-     (string-join (cons "dpkg-buildpackage" args) " ")
-     "dpkg-buildpackage")))
+(defun kjs-run-compile-command (command buffer-name)
+  "Run COMMAND, sending output to a compilation buffer."
+  (let ((compilation-buffer-name-function
+         (lambda (mode)
+           (if (string-match-p "^\*" buffer-name)
+               buffer-name
+             (format "*%s-%s*"
+                     buffer-name
+                     (format-time-string "%Y%m%d-%H%M%S"))))))
+    ;; (compile command)
+    (message "%S" command)
+    ))
 
+
+(defun kjs-subst-var (var value)
+  "Extra simple variable replacement"
+  (interactive
+   (list
+    (completing-read "Variable to replace: " '("@RUST_VERSION@"))
+    (read-string "Variable value: ")))
+  (substitute-target-in-buffer (regexp-quote var) value))
+
+
+;;; dpkg-buildpackage
 
 (defun kjs--prep-dpkg-buildpackage (&optional args)
   "Call `dpkg-buildpackage' with transient args."
@@ -63,13 +80,32 @@ implement in the future."
     (kjs--run-dpkg-buildpackage (kjs--get-compile-dir) final-args)))
 
 
-(defun kjs-lintian (dir)
-  "Run `lintian' on a deb package"
-  (interactive
-   (list (kjs--get-compile-dir)))
+(defun kjs--run-dpkg-buildpackage (dir args)
+  "Call `dpkg-buildpackage' as a compile command."
   (let ((default-directory dir))
-    (kjs-run-compile-command "lintian -i --tag-display-limit 0 --color never" "lintian")))
+    (kjs-run-compile-command
+     (string-join (cons "dpkg-buildpackage" args) " ")
+     "dpkg-buildpackage")))
 
+
+;;; lintian
+
+(defun kjs--prep-lintian (&optional args)
+  "Call `lintian' with transient args."
+  (interactive (list (transient-args 'kjs--lintian-transient)))
+  (kjs--run-lintian (kjs--get-compile-dir) args))
+
+
+;; TODO: this needs a target
+(defun kjs--run-lintian (dir args)
+  "Run `lintian' on a deb package"
+  (let ((default-directory dir))
+    (kjs-run-compile-command
+     (string-join (cons "lintian" args) " ")
+     "lintian")))
+
+
+;;; sbuild
 
 (defun kjs-sbuild (distro dir)
   "Build the complete deb"
@@ -79,29 +115,6 @@ implement in the future."
     (list (kjs--get-compile-dir))))
   (let ((default-directory dir))
     (kjs-run-compile-command (concat "sbuild . -Ad " distro) "sbuild")))
-
-
-(defun kjs-subst-var (var value)
-  "Slightly simplified replace"
-  (interactive
-   (list
-    (completing-read "Variable to replace: " '("@RUST_VERSION@"))
-    (read-string "Variable value: ")))
-  (substitute-target-in-buffer (regexp-quote var) value))
-
-
-(defun kjs-run-compile-command (command buffer-name)
-  "Run COMMAND, sending output to a uniquely named buffer."
-  (let ((compilation-buffer-name-function
-         (lambda (mode)
-           (if (string-match-p "^\*" buffer-name)
-               buffer-name
-             (format "*%s-%s*"
-                     buffer-name
-                     (format-time-string "%Y%m%d-%H%M%S"))))))
-    ;; (compile command)
-    (message "%S" command)
-    ))
 
 
 ;;; Transient prefixes to call these functions
@@ -135,12 +148,23 @@ most-used configuration options."
     ("b" "Run build" kjs--prep-dpkg-buildpackage)]])
 
 
+(transient-define-prefix kjs--lintian-transient ()
+  "Options to pass to `lintian'.
+Not comprehensive, but just some of the flags I tend to use. "
+  :value '("-i" "--tag-display-limit=0")
+  [["Output options"
+    ("-i" "info" "-i")
+    ("-t" "tag display limit" "--tag-display-limit=")
+    ]]
+  [["Run lintian"
+    ("l" "lint" kjs--prep-lintian)]])
+
 (transient-define-prefix kjs-deb-transient ()
   "Transient for deb helper functions"
   [
    ["Debian packaging"
     ("b" "dpkg-buildpackage" kjs--dpkg-buildpackage-transient)
-    ("l" "lintian" kjs-lintian)
+    ("l" "lintian" kjs--lintian-transient)
     ("s" "sbuild" kjs-sbuild)]
    ["Variable replacement"
     ("v" "Substitute variable" kjs-subst-var)]])
