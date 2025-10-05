@@ -20,7 +20,7 @@
   :ensure nil)
 
 
-(defvar kjs-last-compile-dir nil
+(defvar kjs--last-compile-dir nil
   "The last-used working directory.")
 
 
@@ -32,9 +32,23 @@ difficult to use something like `package.el'.  It's often the parent
 directory of the package root, which might be a nice default to
 implement in the future."
   (let ((dir (read-directory-name "Working directory: "
-                                  kjs-last-compile-dir)))
-    (setq kjs-last-compile-dir dir)
+                                  kjs--last-compile-dir)))
+    (setq kjs--last-compile-dir dir)
     dir))
+
+
+(defvar kjs--last-target-file nil
+  "The last-used target file.")
+
+
+(defun kjs--get-target-file ()
+  "Prompt the user for a file.
+The reason this exists is forward-compatibility. I am planning to enable
+some basic, configurable validation."
+  (let ((file (read-file-name "Target: "
+                              kjs--last-target-file)))
+    (setq kjs--last-target-file file)
+    file))
 
 
 (defun kjs-run-compile-command (command buffer-name)
@@ -46,9 +60,7 @@ implement in the future."
              (format "*%s-%s*"
                      buffer-name
                      (format-time-string "%Y%m%d-%H%M%S"))))))
-    ;; (compile command)
-    (message "%S" command)
-    ))
+    (compile command)))
 
 
 (defun kjs-subst-var (var value)
@@ -93,15 +105,15 @@ implement in the future."
 (defun kjs--prep-lintian (&optional args)
   "Call `lintian' with transient args."
   (interactive (list (transient-args 'kjs--lintian-transient)))
-  (kjs--run-lintian (kjs--get-compile-dir) args))
+  (kjs--run-lintian (kjs--get-target-file) args))
 
 
-;; TODO: this needs a target
-(defun kjs--run-lintian (dir args)
+(defun kjs--run-lintian (target args)
   "Run `lintian' on a deb package"
-  (let ((default-directory dir))
+  (let* ((dir (file-name-directory target))
+         (default-directory dir))
     (kjs-run-compile-command
-     (string-join (cons "lintian" args) " ")
+     (concat (string-join (cons "lintian" args) " ") " " target)
      "lintian")))
 
 
