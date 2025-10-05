@@ -31,7 +31,8 @@ repository that holds the actual package source, which makes it
 difficult to use something like `package.el'.  It's often the parent
 directory of the package root, which might be a nice default to
 implement in the future."
-  (let ((dir (read-directory-name "Working directory: " kjs-last-compile-dir)))
+  (let ((dir (read-directory-name "Working directory: "
+                                  kjs-last-compile-dir)))
     (setq kjs-last-compile-dir dir)
     dir))
 
@@ -39,7 +40,9 @@ implement in the future."
 (defun kjs--run-dpkg-buildpackage (dir args)
   "Call `dpkg-buildpackage' as a compile command."
   (let ((default-directory dir))
-    (kjs-run-compile-command (string-join (cons "dpkg-buildpackage" args) " ") "dpkg-buildpackage")))
+    (kjs-run-compile-command
+     (string-join (cons "dpkg-buildpackage" args) " ")
+     "dpkg-buildpackage")))
 
 
 (defun kjs--prep-dpkg-buildpackage (&optional args)
