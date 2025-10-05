@@ -1,7 +1,20 @@
-;; -*- lexical-binding: t; -*-
+;;; -*- lexical-binding: t; -*-
 
+;;; kjs-global.el --- global, general configuration
+
+;;; Commentary
+
+;; This is configuration code that applies globally across Emacs and a
+;; few of its built-in packages, like eshell and dired.  A few others,
+;; like org and eglot are handled in more appropriate places.
+
+;;; Code
+
+;; Do this as early as possible, to avoid things being put in the
+;; wrong place.
 (use-package no-littering
-  :ensure
+  :ensure t
+  :demand t
   :config
   (setq auto-save-file-name-transforms
         `((".*" ,(no-littering-expand-var-file-name "auto-save/") t)))
@@ -9,7 +22,16 @@
 	`(("." . ,(no-littering-expand-var-file-name "backups/")))))
 
 
+(use-package exec-path-from-shell
+  :ensure
+  :demand t
+  :config
+  (when (memq window-system '(mac ns x pgtk))
+    (exec-path-from-shell-initialize)))
+
+
 (use-package emacs
+  :ensure nil
   :demand t
   :init
   (setq gc-cons-percentage 0.5
@@ -33,7 +55,7 @@
     (setq native-comp-async-report-warnings-errors 'silent))
   (display-battery-mode)
 
-  ;; macos
+  ;; macos keys
   (when (eq system-type 'darwin)
     (setq mac-command-modifier 'meta
           mac-option-modifier 'none
@@ -50,12 +72,6 @@
   (setq-default indent-tabs-mode nil)
 
   (add-hook 'before-save-hook 'delete-trailing-whitespace)
-
-  (setq major-mode-remap-alist
-        '((c-mode . c-ts-mode)
-          (c++-mode . c++-ts-mode)
-          (python-mode . python-ts-mode)))
-  (add-to-list 'auto-mode-alist '("\\.yml\\'" . yaml-ts-mode))
 
   ;; turn on some disabled functions
   (mapc
@@ -79,20 +95,9 @@
   :hook (dired-mode . dired-hide-details-mode))
 
 
-(use-package exec-path-from-shell
-  :ensure
-  :config
-  (when (memq window-system '(mac ns x pgtk))
-    (exec-path-from-shell-initialize)))
-
-
 (use-package eshell
   :ensure
-  :bind (("C-c t" . eshell))
-  :hook
-  (eshell-hist-mode . (lambda ()
-                        (define-key eshell-hist-mode-map
-                                    (kbd "C-c M-p") nil))))
+  :bind (("C-c t" . eshell)))
 
 
 

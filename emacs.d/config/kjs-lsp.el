@@ -12,6 +12,11 @@
   (haskell-mode . eglot-ensure)
   :config
   (setq eglot-autoshutdown t)
+  (setq major-mode-remap-alist
+        '((c-mode . c-ts-mode)
+          (c++-mode . c++-ts-mode)
+          (python-mode . python-ts-mode)))
+  (add-to-list 'auto-mode-alist '("\\.yml\\'" . yaml-ts-mode))
   (add-to-list 'eglot-server-programs '((c++-ts-mode c-ts-mode) "clangd"))
   :bind (("C-c C-a" . eglot-code-actions)))
 
