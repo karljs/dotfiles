@@ -30,27 +30,25 @@
   (let ((current (oref obj value)))
     (pcase current
       ('nil t)
-      ((pred (eq t))
-       (read-string (concat (oref obj description) ": ")))
+      ('t (read-string (concat (oref obj description) ": ")))
       (_ nil))))
+
 
 (cl-defmethod transient-init-value ((obj kjs--transient-tristate))
   "Initialize the value from the prefix's :value."
-  (let ((argument (oref obj argument))
-        (value (oref transient--prefix value)))
+  (let* ((argument (oref obj argument))
+         (value (oref transient--prefix value))
+         (found (seq-find
+                 (lambda (v)
+                   (and (stringp v)
+                        (string-prefix-p argument v)))
+                 value)))
     (oset obj value
           (cond
            ((member argument value) t)
-           ((seq-find
-             (lambda (v)
-               (and (stringp v)
-                    (string-prefix-p argument v))) value)
-            (substring (seq-find
-                        (lambda (v)
-                          (and (stringp v)
-                               (string-prefix-p argument v))) value)
-                       (length argument)))
+           (found (substring found (length argument)))
            (t nil)))))
+
 
 (cl-defmethod transient-format-value ((obj kjs--transient-tristate))
   "Format the current state for display.
@@ -60,7 +58,7 @@ passed along to the suffix."
     (propertize
      (pcase value
        ('nil "[ ]")
-       ((pred (eq t)) "[✓]")
+       ('t "[✓]")
        (_ (format "[✓:%s]" value)))
      'face (if value 'transient-value 'transient-inactive-value))))
 
@@ -71,10 +69,10 @@ By default, this would just return `t' or just the string data, but
 that's not enough to actually use or even distinguish from other values."
   (let ((value (oref obj value))
         (argument (oref obj argument)))
-    (cond
-     ((eq value nil) nil)
-     ((eq value t) argument)
-     (t (format "%s%s" argument value)))))
+    (pcase value
+     ('nil nil)
+     ('t argument)
+     (_ (format "%s%s" argument value)))))
 
 
 (provide 'kjs-transient)
