@@ -1,4 +1,15 @@
-;; -*- lexical-binding: t; -*-
+;;; -*- lexical-binding: t; -*-
+
+;;; kjs-note.el --- note-taking, org, denote
+
+;;; Commentary
+
+;; This is configuration for note-taking packages, which basically
+;; means org and denote.  I don't do much with org currently, because
+;; trying to keep it in sync with other tools like online issue
+;; trackers and calendars just isn't worth it for me.
+
+;;; Code
 
 (use-package org
   :ensure
