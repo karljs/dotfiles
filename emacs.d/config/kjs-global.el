@@ -34,16 +34,14 @@
   :ensure nil
   :demand t
   :init
-
   ;; performance and weird legacy stuff
   (setq gc-cons-percentage 0.5
         gc-cons-threshold (* 128 1024 1024))
-  (setq load-prefer newer t)
+  (setq load-prefer-newer t)
   (setq read-process-output-max (* 4 1024 1024))
   (setq process-adaptive-read-buffering nil)
   (setq max-lisp-eval-depth 10000)
   (setq auto-mode-case-fold nil)
-
 
   ;; aesthetics
   (let ((font-size
