@@ -34,8 +34,16 @@
   :ensure nil
   :demand t
   :init
+
+  ;; performance and weird legacy stuff
   (setq gc-cons-percentage 0.5
         gc-cons-threshold (* 128 1024 1024))
+  (setq load-prefer newer t)
+  (setq read-process-output-max (* 4 1024 1024))
+  (setq process-adaptive-read-buffering nil)
+  (setq max-lisp-eval-depth 10000)
+  (setq auto-mode-case-fold nil)
+
 
   ;; aesthetics
   (let ((font-size
@@ -95,7 +103,13 @@
 
 (use-package dired
   :ensure nil
-  :hook (dired-mode . dired-hide-details-mode))
+  :hook (dired-mode . dired-hide-details-mode)
+  :config
+  (setq delete-by-moving-to-trash t)
+  (setq dired-listing-switches
+        "-AFhlv --group-directories-first --time-style=long-iso")
+  (setq dired-dwim-target t)
+  (setq dired-auto-revert-buffer t))
 
 
 (use-package eshell
