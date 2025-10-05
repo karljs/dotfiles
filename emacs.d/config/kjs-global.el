@@ -31,6 +31,7 @@
   (setq visible-bell t)
   (when (native-comp-available-p)
     (setq native-comp-async-report-warnings-errors 'silent))
+  (display-battery-mode)
 
   ;; macos
   (when (eq system-type 'darwin)
