@@ -44,7 +44,10 @@
            140)))
     (set-face-attribute 'default nil
 		        :font "PragmataPro"
-		        :height font-size))
+		        :height font-size)
+    (set-face-attribute 'variable-pitch nil
+                        :font "Inter"
+                        :height font-size))
   (tool-bar-mode -1)
   (set-scroll-bar-mode nil)
   (when (not (eq system-type 'darwin))

@@ -96,6 +96,9 @@
 (use-package modus-themes
   :ensure t
   :config
+  (setq modus-themes-mixed-fonts t)
+  (setq modus-themes-italic-constructs t)
+  (setq modus-themes-bold-constructs t)
   (load-theme 'modus-operandi t))
 
 
