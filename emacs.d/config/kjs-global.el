@@ -53,6 +53,9 @@
 		        :height font-size)
     (set-face-attribute 'variable-pitch nil
                         :font "Inter"
+                        :height font-size)
+    (set-face-attribute 'fixed-pitch nil
+                        :font "PragmataPro"
                         :height font-size))
   (tool-bar-mode -1)
   (set-scroll-bar-mode nil)
@@ -111,13 +114,18 @@
 
 
 (use-package eshell
-  :ensure
+  :ensure nil
   :bind (("C-c t" . eshell)))
 
 
+(use-package isearch
+  :ensure nil
+  ;; makeshift fuzzy-searching with space
+  (setq search-whitespace-regexp ".*")
+  (setq isearch-lax-whitespace t)
+  (setq isearch-regexp-lax-whitespace nil))
 
-;;------------------------------------------------------------------------------
-;; These utility functions are courtesy of
+
 (defun kjs--push-mark-no-activate ()
   (interactive)
   (push-mark (point) t nil))
