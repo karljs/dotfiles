@@ -124,7 +124,7 @@ some basic, configurable validation."
   (interactive
    (list
     (completing-read "Select distro target: " '("noble" "plucky" "jammy"))
-    (list (kjs--get-compile-dir))))
+    (kjs--get-compile-dir)))
   (let ((default-directory dir))
     (kjs-run-compile-command (concat "sbuild . -Ad " distro) "sbuild")))
 
