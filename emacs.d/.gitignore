@@ -6,5 +6,8 @@ elpa
 transient
 tree-sitter
 var
+etc
+recentf
+projectile*
 
 .DS_Store
