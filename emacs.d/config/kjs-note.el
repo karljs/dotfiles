@@ -66,4 +66,10 @@
   (setq consult-denote-grep-command 'consult-ripgrep))
 
 
+(use-package markdown-mode
+  :ensure nil
+  :hook
+  (markdown-mode . visual-line-mode))
+
+
 (provide 'kjs-note)

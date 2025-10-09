@@ -122,7 +122,58 @@
   (compilation-filter-hook . ansi-color-compilation-filter))
 
 
+(use-package gptel
+  :ensure t
+  :config
+  (setq gptel-model 'gemini-2.5-pro
+        gptel-backend (gptel-make-gemini "Gemini"
+                        :key (getenv "GEMINI_API_KEY")
+                        :stream t))
+  :hook
+  (gptel-post-stream-hook . gptel-auto-scroll))
+
+
 (use-package transient
+  :ensure t)
+
+
+;; Probably break this out to a new file
+(use-package notmuch
+  :ensure t
+  :bind (("C-c m" . notmuch)
+         :map notmuch-search-mode-map
+         ("r" . (lambda ()
+                  (interactive)
+                  (notmuch-search-tag '("-unread")))))
+
+  :config
+  (setq notmuch-database-path "~/.mail/canonical.gmail/")
+  (setq notmuch-saved-searches
+        '((:name "inbox" :query "tag:inbox" :key "i")
+          (:name "unread" :query "tag:unread" :key "u")
+          (:name "sent" :query "tag:sent" :key "t")
+          (:name "all mail" :query "*" :key "a")))
+
+  (setq message-send-mail-function 'smtpmail-send-it
+        smtpmail-smtp-server "smtp.gmail.com"
+        smtpmail-smtp-service 587
+        smtpmail-stream-type 'starttls
+        user-mail-address "karl.smeltzer@canonical.com"
+        user-full-name "Karl Smeltzer")
+  (add-hook 'notmuch-show-hook
+          (lambda ()
+            (notmuch-show-tag-all '("-unread"))))
+  (setq smtpmail-debug-info t
+        smtpmail-debug-verb t)
+  )
+
+(use-package notmuch-indicator
+  :ensure t
+  :config
+  (notmuch-indicator-mode)
+  )
+
+(use-package smtpmail
   :ensure t)
 
 
