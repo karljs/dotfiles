@@ -86,7 +86,7 @@ some basic, configurable validation."
        ((string= arg "-A") (push "all" build-types))
        (t (push arg final-args))))
     (when build-types
-      (push (format "--build-type=%s"
+      (push (format "--build=%s"
                     (string-join (nreverse build-types) ","))
             final-args))
     (kjs--run-dpkg-buildpackage (kjs--get-compile-dir) final-args)))
