@@ -113,6 +113,27 @@
   (setq dired-auto-revert-buffer t))
 
 
+(use-package dired-subtree
+  :ensure t
+  :after dired
+  :bind
+  (:map dired-mode-map
+        ("<tab>" . dired-subtree-toggle)
+        ("TAB" . dired-subtree-toggle)
+        ("<backtab>" . dired-subtree-remove)
+        ("S-TAB" . dired-subtree-remove))
+  :config
+  ;; (setq dired-subtree-use-backgrounds nil)
+  )
+
+
+(use-package wdired
+  :ensure t
+  :config
+  (setq wdired-allow-to-change-permissions t)
+  (setq wdired-create-parent-directories t))
+
+
 (use-package eshell
   :ensure nil
   :bind (("C-c t" . eshell)))
@@ -120,6 +141,7 @@
 
 (use-package isearch
   :ensure nil
+  :config
   ;; makeshift fuzzy-searching with space
   (setq search-whitespace-regexp ".*")
   (setq isearch-lax-whitespace t)
