@@ -163,10 +163,11 @@ most-used configuration options."
 (transient-define-prefix kjs--lintian-transient ()
   "Options to pass to `lintian'.
 Not comprehensive, but just some of the flags I tend to use. "
-  :value '("-i" "--tag-display-limit=0")
+  :value '("-i" "--tag-display-limit=0" "--color=never")
   [["Output options"
     ("-i" "info" "-i")
     ("-t" "tag display limit" "--tag-display-limit=")
+    ("-c" "color" "--color=" :choices (auto never always html) :always-read t :allow-empty nil)
     ]]
   [["Run lintian"
     ("l" "lint" kjs--prep-lintian)]])
