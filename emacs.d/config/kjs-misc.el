@@ -167,6 +167,16 @@
         smtpmail-debug-verb t)
   )
 
+(use-package w3m
+  :ensure t
+  :config
+  (setq browse-url-browser-function 'w3m-browse-url)
+  (setq w3m-default-display-inline-images t)
+  (setq w3m-use-cookies t)
+  (setq mm-text-html-renderer 'w3m)
+  (setq mm-inline-large-images 'resize))
+
+
 (use-package notmuch-indicator
   :ensure t
   :config
