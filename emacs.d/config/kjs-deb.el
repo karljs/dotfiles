@@ -100,37 +100,6 @@ some basic, configurable validation."
      "dpkg-buildpackage")))
 
 
-;;; lintian
-
-(defun kjs--prep-lintian (&optional args)
-  "Call `lintian' with transient args."
-  (interactive (list (transient-args 'kjs--lintian-transient)))
-  (kjs--run-lintian (kjs--get-target-file) args))
-
-
-(defun kjs--run-lintian (target args)
-  "Run `lintian' on a deb package"
-  (let* ((dir (file-name-directory target))
-         (default-directory dir))
-    (kjs-run-compile-command
-     (concat (string-join (cons "lintian" args) " ") " " target)
-     "lintian")))
-
-
-;;; sbuild
-
-(defun kjs-sbuild (distro dir)
-  "Build the complete deb"
-  (interactive
-   (list
-    (completing-read "Select distro target: " '("noble" "plucky" "jammy"))
-    (kjs--get-compile-dir)))
-  (let ((default-directory dir))
-    (kjs-run-compile-command (concat "sbuild . -Ad " distro) "sbuild")))
-
-
-;;; Transient prefixes to call these functions
-
 (transient-define-prefix kjs--dpkg-buildpackage-transient ()
   "Options to pass to `dpkg-buildpackage'.
 This is not comprehensive, but instead just exposes some of the
@@ -156,9 +125,11 @@ most-used configuration options."
     ("-nc" "no pre-clean" "-nc")
     ("-d" "no check builddeps" "-d")]
 
-   ["Run command"
+   ["Build package"
     ("b" "Run build" kjs--prep-dpkg-buildpackage)]])
 
+
+;;; lintian
 
 (transient-define-prefix kjs--lintian-transient ()
   "Options to pass to `lintian'.
@@ -172,18 +143,120 @@ Not comprehensive, but just some of the flags I tend to use. "
   [["Run lintian"
     ("l" "lint" kjs--prep-lintian)]])
 
+
+;;; sbuild
+
+(defclass kjs--sbuild-url-arg (transient-option)
+  ())
+
+(defconst kjs--ppa-template "deb [trusted=yes] http://ppa.launchpadcontent.net/%s/ubuntu/ %s main")
+
+(defconst kjs--extra-repo-arg "--extra-repository=")
+
+
+(transient-define-argument kjs--sbuild-ppa-arg ()
+  "Simplify adding PPA to sbuild environment."
+  :class 'kjs--sbuild-url-arg
+  :argument kjs--extra-repo-arg
+  :reader (lambda (prompt initial-input history)
+            (completing-read
+             prompt
+             '("rust-toolchain/staging")
+             nil t initial-input history)))
+
+
+(cl-defmethod transient-format-value ((obj kjs--sbuild-url-arg))
+  "Ensure custom PPA arg has the right face"
+  (let ((value (oref obj value)))
+    (if (and value (not (string-empty-p value)))
+        (propertize value 'face 'transient-argument)
+      "")))
+
+
+(defun kjs--prep-sbuild (&optional args)
+  "Call `sbuild' with transient args."
+  (interactive (list (transient-args 'kjs--sbuild-transient)))
+  (let* ((dist (transient-arg-value "--dist=" args))
+         (ppa (transient-arg-value kjs--extra-repo-arg args)))
+    (let ((modified-args
+           (mapcar (lambda (arg)
+                     (if (string-prefix-p kjs--extra-repo-arg arg)
+                         (concat kjs--extra-repo-arg
+                                 (shell-quote-argument
+                                  (format kjs--ppa-template ppa dist)))
+                       arg))
+                   args)))
+      (kjs--run-sbuild (kjs--get-compile-dir) modified-args))))
+
+
+(defun kjs--run-sbuild (dir args)
+  "Run `sbuild' on a package."
+  (let ((default-directory dir))
+    (kjs-run-compile-command
+     (string-join (cons "sbuild" args) " ") "sbuild")))
+
+
+(transient-define-prefix kjs--sbuild-transient ()
+  "Options to pass to `sbuild'."
+  :value '("-A" "--dist=noble")
+  [["Target options"
+    ("-A" "arch-all" "-A")
+    ("-d" "distro" "--dist="
+     :choices (questing noble jammy focal)
+     :always-read t
+     :allow-empty nil)]
+   ["PPA"
+    ("-e" "extra repo" kjs--sbuild-ppa-arg)
+    ]
+   ;; TODO: pick chroot from a list
+   [ "Run sbuild"
+     ("s" "sbuild" kjs--prep-sbuild)
+     ]
+   ]
+  )
+
+
+;;; uscan
+
+(defun kjs--prep-uscan (&optional args)
+  "Call `uscan` with transient args."
+  (interactive (list (transient-args 'kjs--uscan-transient)))
+  (kjs--run-uscan (kjs--get-compile-dir) args))
+
+
+(defun kjs--run-uscan (dir args)
+  "Run `uscan` on your package"
+  (let ((default-directory dir))
+    (kjs-run-compile-command
+     (string-join (cons "uscan" args) " ") "uscan")))
+
+
+(transient-define-prefix kjs--uscan-transient ()
+  "Options to pass to `uscan'."
+  :value '("--download-version=1.87")
+  [
+   ["Download"
+    ("-d" "download version" "--download-version=" :prompt "Version: " :always-read t :allow-empty nil)
+    ("u" "uscan" kjs--prep-uscan)]]
+  )
+
+
+;;; General
+
+
 (transient-define-prefix kjs-deb-transient ()
   "Transient for deb helper functions"
   [
    ["Debian packaging"
     ("b" "dpkg-buildpackage" kjs--dpkg-buildpackage-transient)
     ("l" "lintian" kjs--lintian-transient)
-    ("s" "sbuild" kjs-sbuild)]
+    ("s" "sbuild" kjs--sbuild-transient)
+    ("u" "uscan" kjs--uscan-transient)]
    ["Variable replacement"
     ("v" "Substitute variable" kjs-subst-var)]])
 
 
-(global-set-key (kbd "C-c C-k") 'kjs-deb-transient)
+(global-set-key (kbd "C-c `") 'kjs-deb-transient)
 
 
 (provide 'kjs-deb)
