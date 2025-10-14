@@ -8,16 +8,16 @@ export VISUAL="hx"
 stty -ixon
 
 # misc local stuff
-PATH="/home/karl/.local/bin:$PATH"
+PATH="$HOME/.local/bin:$PATH"
 
 # Haskell tooling
-[ -f "/home/karl/.ghcup/env" ] && . "/home/karl/.ghcup/env" # ghcup-env
+[ -f "$HOME/.ghcup/env" ] && . "$HOME/.ghcup/env" # ghcup-env
 
 # Rust tooling
-PATH="/home/karl/.cargo/bin:$PATH"
+PATH="$HOME/.cargo/bin:$PATH"
 
 # Custom LLVM build
-PATH="/home/karl/.local/llvm/bin:$PATH"
+PATH="$HOME/.local/llvm/bin:$PATH"
 
 export PATH
 

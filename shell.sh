@@ -1,8 +1,3 @@
-case $- in
-*i*) ;;
-*) return ;;
-esac
-
 if [ -d ~/.shell.d ] && [ -x ~/.shell.d ]; then
   for shellfile in ~/.shell.d/*; do
     [ -r "$shellfile" ] && source "$shellfile"
