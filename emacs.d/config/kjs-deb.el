@@ -177,16 +177,16 @@ Not comprehensive, but just some of the flags I tend to use. "
   "Call `sbuild' with transient args."
   (interactive (list (transient-args 'kjs--sbuild-transient)))
   (let* ((dist (transient-arg-value "--dist=" args))
-         (ppa (transient-arg-value kjs--extra-repo-arg args)))
-    (let ((modified-args
-           (mapcar (lambda (arg)
-                     (if (string-prefix-p kjs--extra-repo-arg arg)
-                         (concat kjs--extra-repo-arg
-                                 (shell-quote-argument
-                                  (format kjs--ppa-template ppa dist)))
-                       arg))
-                   args)))
-      (kjs--run-sbuild (kjs--get-target-file) modified-args))))
+         (ppa (transient-arg-value kjs--extra-repo-arg args))
+         (modified-args
+          (mapcar (lambda (arg)
+                    (if (string-prefix-p kjs--extra-repo-arg arg)
+                        (concat kjs--extra-repo-arg
+                                (shell-quote-argument
+                                 (format kjs--ppa-template ppa dist)))
+                      arg))
+                  args)))
+    (kjs--run-sbuild (kjs--get-target-file) modified-args)))
 
 
 (defun kjs--run-sbuild (target args)
