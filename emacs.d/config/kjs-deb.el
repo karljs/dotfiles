@@ -186,14 +186,18 @@ Not comprehensive, but just some of the flags I tend to use. "
                                   (format kjs--ppa-template ppa dist)))
                        arg))
                    args)))
-      (kjs--run-sbuild (kjs--get-compile-dir) modified-args))))
+      (kjs--run-sbuild (kjs--get-target-file) modified-args))))
 
 
-(defun kjs--run-sbuild (dir args)
+(defun kjs--run-sbuild (target args)
   "Run `sbuild' on a package."
-  (let ((default-directory dir))
+  (let ((default-directory (file-name-directory target)))
     (kjs-run-compile-command
-     (string-join (cons "sbuild" args) " ") "sbuild")))
+     (concat
+      (string-join (cons "sbuild" args) " ")
+      " "
+      target)
+     "sbuild")))
 
 
 (transient-define-prefix kjs--sbuild-transient ()
