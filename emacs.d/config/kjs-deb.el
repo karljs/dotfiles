@@ -52,15 +52,23 @@ some basic, configurable validation."
 
 
 (defun kjs-run-compile-command (command buffer-name)
-  "Run COMMAND, sending output to a compilation buffer."
-  (let ((compilation-buffer-name-function
-         (lambda (mode)
-           (if (string-match-p "^\*" buffer-name)
-               buffer-name
-             (format "*%s-%s*"
-                     buffer-name
-                     (format-time-string "%Y%m%d-%H%M%S"))))))
-    (compile command)))
+  "Run COMMAND, sending output to a comint buffer."
+  (let* ((comint-buffer-name
+          (if (string-match-p "^\*" buffer-name)
+              buffer-name
+            (format "*%s-%s*"
+                    buffer-name
+                    (format-time-string "%Y%m%d-%H%M%S")))))
+    (make-comint-in-buffer
+     comint-buffer-name
+     comint-buffer-name
+     shell-file-name
+     nil
+     shell-command-switch
+     command)
+    ;; (with-current-buffer comint-buffer-name
+    ;;   (setq-local comint-buffer-maximum-size 10000))
+    (pop-to-buffer comint-buffer-name)))
 
 
 (defun kjs-subst-var (var value)
