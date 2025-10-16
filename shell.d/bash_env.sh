@@ -21,7 +21,9 @@ PATH="$HOME/.local/llvm/bin:$PATH"
 
 export PATH
 
+export DEBFULLNAME="Karl Smeltzer"
 export DEBEMAIL="karl.smeltzer@canonical.com"
+export DEBSIGN_KEYID="049FDC317ACDCBAD0CCE5FF8CA323723B6406E60"
 
 export BAT_THEME="gruvbox-dark"
 
