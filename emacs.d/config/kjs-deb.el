@@ -214,7 +214,7 @@ Not comprehensive, but just some of the flags I tend to use. "
   [["Target options"
     ("-A" "arch-all" "-A")
     ("-d" "distro" "--dist="
-     :choices (questing noble jammy focal)
+     :choices (questing noble jammy focal plucky)
      :always-read t
      :allow-empty nil)]
    ["PPA"
