@@ -152,6 +152,21 @@ Not comprehensive, but just some of the flags I tend to use. "
     ("l" "lint" kjs--prep-lintian)]])
 
 
+(defun kjs--prep-lintian (&optional args)
+  "Call `lintian' with transient args."
+  (interactive (list (transient-args 'kjs--lintian-transient)))
+  (kjs--run-lintian (kjs--get-target-file) args))
+
+
+(defun kjs--run-lintian (target args)
+  "Run `lintian' on a deb package"
+  (let* ((dir (file-name-directory target))
+         (default-directory dir))
+    (kjs-run-compile-command
+     (concat (string-join (cons "lintian" args) " ") " " target)
+     "lintian")))
+
+
 ;;; sbuild
 
 (defclass kjs--sbuild-url-arg (transient-option)
