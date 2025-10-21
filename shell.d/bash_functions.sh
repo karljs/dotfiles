@@ -1,3 +1,17 @@
+sbuild-purge() {
+    if [ ! -d "debian" ]; then
+        echo "This script should only be executed within a package's source directory, with the build artifacts (e.g., *.ppa.upload, *.changes, etc.) in the parent directory."
+        exit 1
+    fi
+
+    quilt pop -a 2>/dev/null || echo "No patches applied"
+    schroot -e --all-sessions
+    rm -rf /var/lib/sbuild/build/*
+    rm -vf ../*.{debian.tar.xz,dsc,buildinfo,changes,ppa.upload,build,deb}
+    rm -vf debian/files
+    rm -rf .pc
+}
+
 # create and change to a directory
 mkcd() {
         mkdir -p -- "$1" && cd -P -- "$1" || exit
