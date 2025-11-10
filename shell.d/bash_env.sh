@@ -1,8 +1,9 @@
 # Environment variables, shell settings, and scripts that need
 # to be sourced
 
-export EDITOR="hx"
-export VISUAL="hx"
+export EDITOR="nvim"
+export GIT_EDITOR="nvim"
+export VISUAL="nvim"
 
 # disable XON/XOFF so C-s can forward search
 stty -ixon
@@ -18,6 +19,9 @@ PATH="$HOME/.cargo/bin:$PATH"
 
 # Custom LLVM build
 PATH="$HOME/.local/llvm/bin:$PATH"
+
+# Go tooling
+PATH="$HOME/go/bin:$PATH"
 
 export PATH
 

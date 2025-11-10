@@ -7,7 +7,7 @@
 ;; /_/  /_/ /_//_/  \__/(_)___//_/
 ;;
 
-(setq custom-file null-device)
+(setq custom-file (expand-file-name "custom.el" user-emacs-directory))
 
 ;; package manager and bootstrap use-package
 (setq package-enable-at-startup nil)
@@ -41,3 +41,5 @@
   :ensure nil)
 (use-package kjs-deb
   :ensure nil)
+
+(server-start)
