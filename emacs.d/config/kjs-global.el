@@ -27,6 +27,8 @@
   :demand t
   :config
   (when (memq window-system '(mac ns x pgtk))
+    (dolist (var '("JIRA_API_KEY"))
+      (add-to-list 'exec-path-from-shell-variables var))
     (exec-path-from-shell-initialize)))
 
 
@@ -82,6 +84,7 @@
   (setq compilation-scroll-output t)
   (minibuffer-depth-indicate-mode 1)
   (setq-default indent-tabs-mode nil)
+  (setq browse-url-browser-function 'browse-url-firefox)
 
   (add-hook 'before-save-hook 'delete-trailing-whitespace)
 

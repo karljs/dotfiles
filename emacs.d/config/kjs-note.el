@@ -18,6 +18,9 @@
   (setq org-directory (expand-file-name "~/Documents/notes"))
   (setq org-refile-targets '((org-agenda-files :maxlevel . 2)))
 
+  (setf (alist-get "\\.x?html?\\'" org-file-apps nil nil #'string=)
+        'browse-url-browser-function)
+
   (with-eval-after-load 'org-capture
     (add-to-list 'org-capture-templates
                  '("n" "New note" plain

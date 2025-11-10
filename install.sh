@@ -12,6 +12,8 @@ fi
 
 # Emacs
 ln -sn "$PWD/emacs.d" "$HOME/.emacs.d"
+ln -sn "$PWD/gmi-send.sh" "$HOME/.local/bin/gmi-send.sh"
+chmod 755 "$HOME/.local/bin/gmi-send.sh"
 
 # Helix
 if ! [ -d $HOME/.config/helix ]; then

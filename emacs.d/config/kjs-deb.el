@@ -68,7 +68,7 @@ some basic, configurable validation."
      command)
     ;; (with-current-buffer comint-buffer-name
     ;;   (setq-local comint-buffer-maximum-size 10000))
-    (pop-to-buffer actual-buffer-name)))
+    (pop-to-buffer comint-buffer-name)))
 
 
 (defun kjs-subst-var (var value)
@@ -152,6 +152,21 @@ Not comprehensive, but just some of the flags I tend to use. "
     ("l" "lint" kjs--prep-lintian)]])
 
 
+(defun kjs--prep-lintian (&optional args)
+  "Call `lintian' with transient args."
+  (interactive (list (transient-args 'kjs--lintian-transient)))
+  (kjs--run-lintian (kjs--get-target-file) args))
+
+
+(defun kjs--run-lintian (target args)
+  "Run `lintian' on a deb package"
+  (let* ((dir (file-name-directory target))
+         (default-directory dir))
+    (kjs-run-compile-command
+     (concat (string-join (cons "lintian" args) " ") " " target)
+     "lintian")))
+
+
 ;;; sbuild
 
 (defclass kjs--sbuild-url-arg (transient-option)
@@ -214,7 +229,7 @@ Not comprehensive, but just some of the flags I tend to use. "
   [["Target options"
     ("-A" "arch-all" "-A")
     ("-d" "distro" "--dist="
-     :choices (questing noble jammy focal)
+     :choices (resolute noble questing jammy focal plucky)
      :always-read t
      :allow-empty nil)]
    ["PPA"
@@ -255,6 +270,36 @@ Not comprehensive, but just some of the flags I tend to use. "
 
 ;;; General
 
+(defun kjs-clean-after-build (&optional directory)
+  "Clean up build directory after an sbuild.
+If DIRECTORY is not provided, defaults to project root.
+When called interactively, prompts for directory."
+  (interactive
+   (list (read-directory-name "Package directory: "
+                              (when (fboundp 'project-root)
+                                (project-root (project-current)))
+                              nil
+                              t)))
+  (let* ((dir (expand-file-name (or directory
+                                     (when (fboundp 'project-root)
+                                       (project-root (project-current)))
+                                     default-directory)))
+         (debian-dir (expand-file-name "debian" dir))
+         (parent-dir (file-name-directory (directory-file-name dir)))
+         (default-directory dir))
+
+    (unless (file-directory-p debian-dir)
+      (error "This should only be executed within a package's source directory"))
+
+    (shell-command "quilt pop -a 2>&1 || true")
+    (shell-command "schroot -e --all-sessions")
+    (dolist (ext '("debian.tar.xz" "dsc" "buildinfo" "changes"
+                   "ppa.upload" "build" "deb"))
+      (shell-command (format "rm -vf %s*.%s" parent-dir ext)))
+    (shell-command "rm -vf debian/files")
+    (shell-command "rm -rf .pc")
+    (message "sbuild purge complete in %s" dir)))
+
 
 (transient-define-prefix kjs-deb-transient ()
   "Transient for deb helper functions"
@@ -265,7 +310,9 @@ Not comprehensive, but just some of the flags I tend to use. "
     ("s" "sbuild" kjs--sbuild-transient)
     ("u" "uscan" kjs--uscan-transient)]
    ["Variable replacement"
-    ("v" "Substitute variable" kjs-subst-var)]])
+    ("v" "Substitute variable" kjs-subst-var)]
+   ["Util"
+    ("c" "Clean" kjs-clean-after-build)]])
 
 
 (global-set-key (kbd "C-c `") 'kjs-deb-transient)

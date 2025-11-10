@@ -99,11 +99,14 @@
   (setq modus-themes-mixed-fonts t)
   (setq modus-themes-italic-constructs t)
   (setq modus-themes-bold-constructs t)
-  (load-theme 'modus-operandi t))
+  ;; (load-theme 'modus-operandi t)
+  )
 
 
 (use-package ef-themes
-  :ensure t)
+  :ensure t
+  :config
+  (load-theme 'ef-dream t))
 
 
 (use-package standard-themes
@@ -139,6 +142,11 @@
 
 ;; Probably break this out to a new file
 (use-package notmuch
+  :preface
+  (defun kjs-sendmail-via-gmi ()
+    (let ((sendmail-program "gmi-send.sh"))
+      (message-send-mail-with-sendmail)))
+
   :ensure t
   :bind (("C-c m" . notmuch)
          :map notmuch-search-mode-map
@@ -154,23 +162,29 @@
           (:name "sent" :query "tag:sent" :key "t")
           (:name "all mail" :query "*" :key "a")))
 
-  (setq message-send-mail-function 'smtpmail-send-it
-        smtpmail-smtp-server "smtp.gmail.com"
-        smtpmail-smtp-service 587
-        smtpmail-stream-type 'starttls
-        user-mail-address "karl.smeltzer@canonical.com"
-        user-full-name "Karl Smeltzer")
+  (setq sendmail-program "gmi-send.sh"
+        message-send-mail-function #'kjs-sendmail-via-gmi
+        notmuch-fcc-dirs nil
+        notmuch-always-prompt-for-sender 'nil)
+
+  ;; (setq message-send-mail-function 'smtpmail-send-it
+  ;;       smtpmail-smtp-server "smtp.gmail.com"
+  ;;       smtpmail-smtp-service 587
+  ;;       smtpmail-stream-type 'starttls
+  ;;       )
   (add-hook 'notmuch-show-hook
-          (lambda ()
-            (notmuch-show-tag-all '("-unread"))))
+            (lambda ()
+              (notmuch-show-tag-all '("-unread"))))
   (setq smtpmail-debug-info t
         smtpmail-debug-verb t)
-  )
+  (setq notmuch-address-internal-completion '("from" "to" "cc" "bcc"))
+  (notmuch-address-setup))
+
 
 (use-package w3m
   :ensure t
   :config
-  (setq browse-url-browser-function 'w3m-browse-url)
+  ;; (setq browse-url-browser-function 'w3m-browse-url)
   (setq w3m-default-display-inline-images t)
   (setq w3m-use-cookies t)
   (setq mm-text-html-renderer 'w3m)
@@ -183,8 +197,23 @@
   (notmuch-indicator-mode)
   )
 
+
 (use-package smtpmail
   :ensure t)
+
+
+(use-package jira
+  :ensure t
+  :config
+  (setq jira-base-url "https://warthogs.atlassian.net")
+  (setq jira-username "karl.smeltzer@canonical.com")
+  (setq jira-token (funcall (plist-get (car (auth-source-search :host "jira" :max 1)) :secret)))
+  (setq jira-api-version 3))
+
+
+(use-package eat
+  :ensure t
+  :bind (("C-c t" . eat)))
 
 
 (provide 'kjs-misc)
