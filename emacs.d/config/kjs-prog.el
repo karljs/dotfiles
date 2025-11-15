@@ -118,27 +118,26 @@
 
 (use-package cc-mode
   :preface
-  (defun kjs--insert-ifdef-guards ()
-    "Insert #ifdef guards for C/C++ header files based on the buffer name"
-    (interactive)
-    (let* ((project (projectile-project-name))
-           (name (file-name-base (buffer-file-name)))
-           (symbol (concat project "_" name "_h")))
-      (progn
-        (insert (concat "#ifndef " symbol))
-        (end-of-line)
-        (newline)
-        (insert (concat  "#define " symbol))
-        (end-of-line)
-        (newline)
-        (newline)
-        (insert "#endif")
-        (previous-line))))
-
+  :init
+  (when (file-exists-p "~/src/llvm/llvm-project/llvm/utils/emacs/emacs.el")
+    (load "~/src/llvm/llvm-project/llvm/utils/emacs/emacs.el"))
   :config
-  (setq c-ts-mode-indent-offset 4)
-  (setq c-ts-mode-indent-style 'linux)
-  )
+  (if (file-exists-p "~/src/llvm/llvm-project/llvm/utils/emacs/emacs.el")
+      (setq c-default-style
+            '((c-mode . "llvm-root")
+              (c++-mode . "llvm")
+              (other . "linux")))
+    (setq c-default-style
+          '((c-mode . "linux")
+            (c++-mode . "linux")
+            (other . "linux"))))
 
+  (electric-pair-mode))
+
+
+(use-package c-ts-mode
+  :config
+  (setq c-ts-mode-indent-offset 4
+        c-ts-mode-indent-style 'linux))
 
 (provide 'kjs-prog)

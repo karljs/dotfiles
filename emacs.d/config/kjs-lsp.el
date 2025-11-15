@@ -17,7 +17,18 @@
           (c++-mode . c++-ts-mode)
           (python-mode . python-ts-mode)))
   (add-to-list 'auto-mode-alist '("\\.yml\\'" . yaml-ts-mode))
-  (add-to-list 'eglot-server-programs '((c++-ts-mode c-ts-mode) "clangd"))
+
+  ;; Use custom llvm build when it exists.  Should probably sort out
+  ;; update-alternatives instead.
+  (when (file-directory-p "~/.llvm-21")
+    (let ((llvm-root (expand-file-name "~/.llvm-21")))
+      (add-to-list 'eglot-server-programs
+                   `((c-mode c++-mode c++-ts-mode c-ts-mode)
+                     ,(concat llvm-root "/bin/clangd")))
+      (add-to-list 'exec-path (concat llvm-root "/bin"))
+      (setenv "CC" (concat llvm-root "/bin/clang"))
+      (setenv "CXX" (concat llvm-root "/bin/clang++"))))
+
   :bind (("C-c C-a" . eglot-code-actions)))
 
 
@@ -65,8 +76,9 @@
              (css-mode . css-ts-mode)
              (json-mode . json-ts-mode)
              (js-json-mode . json-ts-mode)
-             (c-mode . c-ts-mode)
-             (c++-mode . c++-ts-mode)))
+             ;; (c-mode . c-ts-mode)
+             ;; (c++-mode . c++-ts-mode)
+             ))
     (add-to-list 'major-mode-remap-alist mapping))
   :config
   (kjs-setup-install-grammars))
