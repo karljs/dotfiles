@@ -99,14 +99,15 @@
   (setq modus-themes-mixed-fonts t)
   (setq modus-themes-italic-constructs t)
   (setq modus-themes-bold-constructs t)
-  ;; (load-theme 'modus-operandi t)
+  (load-theme 'modus-operandi t)
   )
 
 
 (use-package ef-themes
   :ensure t
   :config
-  (load-theme 'ef-dream t))
+  ;; (load-theme 'ef-dream t)
+  )
 
 
 (use-package standard-themes
