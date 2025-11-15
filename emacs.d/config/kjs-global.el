@@ -88,6 +88,8 @@
 
   (add-hook 'before-save-hook 'delete-trailing-whitespace)
 
+  (setq ediff-window-setup-function 'ediff-setup-windows-plain)
+
   ;; turn on some disabled functions
   (mapc
    (lambda (fn)
