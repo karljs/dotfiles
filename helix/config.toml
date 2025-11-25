@@ -1,4 +1,4 @@
-theme = "gruvbox"
+theme = "monokai_pro"
 
 [editor]
 end-of-line-diagnostics = "hint"
