@@ -23,10 +23,6 @@ restart-shell() {
         exec -l $SHELL
 }
 
-apt-no-proxy() {
-        sudo apt-get -o Acquire::http::proxy=false "$1"
-}
-
 test-snap() {
         SNAP_NAME=$(grep "name:" snapcraft.yaml | cut -d ' ' -f2)
         CONTAINER_NAME="snap-test-$(date +%s)"

@@ -1,9 +1,9 @@
 # Environment variables, shell settings, and scripts that need
 # to be sourced
 
-export EDITOR="nvim"
-export GIT_EDITOR="nvim"
-export VISUAL="nvim"
+export EDITOR="hx"
+export GIT_EDITOR="hx"
+export VISUAL="hx"
 
 # disable XON/XOFF so C-s can forward search
 stty -ixon
@@ -17,9 +17,6 @@ PATH="$HOME/.local/bin:$PATH"
 # Rust tooling
 PATH="$HOME/.cargo/bin:$PATH"
 
-# Custom LLVM build
-PATH="$HOME/.local/llvm/bin:$PATH"
-
 # Go tooling
 PATH="$HOME/go/bin:$PATH"
 
@@ -29,11 +26,15 @@ export DEBFULLNAME="Karl Smeltzer"
 export DEBEMAIL="karl.smeltzer@canonical.com"
 export DEBSIGN_KEYID="049FDC317ACDCBAD0CCE5FF8CA323723B6406E60"
 
-export BAT_THEME="gruvbox-dark"
+export BAT_THEME="Monokai Extended"
 
 # must come after PATH is set
 if command -v zellij >/dev/null 2>&1; then
         eval "$(zellij setup --generate-completion bash)"
+fi
+
+if command -v wezterm >/dev/null 2>&1; then
+        eval "$(wezterm shell-completion --shell bash)"
 fi
 
 # prompt
