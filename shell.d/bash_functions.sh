@@ -7,7 +7,7 @@ sbuild-purge() {
     quilt pop -a 2>/dev/null || echo "No patches applied"
     schroot -e --all-sessions
     rm -rf /var/lib/sbuild/build/*
-    rm -vf ../*.{debian.tar.xz,dsc,buildinfo,changes,ppa.upload,build,deb}
+    rm -vf ../*.{debian.tar.xz,dsc,buildinfo,changes,ppa.upload,build,deb,ddeb}
     rm -vf debian/files
     rm -rf .pc
 }
