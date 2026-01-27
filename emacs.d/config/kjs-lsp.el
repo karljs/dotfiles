@@ -18,18 +18,14 @@
           (python-mode . python-ts-mode)))
   (add-to-list 'auto-mode-alist '("\\.yml\\'" . yaml-ts-mode))
 
-  ;; Use custom llvm build when it exists.  Should probably sort out
-  ;; update-alternatives instead.
-  (when (file-directory-p "~/.llvm-21")
-    (let ((llvm-root (expand-file-name "~/.llvm-21")))
-      (add-to-list 'eglot-server-programs
-                   `((c-mode c++-mode c++-ts-mode c-ts-mode)
-                     ,(concat llvm-root "/bin/clangd")))
-      (add-to-list 'exec-path (concat llvm-root "/bin"))
-      (setenv "CC" (concat llvm-root "/bin/clang"))
-      (setenv "CXX" (concat llvm-root "/bin/clang++"))))
+  (defun kjs-eglot-format-dwim ()
+    "Format region if active, otherwise buffer"
+    (interactive)
+    (if (use-region-p)
+        (eglot-format (region-beginning) (region-end))
+      (eglot-format-buffer)))
 
-  :bind (("C-c C-a" . eglot-code-actions)))
+    :bind (("C-c C-a" . eglot-code-actions)))
 
 
 (use-package consult-eglot
@@ -48,6 +44,7 @@
     (interactive)
     (dolist (grammar
              `((c . (,(kjs-ts-url "c") "v0.23.5"))
+               (cmake . ("https://github.com/uyha/tree-sitter-cmake" "v0.7.2"))
                (cpp . (,(kjs-ts-url "cpp") "v0.23.4"))
                (css . (,(kjs-ts-url "css") "v0.20.0"))
                (go . (,(kjs-ts-url "go") "v0.20.0"))
@@ -76,8 +73,8 @@
              (css-mode . css-ts-mode)
              (json-mode . json-ts-mode)
              (js-json-mode . json-ts-mode)
-             ;; (c-mode . c-ts-mode)
-             ;; (c++-mode . c++-ts-mode)
+             (c-mode . c-ts-mode)
+             (c++-mode . c++-ts-mode)
              ))
     (add-to-list 'major-mode-remap-alist mapping))
   :config

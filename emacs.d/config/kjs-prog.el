@@ -115,29 +115,62 @@
 (use-package python-mode
   :ensure)
 
-
-(use-package cc-mode
-  :preface
-  :init
-  (when (file-exists-p "~/src/llvm/llvm-project/llvm/utils/emacs/emacs.el")
-    (load "~/src/llvm/llvm-project/llvm/utils/emacs/emacs.el"))
-  :config
-  (if (file-exists-p "~/src/llvm/llvm-project/llvm/utils/emacs/emacs.el")
-      (setq c-default-style
-            '((c-mode . "llvm-root")
-              (c++-mode . "llvm")
-              (other . "linux")))
-    (setq c-default-style
-          '((c-mode . "linux")
-            (c++-mode . "linux")
-            (other . "linux"))))
-
-  (electric-pair-mode))
-
-
 (use-package c-ts-mode
+  :ensure nil
+  :mode (("\\.c\\'" . c-ts-mode)
+         ("\\.h\\'" . c++-ts-mode)
+         ("\\.cpp\\'" . c++-ts-mode)
+         ("\\.cxx\\'" . c++-ts-mode)
+         ("\\.cc\\'" . c++-ts-mode)
+         ("\\.hpp\\'" . c++-ts-mode)
+         ("\\.hxx\\'" . c++-ts-mode))
+  :hook ((c-ts-mode . kjs-c-ts-commont-setup)
+         (c++-ts-mode . kjs-c-ts-common-setup))
+  :init
+  (defun kjs-c-ts-common-setup ()
+    "Shared setup for C and C++"
+    (electric-indent-local-mode -1)
+    (setq-local indent-line-function #'kjs-indent-to-next-multiple)
+    (local-set-key (kbd "<backtab>") #'kjs-dedent-to-prev-multiple)
+    (add-hook 'eglot-managed-mode-hook
+              (lambda ()
+                (setq-local post-self-insert-hook (list t)))
+              nil t)
+    (eglot-ensure)
+    (add-hook 'before-save-hook #'kjs-eglot-format-on-save))
+
+  (defun kjs-eglot-format-on-save ()
+    (when (bound-and-true-p eglot--managed-mode)
+      (eglot-format-buffer)))
+
+  (defun kjs-c-ts-bind-keys (map)
+    (define-key map (kbd "C-c f") #'kjs-eglot-format-dwim)
+    (define-key map (kbd "C-c F") #'eglot-format-buffer))
+
+  (defun kjs-indent-to-next-multiple ()
+    (interactive)
+    (let ((cur (current-indentation)))
+      (indent-line-to (+ cur (- 4 (mod cur 4))))))
+
+  (defun kjs-dedent-to-prev-multiple ()
+    (interactive)
+    (let ((cur (current-indentation)))
+      (indent-line-to (max 0 (- cur (if (zerop (mod cur 4)) 4 (mod cur 4)))))))
+
   :config
-  (setq c-ts-mode-indent-offset 4
-        c-ts-mode-indent-style 'linux))
+  (kjs-c-ts-bind-keys c-ts-mode-map)
+  (kjs-c-ts-bind-keys c++-ts-mode-map))
+
+
+(use-package cmake-ts-mode
+  :ensure t
+  :mode ("CMakeLists\\.txt\\'" "\\.cmake\\'")
+  :hook (cmake-ts-mode . kjs-cmake-maybe-eglot)
+  :init
+  (defun kjs-cmake-maybe-eglot ()
+    (require 'eglot)
+    (add-to-list 'eglot-server-programs `((cmake-ts-mode) . ("neocmakelsp" "stdio")))
+    (eglot-ensure)))
+
 
 (provide 'kjs-prog)
