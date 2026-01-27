@@ -149,8 +149,14 @@
 
   (defun kjs-indent-to-next-multiple ()
     (interactive)
-    (let ((cur (current-indentation)))
-      (indent-line-to (+ cur (- 4 (mod cur 4))))))
+    (let ((col (save-excursion (back-to-indentation) (current-column))))
+      (if (<= (current-column) col)
+          ;; Point is in leading whitespace, indent the line
+          (let ((cur (current-indentation)))
+            (indent-line-to (+ cur (- 4 (mod cur 4)))))
+        ;; Point is after text, signal no indent happened
+        nil)))
+
 
   (defun kjs-dedent-to-prev-multiple ()
     (interactive)
