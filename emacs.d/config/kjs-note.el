@@ -70,9 +70,12 @@
 
 
 (use-package markdown-mode
-  :ensure nil
-  :hook
-  (markdown-mode . visual-line-mode))
+  :ensure t
+  :mode ("README\\.md\\'" . gfm-mode)
+  :init (setq markdown-command "pandoc")
+  :bind (:map markdown-mode-map
+              ("C-c C-e" . markdown-do))
+  )
 
 
 (provide 'kjs-note)
