@@ -99,7 +99,7 @@
   (setq modus-themes-mixed-fonts t)
   (setq modus-themes-italic-constructs t)
   (setq modus-themes-bold-constructs t)
-  ;; (load-theme 'modus-operandi t)
+  (load-theme 'modus-operandi t)
   )
 
 
@@ -116,8 +116,7 @@
 
 (use-package monokai-pro-theme
   :ensure t
-  :config
-  (load-theme 'monokai-pro t))
+  :config)
 
 
 (use-package rainbow-delimiters
