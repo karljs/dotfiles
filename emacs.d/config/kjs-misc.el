@@ -217,9 +217,10 @@
   (setq jira-api-version 3))
 
 
-(use-package eat
+(use-package copilot-chat
   :ensure t
-  :bind (("C-c t" . eat)))
-
+  :config
+  (setq copilot-chat-frontend 'markdown
+        copilot-chat-default-model "claude-sonnet-4.6"))
 
 (provide 'kjs-misc)
