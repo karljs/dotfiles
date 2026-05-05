@@ -1,4 +1,4 @@
-;;  -*- lexical-binding: t; -*-
+ ;;  -*- lexical-binding: t; -*-
 
 (use-package doom-modeline
   :ensure t
@@ -106,7 +106,7 @@
 (use-package ef-themes
   :ensure t
   :config
-  ;; (load-theme 'ef-dream t)
+  ;; (load-theme 'ef-day t)
   )
 
 
@@ -220,7 +220,11 @@
 (use-package copilot-chat
   :ensure t
   :config
-  (setq copilot-chat-frontend 'markdown
+  (setq ;;copilot-chat-frontend 'markdown
         copilot-chat-default-model "claude-sonnet-4.6"))
+
+(use-package eat
+  :ensure t
+  :bind (("C-c t" . eat)))
 
 (provide 'kjs-misc)

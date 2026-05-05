@@ -140,8 +140,7 @@
 
 
 (use-package eshell
-  :ensure nil
-  :bind (("C-c t" . eshell)))
+  :ensure nil)
 
 
 (use-package isearch
