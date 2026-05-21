@@ -26,9 +26,24 @@ export DEBFULLNAME="Karl Smeltzer"
 export DEBEMAIL="karl.smeltzer@canonical.com"
 export DEBSIGN_KEYID="049FDC317ACDCBAD0CCE5FF8CA323723B6406E60"
 
-export BAT_THEME="Monokai Extended"
+export BAT_THEME="ansi"
 
 # must come after PATH is set
+if command -v eza >/dev/null 2>&1; then
+        alias ls='eza'
+        alias l='eza -lbF --git'
+        alias ll='eza -lbGF --git'
+        alias llm='eza -lbGd --git --sort=modified'
+        alias la='eza -lbhHigUmuSa --time-style=long-iso --git --color-scale'
+        alias lx='eza -lbhHigUmuSa@ --time-style=long-iso --git --color-scale'
+
+        # specialty views
+        alias lS='eza -1'
+        alias lt='eza --tree --level=2'
+        alias l.="eza -a | grep -E '^\.'"
+fi
+
+
 if command -v zellij >/dev/null 2>&1; then
         eval "$(zellij setup --generate-completion bash)"
 fi
