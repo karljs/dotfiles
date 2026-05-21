@@ -1,4 +1,4 @@
-theme = "modus_operandi"
+theme = "base16_terminal"
 
 [editor]
 end-of-line-diagnostics = "hint"
@@ -14,3 +14,10 @@ space.q = ":reflow"
 
 [keys.normal.z]
 W = [":toggle soft-wrap.enable", ":redraw"]
+
+[editor.auto-pairs]
+'(' = ')'
+'{' = '}'
+'[' = ']'
+'"' = '"'
+'<' = '>'
