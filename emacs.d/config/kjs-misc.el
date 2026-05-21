@@ -1,6 +1,7 @@
  ;;  -*- lexical-binding: t; -*-
 
 (use-package doom-modeline
+  :disabled
   :ensure t
   :init
   (setq nerd-icons-font-family "PragmataPro")
@@ -44,6 +45,8 @@
 (use-package jinx
   :ensure
   :diminish jinx-mode
+  :preface
+  (setenv "DICPATH" (expand-file-name "~/.local/share/hunspell"))
   :hook (emacs-startup . global-jinx-mode)
   :bind (("C-\"" . jinx-correct)))
 
@@ -99,14 +102,14 @@
   (setq modus-themes-mixed-fonts t)
   (setq modus-themes-italic-constructs t)
   (setq modus-themes-bold-constructs t)
-  (load-theme 'modus-operandi t)
+  ;; (load-theme 'modus-operandi t)
   )
 
 
 (use-package ef-themes
   :ensure t
   :config
-  ;; (load-theme 'ef-day t)
+  (load-theme 'ef-cyprus t)
   )
 
 
@@ -219,12 +222,19 @@
 
 (use-package copilot-chat
   :ensure t
+  :vc (:url https://github.com/chep/copilot-chat.el.git
+       :branch master)
   :config
   (setq ;;copilot-chat-frontend 'markdown
         copilot-chat-default-model "claude-sonnet-4.6"))
 
 (use-package eat
   :ensure t
-  :bind (("C-c t" . eat)))
+  ;; :bind (("C-c t" . eat))
+  )
+
+(use-package ghostel
+  :ensure t
+  :bind (("C-c t" . ghostel)))
 
 (provide 'kjs-misc)

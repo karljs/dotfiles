@@ -35,6 +35,8 @@
 (use-package emacs
   :ensure nil
   :demand t
+
+  :preface
   :init
   ;; performance and weird legacy stuff
   (setq gc-cons-percentage 0.5
@@ -49,16 +51,19 @@
   (let ((font-size
          (if (eq system-type 'darwin)
              170
-           140)))
+           150)))
     (set-face-attribute 'default nil
 		        :font "PragmataPro"
-		        :height font-size)
+                        :height font-size
+		        )
     (set-face-attribute 'variable-pitch nil
-                        :font "Inter"
+                        :font "Equity OT"
                         :height font-size)
     (set-face-attribute 'fixed-pitch nil
-                        :font "PragmataPro"
-                        :height font-size))
+		        :font "PragmataPro"
+                        :height font-size
+		        ))
+
   (tool-bar-mode -1)
   (set-scroll-bar-mode nil)
   (when (not (eq system-type 'darwin))
