@@ -28,6 +28,8 @@ export DEBSIGN_KEYID="049FDC317ACDCBAD0CCE5FF8CA323723B6406E60"
 
 export BAT_THEME="ansi"
 
+export COPILOT_CUSTOM_INSTRUCTIONS_DIRS="$HOME/.config"
+
 # must come after PATH is set
 if command -v eza >/dev/null 2>&1; then
         alias ls='eza'

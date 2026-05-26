@@ -1,6 +1,6 @@
 #!/usr/bin/env sh
 
-# BASH stuff
+# Shell configuration
 ln -sf "$PWD/shell.sh" "$HOME/.shell.sh"
 ln -sn "$PWD/shell.d" "$HOME/.shell.d" >/dev/null 2>&1
 
@@ -12,17 +12,9 @@ fi
 
 # Emacs
 ln -sn "$PWD/emacs.d" "$HOME/.emacs.d"
-ln -sn "$PWD/gmi-send.sh" "$HOME/.local/bin/gmi-send.sh"
-chmod 755 "$HOME/.local/bin/gmi-send.sh"
 
 # Helix
-if ! [ -d $HOME/.config/helix ]; then
-  mkdir -p $HOME/.config/helix
+if ! [ -d "$HOME/.config/helix" ]; then
+  mkdir -p "$HOME/.config/helix"
 fi
 ln -sf "$PWD/helix/config.toml" "$HOME/.config/helix/config.toml"
-
-# Zellij
-if ! [ -d $HOME/.config/zellij ]; then
-  mkdir -p $HOME/.config/zellij
-fi
-ln -sf "$PWD/zellij/config.kdl" "$HOME/.config/zellij/config.kdl"
