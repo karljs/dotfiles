@@ -12,7 +12,6 @@
 
 (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
 
-(setq package-enable-at-startup nil)
 (require 'package)
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
 (package-initialize)
@@ -50,9 +49,7 @@
   :ensure nil
   :demand t
   :init
-  ;; Performance
-  (setq gc-cons-percentage 0.5
-        gc-cons-threshold (* 128 1024 1024))
+  ;; Performance (GC settings are in early-init.el)
   (setq load-prefer-newer t)
   (setq read-process-output-max (* 4 1024 1024))
   (setq process-adaptive-read-buffering nil)
@@ -71,15 +68,9 @@
 		        :font "PragmataPro"
                         :height font-size))
 
-  ;; UI cleanup
-  (tool-bar-mode -1)
-  (set-scroll-bar-mode nil)
-  (when (not (eq system-type 'darwin))
-    (menu-bar-mode -1))
+  ;; UI (tool-bar, scroll-bar, menu-bar disabled in early-init.el)
   (setq ring-bell-function nil)
   (setq visible-bell t)
-  (when (native-comp-available-p)
-    (setq native-comp-async-report-warnings-errors 'silent))
   (display-battery-mode)
 
   ;; macOS keys
@@ -303,7 +294,6 @@
 ;;; Appearance
 
 (use-package doom-modeline
-  :disabled
   :ensure t
   :init
   (setq nerd-icons-font-family "PragmataPro")
@@ -365,7 +355,21 @@
 
 (use-package ansi-color
   :ensure t
-  :hook (compilation-filter-hook . ansi-color-compilation-filter))
+  :config
+  (defun kjs-filter-osc-sequences ()
+    "Remove OSC and terminal query sequences from compilation output."
+    (let ((inhibit-read-only t))
+      (save-excursion
+        (goto-char compilation-filter-start)
+        ;; Remove OSC sequences: ESC ] ... (BEL | ESC \)
+        (while (re-search-forward "\e\\][^\a\e]*\\(\a\\|\e\\\\\\)" nil t)
+          (replace-match ""))
+        (goto-char compilation-filter-start)
+        ;; Remove CSI ? sequences (cursor show/hide, etc)
+        (while (re-search-forward "\e\\[\\?[0-9;]*[a-zA-Z]" nil t)
+          (replace-match "")))))
+  :hook ((compilation-filter . ansi-color-compilation-filter)
+         (compilation-filter . kjs-filter-osc-sequences)))
 
 ;;; Navigation & Projects
 
@@ -767,14 +771,6 @@
   :ensure t)
 
 
-(use-package jira
-  :ensure t
-  :config
-  (setq jira-base-url "https://warthogs.atlassian.net")
-  (setq jira-username "karl.smeltzer@canonical.com")
-  (setq jira-token (funcall (plist-get (car (auth-source-search :host "jira" :max 1)) :secret)))
-  (setq jira-api-version 3))
-
 ;;; Terminals
 
 (use-package eat
@@ -785,8 +781,14 @@
   :ensure t
   :bind (("C-c t" . ghostel)))
 
-;;; Debian Packaging (separate files due to complexity)
+;;; Debian Packaging
 
+;; New deb-packaging package (separate repo)
+(use-package deb-packaging
+  :load-path "~/deb-packaging-el"
+  :bind ("C-c d" . deb-packaging-dispatch))
+
+;; Legacy kjs-deb (available via C-c ` for advanced flag control)
 (add-to-list 'load-path (expand-file-name "config" user-emacs-directory))
 
 (use-package kjs-transient

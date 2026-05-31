@@ -1,3 +1,46 @@
+;;; early-init.el --- Early initialization -*- lexical-binding: t; -*-
+
+;;; Startup Performance
+
+;; Maximize GC threshold during startup for speed
+(setq gc-cons-threshold most-positive-fixnum)
+(setq gc-cons-percentage 0.6)
+
+;; Disable file-name-handler during startup
+(defvar kjs--default-file-name-handler-alist file-name-handler-alist)
+(setq file-name-handler-alist nil)
+
+;; Restore reasonable values after init
+(add-hook 'emacs-startup-hook
+          (lambda ()
+            (setq gc-cons-threshold (* 128 1024 1024)) ; 128MB (matches your init.el preference)
+            (setq gc-cons-percentage 0.5)
+            (setq file-name-handler-alist kjs--default-file-name-handler-alist)))
+
+;;; Prevent UI Flicker
+
+;; Disable UI elements before first frame is created
+(setq default-frame-alist
+      '((menu-bar-lines . 0)
+        (tool-bar-lines . 0)
+        (vertical-scroll-bars . nil)
+        (horizontal-scroll-bars . nil)
+        (width . 140)
+        (height . 42)))
+
+;; Re-enable menu-bar on macOS (will be set properly in init.el)
+(when (eq system-type 'darwin)
+  (push '(menu-bar-lines . 1) default-frame-alist))
+
+(setq frame-inhibit-implied-resize t)
+
+;;; Native Compilation
+
+(when (featurep 'native-compile)
+  (setq native-comp-async-report-warnings-errors 'silent))
+
+;;; macOS Native Compilation Library Paths
+
 (defun homebrew-gcc-paths ()
   "Return GCC library paths from Homebrew installations.
 Detects paths for gcc and libgccjit packages to be used in LIBRARY_PATH."
