@@ -640,15 +640,11 @@
          (c++-ts-mode . kjs-c-ts-common-setup))
   :init
   (defun kjs-c-ts-common-setup ()
-    "Shared setup for C and C++"
-    (electric-indent-local-mode -1)
-    (setq-local indent-line-function #'kjs-indent-to-next-multiple)
-    (local-set-key (kbd "<backtab>") #'kjs-dedent-to-prev-multiple)
-    (add-hook 'eglot-managed-mode-hook
-              (lambda () (setq-local post-self-insert-hook (list t)))
-              nil t)
+    "Shared setup for C and C++.
+Uses tree-sitter indentation with format-on-save via eglot/clangd
+as the source of truth."
     (eglot-ensure)
-    (add-hook 'before-save-hook #'kjs-eglot-format-on-save))
+    (add-hook 'before-save-hook #'kjs-eglot-format-on-save nil t))
 
   (defun kjs-eglot-format-on-save ()
     (when (bound-and-true-p eglot--managed-mode)
@@ -658,20 +654,34 @@
     (define-key map (kbd "C-c f") #'kjs-eglot-format-dwim)
     (define-key map (kbd "C-c F") #'eglot-format-buffer))
 
-  (defun kjs-indent-to-next-multiple ()
-    (interactive)
-    (let ((col (save-excursion (back-to-indentation) (current-column))))
-      (if (<= (current-column) col)
-          (let ((cur (current-indentation)))
-            (indent-line-to (+ cur (- 4 (mod cur 4)))))
-        nil)))
-
-  (defun kjs-dedent-to-prev-multiple ()
-    (interactive)
-    (let ((cur (current-indentation)))
-      (indent-line-to (max 0 (- cur (if (zerop (mod cur 4)) 4 (mod cur 4)))))))
+  ;; --- Old manual indentation functions (kept for reference) ---
+  ;; To restore: uncomment these and the old kjs-c-ts-common-setup body above.
+  ;;
+  ;; (defun kjs-indent-to-next-multiple ()
+  ;;   (interactive)
+  ;;   (let ((col (save-excursion (back-to-indentation) (current-column))))
+  ;;     (if (<= (current-column) col)
+  ;;         (let ((cur (current-indentation)))
+  ;;           (indent-line-to (+ cur (- 4 (mod cur 4)))))
+  ;;       nil)))
+  ;;
+  ;; (defun kjs-dedent-to-prev-multiple ()
+  ;;   (interactive)
+  ;;   (let ((cur (current-indentation)))
+  ;;     (indent-line-to (max 0 (- cur (if (zerop (mod cur 4)) 4 (mod cur 4)))))))
+  ;;
+  ;; Old kjs-c-ts-common-setup body:
+  ;;   (electric-indent-local-mode -1)
+  ;;   (setq-local indent-line-function #'kjs-indent-to-next-multiple)
+  ;;   (local-set-key (kbd "<backtab>") #'kjs-dedent-to-prev-multiple)
+  ;;   (add-hook 'eglot-managed-mode-hook
+  ;;             (lambda () (setq-local post-self-insert-hook (list t)))
+  ;;             nil t)
+  ;; ---
 
   :config
+  (setq c-ts-mode-indent-offset 4)
+  (setq c-ts-mode-indent-style 'linux)
   (kjs-c-ts-bind-keys c-ts-mode-map)
   (kjs-c-ts-bind-keys c++-ts-mode-map))
 
@@ -764,6 +774,9 @@
   :after gptel
   :config
   (gptel-agent-update))
+
+(use-package eca
+  :vc (:url "https://github.com/editor-code-assistant/eca-emacs" :rev :newest))
 
 ;;; External Tools
 
