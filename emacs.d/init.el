@@ -799,7 +799,7 @@ as the source of truth."
 ;; New deb-packaging package (separate repo)
 (use-package deb-packaging
   :load-path "~/deb-packaging-el"
-  :bind ("C-c d" . deb-packaging-dispatch))
+  :bind ("C-c d" . deb-packaging-status))
 
 ;; Legacy kjs-deb (available via C-c ` for advanced flag control)
 (add-to-list 'load-path (expand-file-name "config" user-emacs-directory))
