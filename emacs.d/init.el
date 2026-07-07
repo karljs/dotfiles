@@ -641,10 +641,6 @@
   :mode "\\.yml\\'")
 
 
-(use-package python-mode
-  :ensure)
-
-
 (use-package c-ts-mode
   :ensure nil
   :mode (("\\.c\\'" . c-ts-mode)
