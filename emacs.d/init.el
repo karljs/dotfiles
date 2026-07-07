@@ -485,14 +485,13 @@
           (c++-mode . c++-ts-mode)
           (python-mode . python-ts-mode)))
 
-  (defun kjs-eglot-format-dwim ()
-    "Format region if active, otherwise buffer"
-    (interactive)
-    (if (use-region-p)
-        (eglot-format (region-beginning) (region-end))
-      (eglot-format-buffer)))
+  (add-hook 'eglot-managed-mode-hook
+            (lambda ()
+              (add-hook 'before-save-hook #'eglot-format nil t)))
 
-  :bind (("C-c C-a" . eglot-code-actions)))
+  :bind (:map eglot-mode-map
+              ("C-c C-a" . eglot-code-actions)
+              ("C-c f" . eglot-format)))
 
 
 (use-package consult-eglot
@@ -603,7 +602,6 @@
   :init
   (setq rust-mode-treesitter-derive t)
   :config
-  (setq rust-format-on-save nil)
   (add-to-list 'eglot-server-programs
                '((rust-ts-mode rust-mode) .
                  ("rust-analyzer"
@@ -649,24 +647,7 @@
          ("\\.cc\\'" . c++-ts-mode)
          ("\\.hpp\\'" . c++-ts-mode)
          ("\\.hxx\\'" . c++-ts-mode))
-  :hook ((c-ts-mode . kjs-c-ts-common-setup)
-         (c++-ts-mode . kjs-c-ts-common-setup))
   :init
-  (defun kjs-c-ts-common-setup ()
-    "Shared setup for C and C++.
-Uses tree-sitter indentation with format-on-save via eglot/clangd
-as the source of truth."
-    (eglot-ensure)
-    (add-hook 'before-save-hook #'kjs-eglot-format-on-save nil t))
-
-  (defun kjs-eglot-format-on-save ()
-    (when (bound-and-true-p eglot--managed-mode)
-      (eglot-format-buffer)))
-
-  (defun kjs-c-ts-bind-keys (map)
-    (define-key map (kbd "C-c f") #'kjs-eglot-format-dwim)
-    (define-key map (kbd "C-c F") #'eglot-format-buffer))
-
   ;; --- Old manual indentation functions (kept for reference) ---
   ;; To restore: uncomment these and the old kjs-c-ts-common-setup body above.
   ;;
@@ -694,9 +675,7 @@ as the source of truth."
 
   :config
   (setq c-ts-mode-indent-offset 2)
-  (setq c-ts-mode-indent-style 'linux)
-  (kjs-c-ts-bind-keys c-ts-mode-map)
-  (kjs-c-ts-bind-keys c++-ts-mode-map))
+  (setq c-ts-mode-indent-style 'linux))
 
 
 (use-package cmake-ts-mode
@@ -785,8 +764,6 @@ as the source of truth."
 (use-package eca
   :vc (:url "https://github.com/editor-code-assistant/eca-emacs" :rev :newest))
 
-;;; External Tools
-
 ;;; Terminals
 
 (use-package ghostel
@@ -795,7 +772,6 @@ as the source of truth."
 
 ;;; Debian Packaging
 
-;; New deb-packaging package (separate repo)
 (use-package deb-packaging
   :load-path "~/deb-packaging-el"
   :bind ("C-c d" . deb-packaging-status))
