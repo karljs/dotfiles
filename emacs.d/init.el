@@ -194,7 +194,12 @@
 (use-package vertico
   :ensure t
   :init
-  (vertico-mode))
+  (vertico-mode)
+  :bind (:map vertico-map
+              ("RET"   . vertico-directory-enter)
+              ("DEL"   . vertico-directory-delete-char)
+              ("M-DEL" . vertico-directory-delete-word))
+  :hook (rfn-eshadow-update-overlay . vertico-directory-tidy))
 
 
 (use-package marginalia
@@ -299,7 +304,9 @@
   :init
   (global-corfu-mode)
   :config
-  (setq tab-always-indent 'complete))
+  (setq tab-always-indent 'complete)
+  (corfu-popupinfo-mode)
+  (setq corfu-popupinfo-delay '(1.0 . 0.5)))
 
 
 (use-package cape
@@ -760,6 +767,14 @@ as the source of truth."
   (setq denote-known-keywords '("emacs" "ubuntu" "personal"))
   (setq denote-sort-keywords t)
   (denote-rename-buffer-mode 1))
+
+
+(use-package consult-dir
+  :ensure t
+  :bind (("C-x C-d" . consult-dir)
+         :map vertico-map
+         ("C-x C-d" . consult-dir)
+         ("C-x C-j" . consult-dir-jump-file)))
 
 
 (use-package consult-denote
