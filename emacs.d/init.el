@@ -153,6 +153,24 @@
   (setq isearch-regexp-lax-whitespace nil))
 
 
+(use-package savehist
+  :ensure nil
+  :init
+  (savehist-mode))
+
+
+(use-package repeat
+  :ensure nil
+  :init
+  (repeat-mode))
+
+
+(use-package winner
+  :ensure nil
+  :init
+  (winner-mode))
+
+
 ;; Custom mark functions
 (defun kjs--push-mark-no-activate ()
   (interactive)
