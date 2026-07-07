@@ -511,6 +511,41 @@
   (setq treesit-auto-install 'prompt)
   (global-treesit-auto-mode))
 
+;;; Emacs Lisp
+
+(use-package package-lint-flymake
+  :ensure t
+  :hook (emacs-lisp-mode . package-lint-flymake-setup)
+  :defer t)
+
+
+(use-package aggressive-indent
+  :ensure t
+  :hook ((emacs-lisp-mode lisp-mode scheme-mode) . aggressive-indent-mode))
+
+
+(use-package ielm
+  :ensure nil
+  :hook ((ielm-mode . eldoc-mode)
+         (ielm-mode . kjs-ielm-load-history))
+  :config
+  (defun kjs-ielm-load-history ()
+    "Persist IELM input ring across sessions."
+    (setq comint-input-ring-file-name
+          (no-littering-expand-var-file-name "ielm/history"))
+    (make-directory (file-name-directory comint-input-ring-file-name) t)
+    (comint-read-input-ring t))
+  (keymap-set emacs-lisp-mode-map "C-c C-z" #'ielm))
+
+
+(use-package outline-minor-mode
+  :ensure nil
+  :hook (emacs-lisp-mode . outline-minor-mode)
+  :bind (:map outline-minor-mode-map
+              ("C-<tab>"   . outline-cycle)
+              ("C-S-<tab>" . outline-cycle-buffer)))
+
+
 ;;; Programming Languages
 
 (use-package magit
@@ -536,6 +571,7 @@
     '(progn (define-key paredit-mode-map (kbd "M-s") nil)))
   :hook
   (emacs-lisp-mode . enable-paredit-mode)
+  (ielm-mode . enable-paredit-mode)
   (eval-expression-minibuffer-setup . enable-paredit-mode)
   (racket-mode . enable-paredit-mode)
   (racket-hash-lang-mode . enable-paredit-mode)
