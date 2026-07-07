@@ -167,9 +167,9 @@
   (exchange-point-and-mark)
   (deactivate-mark nil))
 
-(global-set-key (kbd "C-`") 'push-mark-no-activate)
-(global-set-key (kbd "C-M-`") 'jump-to-mark)
-(global-set-key [remap exchange-point-and-mark] 'exchange-point-and-mark-no-activate)
+(global-set-key (kbd "C-`") 'kjs--push-mark-no-activate)
+(global-set-key (kbd "C-M-`") 'kjs--jump-to-mark)
+(global-set-key [remap exchange-point-and-mark] 'kjs--exchange-point-and-mark-no-activate)
 
 ;;; Completion Framework
 
