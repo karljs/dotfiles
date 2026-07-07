@@ -11,11 +11,22 @@
 (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
 
 (require 'package)
-(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
+(setq package-archives
+      '(("gnu"    . "https://elpa.gnu.org/packages/")
+        ("nongnu" . "https://elpa.nongnu.org/packages/nongnu/")
+        ("melpa"  . "https://melpa.org/packages/")))
 (package-initialize)
 
+;; Refresh the index if it's missing or older than a day, so :ensure
+;; never installs against a stale catalog.
+(unless (and package-archive-contents
+             (file-newer-than-file-p
+              (expand-file-name "archives/melpa/archive-contents"
+                                 package-user-dir)
+              (expand-file-name "early-init.el" user-emacs-directory)))
+  (package-refresh-contents))
+
 (unless (package-installed-p 'use-package)
-  (package-refresh-contents)
   (package-install 'use-package))
 (eval-when-compile
   (require 'use-package))
