@@ -395,8 +395,11 @@
 
 
 (use-package ace-window
-  :ensure
-  :bind ("M-o". ace-window))
+  :ensure t
+  :ensure posframe
+  :bind ("M-o" . ace-window)
+  :config
+  (ace-window-posframe-mode 1))
 
 
 (use-package avy
@@ -414,14 +417,6 @@
   :ensure t
   :demand t
   :bind (("C-c s" . substitute-prefix-map)))
-
-
-(use-package helpful
-  :ensure
-  :bind (("C-h f" . helpful-callable)
-         ("C-h v" . helpful-variable)
-         ("C-h k" . helpful-key)
-         ("C-h x" . helpful-command)))
 
 
 (use-package change-inner
