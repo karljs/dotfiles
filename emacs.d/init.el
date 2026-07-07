@@ -62,7 +62,7 @@
 		        :font "PragmataPro"
                         :height font-size)
     (set-face-attribute 'variable-pitch nil
-                        :font "Equity OT"
+                        :font "Equity A"
                         :height font-size)
     (set-face-attribute 'fixed-pitch nil
 		        :font "PragmataPro"
@@ -104,6 +104,12 @@
 (use-package eldoc
   :ensure nil
   :diminish eldoc-mode)
+
+
+(use-package eldoc-box
+  :ensure t
+  :hook (eldoc-mode . eldoc-box-hover-at-point-mode)
+  :diminish eldoc-box-hover-mode)
 
 
 (use-package dired
@@ -597,7 +603,8 @@
 
 
 (use-package racket-mode
-  :ensure t)
+  :ensure t
+  :hook (racket-mode . racket-xp-mode))
 
 
 (use-package geiser
@@ -680,7 +687,7 @@ as the source of truth."
   ;; ---
 
   :config
-  (setq c-ts-mode-indent-offset 4)
+  (setq c-ts-mode-indent-offset 2)
   (setq c-ts-mode-indent-style 'linux)
   (kjs-c-ts-bind-keys c-ts-mode-map)
   (kjs-c-ts-bind-keys c++-ts-mode-map))
@@ -761,20 +768,6 @@ as the source of truth."
 
 ;;; AI Tools
 
-(use-package gptel
-  :ensure t
-  :config
-  (setq gptel-model 'claude-4.6-sonnet
-        gptel-backend (gptel-make-gh-copilot "Copilot"))
-  :hook (gptel-post-stream-hook . gptel-auto-scroll))
-
-
-(use-package gptel-agent
-  :ensure t
-  :after gptel
-  :config
-  (gptel-agent-update))
-
 (use-package eca
   :vc (:url "https://github.com/editor-code-assistant/eca-emacs" :rev :newest))
 
@@ -786,10 +779,6 @@ as the source of truth."
 
 ;;; Terminals
 
-(use-package eat
-  :ensure t)
-
-
 (use-package ghostel
   :ensure t
   :bind (("C-c t" . ghostel)))
@@ -800,14 +789,5 @@ as the source of truth."
 (use-package deb-packaging
   :load-path "~/deb-packaging-el"
   :bind ("C-c d" . deb-packaging-status))
-
-;; Legacy kjs-deb (available via C-c ` for advanced flag control)
-(add-to-list 'load-path (expand-file-name "config" user-emacs-directory))
-
-(use-package kjs-transient
-  :ensure nil)
-
-(use-package kjs-deb
-  :ensure nil)
 
 ;;; init.el ends here
