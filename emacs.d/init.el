@@ -1,12 +1,10 @@
-;;; init.el --- Karl's Emacs Configuration -*- lexical-binding: t; -*-
+;;; -*- lexical-binding: t; -*-
 
 ;; _____       __________      ______
 ;; ___(_)_________(_)_  /_________  /
 ;; __  /__  __ \_  /_  __/_  _ \_  /
 ;; _  / _  / / /  / / /___/  __/  /
 ;; /_/  /_/ /_//_/  \__/(_)___//_/
-
-;; Use `consult-imenu' (M-g i) to jump to any section.
 
 ;;; Package Bootstrap
 
@@ -24,7 +22,6 @@
 
 ;;; Core Settings
 
-;; Keep .emacs.d clean - do this first
 (use-package no-littering
   :ensure t
   :demand t
