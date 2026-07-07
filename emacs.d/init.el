@@ -385,7 +385,7 @@
 
 
 (use-package ansi-color
-  :ensure t
+  :ensure nil
   :config
   (defun kjs-filter-osc-sequences ()
     "Remove OSC and terminal query sequences from compilation output."
@@ -457,7 +457,7 @@
   :ensure t
   :diminish (whole-line-or-region-mode whole-line-or-region-local-mode)
   :config
-  (whole-line-or-region-global-mode nil))
+  (whole-line-or-region-global-mode 1))
 
 
 (use-package pdf-tools
@@ -484,7 +484,6 @@
         '((c-mode . c-ts-mode)
           (c++-mode . c++-ts-mode)
           (python-mode . python-ts-mode)))
-  (add-to-list 'auto-mode-alist '("\\.yml\\'" . yaml-ts-mode))
 
   (defun kjs-eglot-format-dwim ()
     "Format region if active, otherwise buffer"
@@ -636,9 +635,9 @@
   (add-hook 'TeX-after-compilation-finished-functions #'TeX-revert-document-buffer))
 
 
-(use-package yaml-mode
-  :ensure
-  :mode "\\.yml\\'")
+(use-package yaml-ts-mode
+  :ensure nil
+  :mode "\\.ya?ml\\'")
 
 
 (use-package c-ts-mode
@@ -787,10 +786,6 @@ as the source of truth."
   :vc (:url "https://github.com/editor-code-assistant/eca-emacs" :rev :newest))
 
 ;;; External Tools
-
-(use-package transient
-  :ensure t)
-
 
 ;;; Terminals
 
