@@ -1,4 +1,4 @@
-;;; -*- lexical-binding: t; -*-
+;;; init.el --- Emacs initialization -*- lexical-binding: t; -*-
 
 ;; _____       __________      ______
 ;; ___(_)_________(_)_  /_________  /
@@ -30,6 +30,7 @@
   (package-install 'use-package))
 (eval-when-compile
   (require 'use-package))
+
 
 ;;; Core Settings
 
@@ -181,14 +182,17 @@
 
 ;; Custom mark functions
 (defun kjs--push-mark-no-activate ()
+  "Push a mark at point without activating the region."
   (interactive)
   (push-mark (point) t nil))
 
 (defun kjs--jump-to-mark ()
+  "Jump to the previous mark without activating the region."
   (interactive)
   (set-mark-command 1))
 
 (defun kjs--exchange-point-and-mark-no-activate ()
+  "Exchange point and mark without activating the region."
   (interactive)
   (exchange-point-and-mark)
   (deactivate-mark nil))
@@ -519,6 +523,18 @@
   :defer t)
 
 
+(defun kjs--inhibit-elisp-flymake-in-init ()
+  "Disable byte-compile and checkdoc flymake backends in `user-init-file'.
+Those backends emit many false positives in an init that uses
+deferred `use-package' loading; this keeps them active elsewhere."
+  (when (and buffer-file-name user-init-file
+             (file-equal-p buffer-file-name user-init-file))
+    (remove-hook 'flymake-diagnostic-functions 'elisp-flymake-byte-compile t)
+    (remove-hook 'flymake-diagnostic-functions 'elisp-flymake-checkdoc t)))
+
+(add-hook 'emacs-lisp-mode-hook #'kjs--inhibit-elisp-flymake-in-init)
+
+
 (use-package aggressive-indent
   :ensure t
   :hook ((emacs-lisp-mode lisp-mode scheme-mode) . aggressive-indent-mode))
@@ -591,8 +607,12 @@
   :hook (prog-mode . paredit-everywhere-mode))
 
 
+(use-package debian-el
+  :vc (:url "https://salsa.debian.org/emacsen-team/debian-el.git" :rev :newest))
+
+
 (use-package dpkg-dev-el
-  :ensure t)
+  :vc (:url "https://salsa.debian.org/emacsen-team/dpkg-dev-el.git" :rev :newest))
 
 
 (use-package haskell-mode
