@@ -17,12 +17,11 @@
         ("melpa"  . "https://melpa.org/packages/")))
 (package-initialize)
 
-;; Refresh the index if it's missing or older than a day, so :ensure
-;; never installs against a stale catalog.
+;; Refresh the index periodically
 (unless (and package-archive-contents
              (file-newer-than-file-p
               (expand-file-name "archives/melpa/archive-contents"
-                                 package-user-dir)
+                                package-user-dir)
               (expand-file-name "early-init.el" user-emacs-directory)))
   (package-refresh-contents))
 
@@ -180,7 +179,48 @@
   (winner-mode))
 
 
-;; Custom mark functions
+(defun kjs-toggle-side-window ()
+  "Toggle the side windows, focusing one when shown and the previous
+ordinary window when hidden."
+  (interactive)
+  (if (window-parameter (selected-window) 'window-side)
+      ;; get-mru-window skips the dedicated side windows.
+      (let ((main (get-mru-window nil nil t)))
+        (window-toggle-side-windows)
+        (when (window-live-p main)
+          (select-window main)))
+    (unless (window-with-parameter 'window-side)
+      (window-toggle-side-windows))
+    (when-let ((w (window-with-parameter 'window-side)))
+      (select-window w))))
+
+
+(use-package window
+  :ensure nil
+  :bind ("C-c r" . kjs-toggle-side-window)
+  :config
+  ;; REPL/shell pops into a bottom side window.  The name is needed
+  ;; because some modes aren't set when first displayed.
+  (add-to-list 'display-buffer-alist
+               '((lambda (buf _act)
+                   (with-current-buffer buf
+                     (let ((case-fold-search nil))
+                       (or (derived-mode-p 'comint-mode 'eshell-mode
+                                           'racket-repl-mode 'geiser-repl-mode)
+                           (string-match-p
+                            (rx (or "REPL"
+                                    (seq bos "*" (or "ielm" "Python"
+                                                     "shell" "eshell"))))
+                            (buffer-name))))))
+                 (display-buffer-in-side-window)
+                 (side . bottom)
+                 (slot . 0)
+                 (window-height . 0.3)
+                 (dedicated . t)
+                 (body-function . select-window)
+                 (preserve-size . (nil . t)))))
+
+
 (defun kjs--push-mark-no-activate ()
   "Push a mark at point without activating the region."
   (interactive)
@@ -476,7 +516,7 @@
   :ensure
   :config
   (pdf-tools-install)
-  (setq-default pdf-view-display-size 'fit-page))
+  (setq-default pdf-view-display-size 'fit-width))
 
 ;;; LSP & Tree-sitter
 
