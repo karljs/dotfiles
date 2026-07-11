@@ -518,6 +518,14 @@ ordinary window when hidden."
   (pdf-tools-install)
   (setq-default pdf-view-display-size 'fit-width))
 
+
+(use-package consult-pdf-occur
+  :load-path "~/consult-pdf-occur"
+  :after pdf-tools
+  :demand t
+  :bind (:map pdf-view-mode-map
+              ("M-s o" . consult-pdf-occur)))
+
 ;;; LSP & Tree-sitter
 
 (use-package eglot
