@@ -48,9 +48,13 @@
   :demand t
   :config
   (when (memq window-system '(mac ns x pgtk))
-    (dolist (var '("JIRA_API_KEY"))
+    (dolist (var '("JIRA_API_KEY" "DEBFULLNAME" "DEBEMAIL"))
       (add-to-list 'exec-path-from-shell-variables var))
-    (exec-path-from-shell-initialize)))
+    (exec-path-from-shell-initialize))
+  (when-let ((name (getenv "DEBFULLNAME")))
+    (setq user-full-name name))
+  (when-let ((mail (or (getenv "DEBEMAIL") (getenv "EMAIL"))))
+    (setq user-mail-address mail)))
 
 
 (use-package emacs
@@ -520,11 +524,12 @@ ordinary window when hidden."
 
 
 (use-package consult-pdf-occur
-  :load-path "~/consult-pdf-occur"
+  :vc (:url "https://github.com/karljs/consult-pdf-occur")
   :after pdf-tools
   :demand t
   :bind (:map pdf-view-mode-map
               ("M-s o" . consult-pdf-occur)))
+
 
 ;;; LSP & Tree-sitter
 
