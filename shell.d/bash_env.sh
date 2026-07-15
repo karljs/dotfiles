@@ -30,6 +30,8 @@ export BAT_THEME="ansi"
 
 export COPILOT_CUSTOM_INSTRUCTIONS_DIRS="$HOME/.config"
 
+PATH="$HOME/.opencode/bin/:$PATH"
+
 # must come after PATH is set
 if command -v eza >/dev/null 2>&1; then
         alias ls='eza'
