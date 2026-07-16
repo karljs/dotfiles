@@ -791,11 +791,11 @@ deferred `use-package' loading; this keeps them active elsewhere."
   :hook (dired-mode . denote-dired-mode)
   :bind
   (:map global-map
-        ("C-c n n" . denote)
-        ("C-c n r" . denote-rename-file)
-        ("C-c n l" . denote-link)
-        ("C-c n b" . denote-backlinks)
-        ("C-c n d" . denote-dired)
+         ("C-c n n" . denote)
+         ("C-c n r" . denote-rename-file)
+         ("C-c n L" . denote-link)
+         ("C-c n B" . denote-backlinks)
+         ("C-c n d" . denote-dired)
         :map dired-mode-map
         ("C-c C-d C-i" . denote-dired-link-marked-notes)
         ("C-c C-d C-r" . denote-dired-rename-files)
@@ -819,11 +819,106 @@ deferred `use-package' loading; this keeps them active elsewhere."
 (use-package consult-denote
   :ensure t
   :bind
-  (("C-c n f" . consult-denote-find)
-   ("C-c n g" . consult-denote-grep))
+   (("C-c n F" . consult-denote-find)
+    ("C-c n G" . consult-denote-grep))
   :config
   (consult-denote-mode 1)
   (setq consult-denote-grep-command 'consult-ripgrep))
+
+
+(use-package org-roam
+  :ensure t
+  :demand t
+  :custom
+  (org-roam-directory (file-truename "~/Documents/roam"))
+
+  :bind (("C-c n l" . org-roam-buffer-toggle)
+         ("C-c n f" . org-roam-node-find)
+         ("C-c n g" . org-roam-graph)
+         ("C-c n i" . org-roam-node-insert)
+         ("C-c n c" . org-roam-capture)
+         ("C-c n t" . org-roam-tag-add)
+         ("C-c n a" . org-roam-alias-add)
+         ("C-c n v" . kjs/org-roam-random-review))
+
+  :config
+  (setq org-roam-node-display-template
+        (concat "${title:*} " (propertize "${tags:10}" 'face 'org-tag)))
+  (setq org-roam-capture-templates
+        '(("d" "default" plain "%?"
+           :target (file+head "${slug}.org"
+                              "#+title: ${title}\n")
+           :unnarrowed t)
+          ("b" "blog" plain "%?"
+           :target (file+head "${slug}.org"
+                              "#+title: ${title}\n#+filetags: :blog:\n")
+           :unnarrowed t)))
+  (org-roam-db-autosync-mode)
+
+  :preface
+  (defvar kjs/org-roam-review-separator "\n-----\n\n"
+    "Separator between notes in the random review buffer.")
+
+  (defun kjs/org-roam-review--insert-node (node)
+    "Insert NODE into the review buffer."
+    (let* ((title (org-roam-node-title node))
+           (id (org-roam-node-id node))
+           (file (org-roam-node-file node)))
+      (insert (format "[[id:%s][%s]]\n\n" id title))
+      (when (file-exists-p file)
+        (let ((content (with-temp-buffer
+                         (insert-file-contents file)
+                         (goto-char (point-min))
+                         (while (re-search-forward "^#\\+[^\n]*\n" nil t)
+                           (replace-match ""))
+                         (goto-char (point-min))
+                         (when (looking-at ":PROPERTIES:\n")
+                           (re-search-forward "^:END:\n" nil t)
+                           (delete-region (point-min) (point)))
+                         (buffer-string))))
+          (insert content)))))
+
+  (defun kjs/org-roam-review-next ()
+    "Jump to the next note separator in the review buffer."
+    (interactive)
+    (when (re-search-forward "^-----$" nil t)
+      (forward-line 2)))
+
+  (defun kjs/org-roam-review-prev ()
+    "Jump to the previous note separator in the review buffer."
+    (interactive)
+    (when (re-search-backward "^-----$" nil t)
+      (skip-chars-backward "\n")
+      (when (re-search-backward "^-----$" nil t)
+        (forward-line 2))))
+
+  (defun kjs/org-roam-random-review (&optional n)
+    "Open a buffer with N random org-roam nodes for review."
+    (interactive "p")
+    (let* ((nodes (org-roam-node-list))
+           (n (min (or n 5) (length nodes)))
+           (shuffled (mapcar #'cdr
+                             (seq-sort-by #'car #'<
+                                          (mapcar (lambda (node) (cons (random) node))
+                                                  nodes))))
+           (sample (seq-subseq shuffled 0 n))
+           (buf (get-buffer-create "*org-roam review*")))
+      (with-current-buffer buf
+        (org-mode)
+        (let ((inhibit-read-only t))
+          (erase-buffer)
+          (let ((first t))
+            (dolist (node sample)
+              (unless first
+                (insert kjs/org-roam-review-separator))
+              (setq first nil)
+              (kjs/org-roam-review--insert-node node)))
+          (goto-char (point-min)))
+        (local-set-key (kbd "q") (lambda () (interactive) (quit-window)))
+        (local-set-key (kbd "n") #'kjs/org-roam-review-next)
+        (local-set-key (kbd "p") #'kjs/org-roam-review-prev)
+        (read-only-mode 1))
+      (pop-to-buffer buf))))
 
 
 (use-package markdown-mode
