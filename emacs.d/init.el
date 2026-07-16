@@ -768,6 +768,7 @@ deferred `use-package' loading; this keeps them active elsewhere."
   :ensure
   :config
   (setq org-pretty-entities t)
+  (setq org-return-follows-link t)
   (setq org-directory (expand-file-name "~/Documents/notes"))
   (setq org-refile-targets '((org-agenda-files :maxlevel . 2)))
   (setf (alist-get "\\.x?html?\\'" org-file-apps nil nil #'string=)
@@ -855,8 +856,18 @@ deferred `use-package' loading; this keeps them active elsewhere."
            :unnarrowed t)))
   (org-roam-db-autosync-mode)
 
+  (defvar kjs/org-roam-review-mode-map
+    (let ((map (make-sparse-keymap)))
+      (set-keymap-parent map org-mode-map)
+      (define-key map (kbd "q") (lambda () (interactive) (quit-window)))
+      (define-key map (kbd "n") #'kjs/org-roam-review-next)
+      (define-key map (kbd "p") #'kjs/org-roam-review-prev)
+      map)
+    "Keymap for `kjs/org-roam-random-review' buffers.")
+
+
   :preface
-  (defvar kjs/org-roam-review-separator "\n-----\n\n"
+  (defvar kjs/org-roam-review-separator "\n\n-----\n"
     "Separator between notes in the random review buffer.")
 
   (defun kjs/org-roam-review--insert-node (node)
@@ -874,23 +885,24 @@ deferred `use-package' loading; this keeps them active elsewhere."
                          (goto-char (point-min))
                          (when (looking-at ":PROPERTIES:\n")
                            (re-search-forward "^:END:\n" nil t)
-                           (delete-region (point-min) (point)))
-                         (buffer-string))))
-          (insert content)))))
+                            (delete-region (point-min) (point)))
+                          (string-trim (buffer-string)))))
+           (insert content)))))
 
   (defun kjs/org-roam-review-next ()
     "Jump to the next note separator in the review buffer."
     (interactive)
     (when (re-search-forward "^-----$" nil t)
-      (forward-line 2)))
+      (forward-line 1)))
 
   (defun kjs/org-roam-review-prev ()
     "Jump to the previous note separator in the review buffer."
     (interactive)
     (when (re-search-backward "^-----$" nil t)
-      (skip-chars-backward "\n")
-      (when (re-search-backward "^-----$" nil t)
-        (forward-line 2))))
+       (skip-chars-backward "\n")
+       (if (re-search-backward "^-----$" nil t)
+        (forward-line 1)
+      (goto-char (point-min)))))
 
   (defun kjs/org-roam-random-review (&optional n)
     "Open a buffer with N random org-roam nodes for review."
@@ -914,9 +926,7 @@ deferred `use-package' loading; this keeps them active elsewhere."
               (setq first nil)
               (kjs/org-roam-review--insert-node node)))
           (goto-char (point-min)))
-        (local-set-key (kbd "q") (lambda () (interactive) (quit-window)))
-        (local-set-key (kbd "n") #'kjs/org-roam-review-next)
-        (local-set-key (kbd "p") #'kjs/org-roam-review-prev)
+        (use-local-map kjs/org-roam-review-mode-map)
         (read-only-mode 1))
       (pop-to-buffer buf))))
 
