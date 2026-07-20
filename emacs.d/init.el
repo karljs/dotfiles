@@ -121,7 +121,8 @@
 (use-package eldoc-box
   :ensure t
   :hook (eldoc-mode . eldoc-box-hover-at-point-mode)
-  :diminish eldoc-box-hover-mode)
+  :diminish eldoc-box-hover-mode
+  :bind ("C-c C-k" . eldoc-box-quit-frame))
 
 
 (use-package dired
@@ -398,7 +399,8 @@ ordinary window when hidden."
 (use-package ef-themes
   :ensure t
   :config
-  (load-theme 'ef-cyprus t))
+  (load-theme 'ef-eagle t)
+  )
 
 
 (use-package standard-themes
@@ -588,9 +590,9 @@ deferred `use-package' loading; this keeps them active elsewhere."
 (add-hook 'emacs-lisp-mode-hook #'kjs--inhibit-elisp-flymake-in-init)
 
 
-(use-package aggressive-indent
-  :ensure t
-  :hook ((emacs-lisp-mode lisp-mode scheme-mode) . aggressive-indent-mode))
+;; (use-package aggressive-indent
+;;   :ensure t
+;;   :hook ((emacs-lisp-mode lisp-mode scheme-mode) . aggressive-indent-mode))
 
 
 (use-package ielm
@@ -953,6 +955,10 @@ deferred `use-package' loading; this keeps them active elsewhere."
 
 (use-package deb-packaging
   :load-path "~/deb-packaging-el"
-  :bind ("C-c d" . deb-packaging-status))
+  :bind ("C-c d" . deb-packaging-status)
+  :config
+  (setq deb-packaging-config-extra-ppas
+        '("ppa:openssl-testing/openssl4-fixes"
+          "ppa:openssl-testing/openssl4-rebuild")))
 
 ;;; init.el ends here
